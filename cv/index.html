@@ -1,14 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shay Mordechai – CV</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shay Mordechai | Security Researcher</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f4f7f9;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .subtitle { color: #3498db; font-weight: 600; font-size: 1.2em; margin-top: 0; }
+        .links { margin: 20px 0; }
+        .links a {
+            text-decoration: none;
+            color: #fff;
+            background: #2c3e50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        .links a:hover { background: #34495e; }
+        .links a.pdf { background: #e74c3c; }
+        .links a.pdf:hover { background: #c0392b; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; color: #2c3e50; }
+        .project { margin-bottom: 20px; }
+        .project-title { font-weight: bold; color: #2980b9; }
+        .tag {
+            font-size: 0.8em;
+            background: #ecf0f1;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #7f8c8d;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Shay Mordechai</h1>
-  <p><a href="cv.pdf">Download CV (PDF)</a></p>
-  <h2>About</h2>
-  <p>Short professional intro.</p>
+
+<div class="container">
+    <h1>Shay Mordechai</h1>
+    <p class="subtitle">Security Researcher | DevSecOps & Networking Specialist</p>
+
+    <div class="links">
+        <a href="cv.pdf" class="pdf">📄 Download CV (PDF)</a>
+        <a href="https://github.com/tshay0129">GitHub</a>
+        <a href="https://www.linkedin.com/in/shay-mor/">LinkedIn</a>
+    </div>
+
+    <h2>About</h2>
+    <p>
+        Passionate Security Researcher with a deep foundation in <strong>Network Analysis (GPA 97)</strong> and <strong>Reverse Engineering</strong>. 
+        Expertise in securing CI/CD pipelines and developing custom security tools. 
+        Currently focused on Cloud-Native security research and vulnerability discovery.
+    </p>
+
+    <h2>Featured Research</h2>
+    
+    <div class="project">
+        <span class="project-title">SBCL Compiler Research</span> <span class="tag">Zero-Day</span>
+        <p>Orchestrated a research workflow identifying 3 potential vulnerabilities. Currently under <strong>Responsible Disclosure</strong>.</p>
+    </div>
+
+    <div class="project">
+        <span class="project-title">Kubernetes Security Lab</span> <span class="tag">In Progress</span>
+        <p>Architecting nested virtualization environments to research attack surfaces, implementing Calico CNI and Falco for runtime threat detection.</p>
+    </div>
+
+    <div class="project">
+        <span class="project-title">Network Security Toolbox</span>
+        <p>Developing custom Python/Scapy tools for protocol manipulation, ICMP exfiltration, and raw socket analysis.</p>
+    </div>
+
+</div>
+
 </body>
 </html>
-
