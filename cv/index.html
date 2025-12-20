@@ -4,48 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shay Mordechai | Security Researcher</title>
+    
+    <link rel="icon" href="https://fav.farm/🛡️">
+    
     <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --danger: #e74c3c;
+            --bg: #f8fafc;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 800px;
+            color: #334155;
+            max-width: 850px;
             margin: 40px auto;
             padding: 0 20px;
-            background-color: #f4f7f9;
+            background-color: var(--bg);
         }
+
         .container {
             background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--primary);
         }
-        h1 { color: #2c3e50; margin-bottom: 5px; }
-        .subtitle { color: #3498db; font-weight: 600; font-size: 1.2em; margin-top: 0; }
-        .links { margin: 20px 0; }
+
+        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.5em; }
+        
+        .subtitle { 
+            color: var(--accent); 
+            font-weight: 600; 
+            font-size: 1.1em; 
+            margin-top: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .links { margin: 25px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        
         .links a {
             text-decoration: none;
             color: #fff;
-            background: #2c3e50;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-right: 10px;
-            display: inline-block;
-            transition: background 0.3s;
+            background: var(--primary);
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .links a:hover { background: #34495e; }
-        .links a.pdf { background: #e74c3c; }
-        .links a.pdf:hover { background: #c0392b; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; color: #2c3e50; }
-        .project { margin-bottom: 20px; }
-        .project-title { font-weight: bold; color: #2980b9; }
+
+        .links a:hover { transform: translateY(-2px); opacity: 0.9; }
+        .links a.pdf { background: var(--danger); }
+
+        h2 { 
+            border-bottom: 2px solid #f1f5f9; 
+            padding-bottom: 12px; 
+            margin-top: 40px; 
+            color: var(--primary);
+            font-size: 1.5em;
+        }
+
+        .project { 
+            margin-bottom: 25px; 
+            padding: 15px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .project:hover { background: #f8fafc; }
+
+        .project-title { font-weight: bold; color: var(--accent); font-size: 1.1em; }
+        
         .tag {
-            font-size: 0.8em;
-            background: #ecf0f1;
-            padding: 2px 8px;
+            font-size: 0.75em;
+            background: #e2e8f0;
+            padding: 3px 10px;
+            border-radius: 20px;
+            color: #475569;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 5px;
             border-radius: 4px;
-            color: #7f8c8d;
-            margin-left: 5px;
+            font-size: 0.9em;
+            color: var(--danger);
         }
     </style>
 </head>
@@ -53,38 +104,37 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | DevSecOps & Networking Specialist</p>
+    <p class="subtitle">Security Researcher | OS Internals & Network Specialist</p>
 
     <div class="links">
-        <a href="cv.pdf" class="pdf">📄 Download CV (PDF)</a>
-        <a href="https://github.com/shay-mordechai">GitHub</a>
-        <a href="https://www.linkedin.com/in/shay-mor/">LinkedIn</a>
+        <a href="cv.pdf" class="pdf">📄 Download CV</a>
+        <a href="https://github.com/shay-mordechai">📂 GitHub</a>
+        <a href="https://www.linkedin.com/in/shay-mor/">🔗 LinkedIn</a>
     </div>
 
     <h2>About</h2>
     <p>
-        Passionate Security Researcher with a strong academic background <strong>(GPA 89)</strong> and deep expertise in <strong>Network Analysis (97)</strong> and <strong>Reverse Engineering (93)</strong>. 
-        Expertise in securing CI/CD pipelines and developing custom security tools. 
-        Currently focused on Cloud-Native security research and vulnerability discovery.
+        Security Researcher specializing in <strong>Linux Internals</strong> <code>(Namespaces, Cgroups, PID isolation)</code> and Network Analysis[cite: 4, 27, 29]. 
+        Deeply experienced in <strong>Reverse Engineering (93)</strong> and low-level protocol manipulation[cite: 17, 27]. 
+        Currently researching <strong>Cloud-Native surfaces</strong> and automated vulnerability discovery through fuzzing[cite: 6, 17].
     </p>
 
-    <h2>Featured Research</h2>
+    <h2>Research & Projects</h2>
     
     <div class="project">
-        <span class="project-title">SBCL Compiler Research</span> <span class="tag">Zero-Day</span>
-        <p>Orchestrated a research workflow identifying 3 potential vulnerabilities. Currently under <strong>Responsible Disclosure</strong>.</p>
+        <span class="project-title">SBCL Compiler Vulnerability Research</span> <span class="tag">Zero-Day Found</span>
+        <p>Conducted fuzzing research on the SBCL compiler, identifying 3 memory corruption vulnerabilities[cite: 17]. Currently under responsible disclosure[cite: 17].</p>
     </div>
 
     <div class="project">
-        <span class="project-title">Kubernetes Security Lab</span> <span class="tag">In Progress</span>
-        <p>Architecting nested virtualization environments to research attack surfaces, implementing Calico CNI and Falco for runtime threat detection.</p>
+        <span class="project-title">Immutable OS & K8s Security Lab</span> <span class="tag">Active</span>
+        <p>Built a research environment based on <strong>Fedora Kinoite</strong> and Kubeadm to explore container isolation and runtime security (Falco/Calico)[cite: 15, 16].</p>
     </div>
 
     <div class="project">
-        <span class="project-title">Network Security Toolbox</span>
-        <p>Developing custom Python/Scapy tools for protocol manipulation, ICMP exfiltration, and raw socket analysis.</p>
+        <span class="project-title">Network Research Portfolio</span>
+        <p>Developed custom tools for <strong>ICMP Exfiltration</strong> and <strong>TLS Spoofing</strong> (3,400+ LoC in Python) to analyze low-level packet structures[cite: 20, 21].</p>
     </div>
-
 </div>
 
 </body>
