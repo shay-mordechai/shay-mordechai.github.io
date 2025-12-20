@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shay Mordechai | Portfolio</title>
+    <title>Shay Mordechai | Security Researcher</title>
     
     <link rel="icon" href="https://fav.farm/🛡️">
     
     <style>
         :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --danger: #e74c3c;
-            --bg: #f8fafc;
+            --primary: #0f172a;
+            --accent: #3b82f6; 
+            --danger: #ef4444;
+            --bg: #f1f5f9;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
             color: #334155;
             max-width: 850px;
@@ -33,7 +33,7 @@
             border-top: 5px solid var(--primary);
         }
 
-        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.5em; }
+        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.5em; letter-spacing: -1px; }
         
         .subtitle { 
             color: var(--accent); 
@@ -58,7 +58,7 @@
             gap: 8px;
         }
 
-        .links a:hover { transform: translateY(-2px); opacity: 0.9; }
+        .links a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .links a.pdf { background: var(--danger); }
 
         h2 { 
@@ -71,32 +71,39 @@
 
         .project { 
             margin-bottom: 25px; 
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
-            transition: background 0.2s;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
         }
         
-        .project:hover { background: #f8fafc; }
+        .project:hover { border-color: var(--accent); background: #f8fafc; }
 
-        .project-title { font-weight: bold; color: var(--accent); font-size: 1.1em; }
+        .project-title { font-weight: bold; color: var(--primary); font-size: 1.1em; }
         
         .tag {
-            font-size: 0.75em;
-            background: #e2e8f0;
-            padding: 3px 10px;
-            border-radius: 20px;
-            color: #475569;
+            font-size: 0.7em;
+            background: #dbeafe;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: #1e40af;
             margin-left: 8px;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        code {
-            background: #f1f5f9;
-            padding: 2px 5px;
-            border-radius: 4px;
+        .highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .highlight-item {
             font-size: 0.9em;
-            color: var(--danger);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
         }
     </style>
 </head>
@@ -104,36 +111,44 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Computer Science Student & Aspiring Security Researcher</p>
+    <p class="subtitle">Security Researcher | Network & Linux Internals Expert</p>
 
     <div class="links">
-        <a href="cv.pdf" class="pdf">📄 Download CV</a>
-        <a href="https://github.com/shay-mordechai">📂 GitHub</a>
+        <a href="cv.pdf" class="pdf">📄 CV.pdf</a>
+        <a href="https://github.com/shay-mordechai">📂 Research Labs</a>
         <a href="https://www.linkedin.com/in/shay-mor/">🔗 LinkedIn</a>
     </div>
 
-    <h2>About</h2>
+    <h2>Executive Summary</h2>
     <p>
-        Computer Science student (Graduating 2025) with a specialization in Cybersecurity. 
-        Deeply focused on <strong>Network Analysis (97)</strong> and <strong>Linux Internals</strong>. 
-        Possesses a strong systemic understanding of security architecture through hands-on experience in <strong>Reverse Engineering (93)</strong> and custom tool developmen.
+        Security researcher with a deep foundation in <strong>Network Analysis (GPA 97)</strong> and <strong>Reverse Engineering</strong>. 
+        Expertise in bridging the gap between low-level OS mechanisms and modern cloud architectures. 
+        Currently focused on immutable systems research and automated vulnerability discovery.
     </p>
 
-    <h2>Featured Projects</h2>
+    <h2>Core Expertise</h2>
+    <div class="highlights">
+        <div class="highlight-item">🔹 <strong>Network:</strong> Raw Sockets, Scapy, L2-L7 Protocol Analysis.</div>
+        <div class="highlight-item">🔹 <strong>Linux:</strong> Namespaces, Cgroups, Immutable OS (Kinoite).</div>
+        <div class="highlight-item">🔹 <strong>Cloud:</strong> K8s Runtime Security (Falco, Calico eBPF).</div>
+        <div class="highlight-item">🔹 <strong>Research:</strong> Fuzzing, Memory Layout Analysis, SBCL.</div>
+    </div>
+
+    <h2>Featured Research & Projects</h2>
     
     <div class="project">
-        <span class="project-title">Custom Network Research Portfolio</span> <span class="tag">Network Internals</span>
-        <p>Developed full-stack networking implementations: <strong>HTTP, DNS, and SMTP servers</strong> using Raw Sockets. Created a 3,400+ LoC Python platform for simulating advanced network attacks.</p>
+        <span class="project-title">Low-Level Network Engine</span> <span class="tag">Network Internals</span>
+        <p>Built custom <strong>HTTP, DNS, and SMTP servers</strong> from scratch using Raw Sockets to bypass standard libraries. Developed a Python-based traffic manipulation platform (3,400+ LoC) for advanced protocol fuzzing.</p>
     </div>
 
     <div class="project">
-        <span class="project-title">Cloud-Native Security Lab</span> <span class="tag">Kubernetes</span>
-        <p>Architecting nested virtualization research environments on <strong>Fedora Kinoite</strong>. Exploring runtime defense mechanisms using <strong>Calico CNI</strong> and <strong>Falco</strong>.</p>
+        <span class="project-title">Cloud Isolation & Runtime Defense</span> <span class="tag">Linux & K8s</span>
+        <p>Researching container escape vectors and isolation mechanisms. Implementing <strong>Falco</strong> for syscall monitoring and <strong>Calico</strong> for eBPF-based network policy enforcement on immutable Linux distributions.</p>
     </div>
 
     <div class="project">
-        <span class="project-title">AI-Augmented Fuzzing Research</span> <span class="tag">System Vulnerabilities</span>
-        <p>Orchestrated an experimental research workflow for the <strong>SBCL compiler</strong>. Validated 3 memory-corruption findings, performing detailed crash analysis and memory layout investigations.</p>
+        <span class="project-title">SBCL Compiler Vulnerability Research</span> <span class="tag">Vulnerability Discovery</span>
+        <p>Developing an AI-augmented fuzzing workflow for the SBCL compiler. Successfully identified and analyzed memory corruption crashes through detailed memory layout investigations and crash-triage.</p>
     </div>
 </div>
 
