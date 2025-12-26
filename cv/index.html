@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shay Mordechai | Security Researcher</title>
     
-    <link rel="icon" href="https://fav.farm/🔬">
+    <link rel="icon" href="https://fav.farm/📡">
     
     <style>
         :root {
             --primary: #0f172a;
             --accent: #3b82f6; 
             --danger: #ef4444;
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
+            --text: #334155;
         }
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
-            color: #334155;
+            color: var(--text);
             max-width: 850px;
             margin: 40px auto;
             padding: 0 20px;
@@ -28,82 +29,99 @@
         .container {
             background: white;
             padding: 50px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--primary);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-top: 6px solid var(--primary);
         }
 
-        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.5em; letter-spacing: -1px; }
+        h1 { color: var(--primary); margin-bottom: 8px; font-size: 2.5em; letter-spacing: -1px; }
         
         .subtitle { 
             color: var(--accent); 
             font-weight: 600; 
-            font-size: 1.1em; 
+            font-size: 1.2em; 
             margin-top: 0;
             letter-spacing: 0.5px;
         }
 
-        .links { margin: 25px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .links { margin: 30px 0; display: flex; gap: 15px; flex-wrap: wrap; }
         
         .links a {
             text-decoration: none;
             color: #fff;
             background: var(--primary);
-            padding: 10px 22px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 8px;
             font-weight: 500;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.95em;
         }
 
-        .links a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .links a:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .links a.pdf { background: var(--danger); }
 
         h2 { 
             border-bottom: 2px solid #f1f5f9; 
             padding-bottom: 12px; 
-            margin-top: 40px; 
+            margin-top: 45px; 
             color: var(--primary);
             font-size: 1.5em;
+            letter-spacing: -0.5px;
         }
 
         .project { 
             margin-bottom: 25px; 
-            padding: 20px;
-            border-radius: 8px;
+            padding: 24px;
+            border-radius: 12px;
             border: 1px solid #e2e8f0;
             transition: all 0.2s;
+            background: #fff;
         }
         
-        .project:hover { border-color: var(--accent); background: #f8fafc; }
+        .project:hover { 
+            border-color: var(--accent); 
+            background: #f8fafc; 
+            transform: translateX(5px);
+        }
 
-        .project-title { font-weight: bold; color: var(--primary); font-size: 1.1em; }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .project-title { font-weight: 700; color: var(--primary); font-size: 1.15em; }
         
         .tag {
-            font-size: 0.7em;
-            background: #dbeafe;
-            padding: 4px 10px;
-            border-radius: 4px;
-            color: #1e40af;
-            margin-left: 8px;
+            font-size: 0.75em;
+            background: #eff6ff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: var(--accent);
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .highlights {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .highlight-item {
-            font-size: 0.9em;
+            font-size: 0.95em;
             display: flex;
-            align-items: flex-start;
-            gap: 8px;
+            align-items: center;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -111,7 +129,7 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Linux & Networks Internals</p>
+    <p class="subtitle">Security Researcher | Network Protocols & Anomaly Detection</p>
 
     <div class="links">
         <a href="cv.pdf" class="pdf" target="_blank" rel="noopener noreferrer">📄 Download CV.pdf</a>
@@ -121,34 +139,43 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Security Researcher with over a year of hands-on experience in DevSecOps and vulnerability research. 
-        Specializing in <strong>Network Analysis (Grade: 97)</strong> and <strong>Linux Internals</strong>, 
-        with a focus on bridging the gap between low-level system primitives and cloud-native security.
+        Security Researcher specializing in <strong>Network Security</strong> and <strong>Data-Driven Threat Detection</strong>. 
+        Expert in bridging the gap between low-level packet manipulation and high-volume financial data analysis. 
+        Combines theoretical networking foundations with hands-on experience in <strong>Python, SQL, and Anomaly Detection Logic</strong>.
     </p>
 
     <h2>Core Expertise</h2>
     <div class="highlights">
-        <div class="highlight-item">🔹 <strong>Network:</strong> Raw Sockets, Scapy, L2-L7 DPI.</div>
-        <div class="highlight-item">🔹 <strong>Linux:</strong> Namespaces, Cgroups, PID Isolation.</div>
-        <div class="highlight-item">🔹 <strong>Cloud:</strong> K8s Runtime Defense (Falco, Calico).</div>
-        <div class="highlight-item">🔹 <strong>Research:</strong> Crash Triage, Memory Analysis, Fuzzing.</div>
+        <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, L2-L7 Inspection</div>
+        <div class="highlight-item">📊 <strong>Detection:</strong> Anomaly Logic, Threat Hunting, Heuristics</div>
+        <div class="highlight-item">💾 <strong>Data:</strong> Python (Pandas), SQL, ETL Pipelines</div>
+        <div class="highlight-item">🛠️ <strong>Infra:</strong> Docker, Linux, IBM DataPower</div>
     </div>
 
     <h2>Featured Research & Projects</h2>
     
     <div class="project">
-        <span class="project-title">Low-Level Network Engine</span> <span class="tag">Network Internals</span>
-        <p>Developed custom <strong>HTTP, DNS, and SMTP servers</strong> from scratch using Raw Sockets to analyze low-level packet structures. Engineered a Python-based traffic manipulation platform for advanced protocol analysis.</p>
+        <div class="project-header">
+            <span class="project-title">Real-Time Anomaly Detection ("Project Sniper")</span> 
+            <span class="tag">Data & Security</span>
+        </div>
+        <p>Architected a high-performance <strong>ETL Pipeline</strong> (Python/SQL) for financial time-series data. Developed a heuristic engine to identify <strong>behavioral anomalies</strong> (e.g., "Whale" accumulation) and separate signal from noise, applying Threat Hunting methodologies to market data.</p>
     </div>
 
     <div class="project">
-        <span class="project-title">Cloud Isolation & Runtime Defense</span> <span class="tag">Linux & K8s</span>
-        <p>Researching container isolation mechanisms on immutable Linux distributions (<strong>Fedora Kinoite</strong>). Implementing <strong>Falco</strong> for syscall monitoring and <strong>Calico</strong> for network policy enforcement.</p>
+        <div class="project-header">
+            <span class="project-title">Network Protocol & Traffic Toolset</span> 
+            <span class="tag">Network Internals</span>
+        </div>
+        <p>Built a <strong>TLS Traffic Generator</strong> using <strong>Scapy</strong> and implemented core protocols (HTTP/DNS/SMTP) from scratch using <strong>Raw Sockets</strong>. Engineered tools for deep packet inspection and adversarial simulation.</p>
     </div>
 
     <div class="project">
-        <span class="project-title">Compiler Vulnerability Research</span> <span class="tag">Research</span>
-        <p>Identifying memory corruption vulnerabilities in the <strong>SBCL compiler</strong> using AI-augmented fuzzing. Performing detailed crash-triage and memory layout investigations to map exploitation primitives.</p>
+        <div class="project-header">
+            <span class="project-title">Operation Blackbird (CTF Platform)</span> 
+            <span class="tag">OffSec & MITM</span>
+        </div>
+        <p>Developed a custom Python-based platform (3,400+ LoC) simulating <strong>MITM attacks</strong> on Certificate Authorities (CA). Designed scenarios for intercepting and forging Certificate Signing Requests (CSR) using <strong>Burp Suite</strong>.</p>
     </div>
 </div>
 
