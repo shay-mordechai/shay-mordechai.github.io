@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shay Mordechai | Security Researcher</title>
+    <title>Shay Mordechai | Malware & Security Researcher</title>
     
-    <link rel="icon" href="https://fav.farm/📡">
+    <link rel="icon" href="https://fav.farm/🛡️">
     
     <style>
         :root {
             --primary: #0f172a;
-            --accent: #3b82f6; 
-            --danger: #ef4444;
-            --bg: #f8fafc;
+            --accent: #2563eb; 
+            --danger: #dc2626;
+            --success: #16a34a;
+            --bg: #f1f5f9;
             --text: #334155;
+            --card-bg: #ffffff;
         }
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
             color: var(--text);
-            max-width: 850px;
+            max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
             background-color: var(--bg);
         }
 
         .container {
-            background: white;
+            background: var(--card-bg);
             padding: 50px;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -50,7 +52,7 @@
             text-decoration: none;
             color: #fff;
             background: var(--primary);
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 500;
             transition: all 0.2s;
@@ -62,9 +64,11 @@
 
         .links a:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .links a.pdf { background: var(--danger); }
+        .links a.github { background: #24292e; }
+        .links a.linkedin { background: #0077b5; }
 
         h2 { 
-            border-bottom: 2px solid #f1f5f9; 
+            border-bottom: 2px solid #e2e8f0; 
             padding-bottom: 12px; 
             margin-top: 45px; 
             color: var(--primary);
@@ -72,6 +76,27 @@
             letter-spacing: -0.5px;
         }
 
+        /* Skills Grid */
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .highlight-item {
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        /* Projects */
         .project { 
             margin-bottom: 25px; 
             padding: 24px;
@@ -79,49 +104,67 @@
             border: 1px solid #e2e8f0;
             transition: all 0.2s;
             background: #fff;
+            position: relative;
         }
         
         .project:hover { 
             border-color: var(--accent); 
-            background: #f8fafc; 
-            transform: translateX(5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
         .project-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .project-title { font-weight: 700; color: var(--primary); font-size: 1.15em; }
+        .project-title { font-weight: 700; color: var(--primary); font-size: 1.2em; display: flex; align-items: center; gap: 10px;}
         
         .tag {
             font-size: 0.75em;
             background: #eff6ff;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             color: var(--accent);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
-        .highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        .project-link {
+            font-size: 0.85em;
+            color: var(--success);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--success);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .highlight-item {
-            font-size: 0.95em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 8px;
+        .project-link:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
+        li { margin-bottom: 6px; }
+
+        /* Experience Section */
+        .job-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary); margin-bottom: 5px; }
+        .job-role { color: var(--accent); font-weight: 500; font-size: 0.95em; }
+        .job-date { color: #64748b; font-size: 0.9em; }
+
+        @media (max-width: 600px) {
+            .container { padding: 25px; }
+            h1 { font-size: 2em; }
+            .project-header { flex-direction: column; align-items: flex-start; }
+            .project-link { margin-left: 0; margin-top: 5px; display: inline-block; }
         }
     </style>
 </head>
@@ -129,37 +172,71 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Network Protocols & Anomaly Detection</p>
+    <p class="subtitle">Security Researcher | OS Internals & Network Specialist</p>
 
     <div class="links">
-        <a href="cv.pdf" class="pdf" target="_blank" rel="noopener noreferrer">📄 Download CV.pdf</a>
-        <a href="https://github.com/shay-mordechai" target="_blank" rel="noopener noreferrer">📂 GitHub</a>
-        <a href="https://www.linkedin.com/in/shay-mor/" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+        <a href="cv.pdf" class="pdf" target="_blank">📄 Download CV</a>
+        <a href="https://github.com/shay-mordechai" class="github" target="_blank">📂 GitHub</a>
+        <a href="https://www.linkedin.com/in/shay-mor/" class="linkedin" target="_blank">🔗 LinkedIn</a>
     </div>
 
     <h2>Executive Summary</h2>
     <p>
-        Security Researcher specializing in <strong>Network Security</strong> and <strong>Data-Driven Threat Detection</strong>. 
-        Expert in bridging the gap between low-level packet manipulation and high-volume financial data analysis. 
-        Combines theoretical networking foundations with hands-on experience in <strong>Python, SQL, and Anomaly Detection Logic</strong>.
+        Security Researcher specializing in <strong>vulnerability discovery</strong> and <strong>automated threat hunting</strong>. 
+        Proven track record in identifying Zero-Day vulnerabilities in complex systems using AI-augmented workflows. 
+        Expert in bridging low-level system analysis with high-volume data processing and web-based security architecture.
     </p>
 
     <h2>Core Expertise</h2>
     <div class="highlights">
-        <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, L2-L7 Inspection</div>
-        <div class="highlight-item">📊 <strong>Detection:</strong> Anomaly Logic, Threat Hunting, Heuristics</div>
-        <div class="highlight-item">💾 <strong>Data:</strong> Python (Pandas), SQL, ETL Pipelines</div>
-        <div class="highlight-item">🛠️ <strong>Infra:</strong> Docker, Linux, IBM DataPower</div>
+        <div class="highlight-item">🐛 <strong>Vulnerability Research:</strong> Zero-Day, Fuzzing, CVEs</div>
+        <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, DPI, Wireshark</div>
+        <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, Threat Modeling, WAF</div>
+        <div class="highlight-item">🤖 <strong>AI & Data:</strong> Python, Gemini Pro, XGBoost, SQL</div>
     </div>
 
-    <h2>Featured Research & Projects</h2>
+    <h2>Featured Projects</h2>
     
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Real-Time Anomaly Detection ("Project Sniper")</span> 
-            <span class="tag">Data & Security</span>
+            <span class="project-title">AI-Augmented Vulnerability Research (SBCL)</span> 
+            <span class="tag">Zero-Day Discovery</span>
         </div>
-        <p>Architected a high-performance <strong>ETL Pipeline</strong> (Python/SQL) for financial time-series data. Developed a heuristic engine to identify <strong>behavioral anomalies</strong> (e.g., "Whale" accumulation) and separate signal from noise, applying Threat Hunting methodologies to market data.</p>
+        <p>Orchestrated an AI-driven fuzzing workflow identifying <strong>3 Zero-Day vulnerabilities</strong> (Memory Corruption, Buffer Overflow) in the SBCL compiler.</p>
+        <ul>
+            <li>Performed binary analysis on symbol flag modification processes.</li>
+            <li><strong>Impact:</strong> Verified 100% success rate for DoS attack vectors (Reported to Israel National CERT).</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <div>
+                <span class="project-title">
+                    LeadFlowAI (my-leadsAI)
+                    <a href="https://my-leads.app/" target="_blank" class="project-link">🚀 Live Demo</a>
+                </span>
+            </div>
+            <span class="tag">Secure SaaS & AI</span>
+        </div>
+        <p>A Secure-by-Design SaaS platform featuring a "Dark Server" architecture with zero public inbound ports.</p>
+        <ul>
+            <li><strong>Zero Trust:</strong> Utilizes Cloudflare Argo tunnels and authenticated origins.</li>
+            <li><strong>Hardening:</strong> Runs on rootless Podman containers within a hardened Fedora environment.</li>
+            <li><strong>AI Agent:</strong> Multimodal AI (Voice/Text) for autonomous CRM management.</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Predator: Quantitative Trading Engine</span> 
+            <span class="tag">AI & Anomaly Detection</span>
+        </div>
+        <p>Automated trading system fusing <strong>XGBoost</strong> models with a <strong>Gemini Pro</strong> decision engine to analyze market sentiment.</p>
+        <ul>
+            <li>Developed a heuristic engine to identify behavioral anomalies in real-time.</li>
+            <li>Engineered a robust fail-safe logic layer for API stability.</li>
+        </ul>
     </div>
 
     <div class="project">
@@ -167,16 +244,25 @@
             <span class="project-title">Network Protocol & Traffic Toolset</span> 
             <span class="tag">Network Internals</span>
         </div>
-        <p>Built a <strong>TLS Traffic Generator</strong> using <strong>Scapy</strong> and implemented core protocols (HTTP/DNS/SMTP) from scratch using <strong>Raw Sockets</strong>. Engineered tools for deep packet inspection and adversarial simulation.</p>
+        <p>Custom research tools built for deep packet inspection and adversarial simulation.</p>
+        <ul>
+            <li><strong>Scapy TLS Creator:</strong> Implemented core protocols (HTTP/DNS/SMTP) from scratch using Raw Sockets.</li>
+            <li><strong>MITM Platform:</strong> Developed a Python-based CTF platform simulating attacks on Certificate Authorities.</li>
+        </ul>
     </div>
 
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Operation Blackbird (CTF Platform)</span> 
-            <span class="tag">OffSec & MITM</span>
+    <h2>Professional Experience</h2>
+    <div class="project" style="padding: 20px;">
+        <div class="job-header">
+            <span>DevSecOps Intern</span>
+            <span>Israel Tax Authority</span>
         </div>
-        <p>Developed a custom Python-based platform (3,400+ LoC) simulating <strong>MITM attacks</strong> on Certificate Authorities (CA). Designed scenarios for intercepting and forging Certificate Signing Requests (CSR) using <strong>Burp Suite</strong>.</p>
+        <div class="job-role">2024 - 2025</div>
+        <p style="margin-top: 10px; font-size: 0.95em;">
+            Orchestrated multi-layered security across the SDLC. Integrated SAST/SCA pipelines and enforced JSON/XML schema hardening on IBM DataPower. Partnered with SOC teams on incident response.
+        </p>
     </div>
+
 </div>
 
 </body>
