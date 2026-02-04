@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shay Mordechai | Malware & Security Researcher</title>
+    <title>Shay Mordechai | Security Researcher | B.Sc. CS</title>
     
     <link rel="icon" href="https://fav.farm/🛡️">
     
@@ -76,7 +76,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Skills Grid */
         .highlights {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -96,7 +95,6 @@
             font-weight: 500;
         }
 
-        /* Projects */
         .project { 
             margin-bottom: 25px; 
             padding: 24px;
@@ -135,36 +133,16 @@
             white-space: nowrap;
         }
 
-        .project-link {
-            font-size: 0.85em;
-            color: var(--success);
-            text-decoration: none;
-            font-weight: 600;
-            border: 1px solid var(--success);
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-left: 10px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .project-link:hover {
-            background: var(--success);
-            color: white;
-        }
-
         ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
         li { margin-bottom: 6px; }
 
-        /* Experience Section */
         .job-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary); margin-bottom: 5px; }
         .job-role { color: var(--accent); font-weight: 500; font-size: 0.95em; }
-        .job-date { color: #64748b; font-size: 0.9em; }
 
         @media (max-width: 600px) {
             .container { padding: 25px; }
             h1 { font-size: 2em; }
             .project-header { flex-direction: column; align-items: flex-start; }
-            .project-link { margin-left: 0; margin-top: 5px; display: inline-block; }
         }
     </style>
 </head>
@@ -172,7 +150,7 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | OS Internals & Network Specialist</p>
+    <p class="subtitle">Security Researcher | B.Sc. Computer Science | OS Internals & Network Specialist</p>
 
     <div class="links">
         <a href="cv.pdf" class="pdf" target="_blank">📄 Download CV</a>
@@ -211,19 +189,14 @@
 
     <div class="project">
         <div class="project-header">
-            <div>
-                <span class="project-title">
-                    LeadFlowAI (my-leadsAI)
-                    <a href="https://my-leads.app/" target="_blank" class="project-link">🚀 Live Demo</a>
-                </span>
-            </div>
-            <span class="tag">Secure SaaS & AI</span>
+            <span class="project-title">Network Protocol Research & Analysis</span> 
+            <span class="tag">Network Internals</span>
         </div>
-        <p>A Secure-by-Design SaaS platform featuring a "Dark Server" architecture with zero public inbound ports.</p>
+        <p>Advanced research on deterministic network-layer defenses and protocol manipulation.</p>
         <ul>
-            <li><strong>Zero Trust:</strong> Utilizes Cloudflare Argo tunnels and authenticated origins.</li>
-            <li><strong>Hardening:</strong> Runs on rootless Podman containers within a hardened Fedora environment.</li>
-            <li><strong>AI Agent:</strong> Multimodal AI (Voice/Text) for autonomous CRM management.</li>
+            <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement, validated by industry vendors (TP-Link PSIRT).</li>
+            <li><strong>Scapy TLS Creator:</strong> Implemented core protocols (HTTP/DNS/SMTP) from scratch using Raw Sockets for deep packet inspection.</li>
+            <li><strong>MITM Platform:</strong> Developed a Python-based CTF platform simulating attacks on Certificate Authorities.</li>
         </ul>
     </div>
 
@@ -239,18 +212,6 @@
         </ul>
     </div>
 
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Network Protocol & Traffic Toolset</span> 
-            <span class="tag">Network Internals</span>
-        </div>
-        <p>Custom research tools built for deep packet inspection and adversarial simulation.</p>
-        <ul>
-            <li><strong>Scapy TLS Creator:</strong> Implemented core protocols (HTTP/DNS/SMTP) from scratch using Raw Sockets.</li>
-            <li><strong>MITM Platform:</strong> Developed a Python-based CTF platform simulating attacks on Certificate Authorities.</li>
-        </ul>
-    </div>
-
     <h2>Professional Experience</h2>
     <div class="project" style="padding: 20px;">
         <div class="job-header">
@@ -262,7 +223,6 @@
             Orchestrated multi-layered security across the SDLC. Integrated SAST/SCA pipelines and enforced JSON/XML schema hardening on IBM DataPower. Partnered with SOC teams on incident response.
         </p>
     </div>
-
 </div>
 
 </body>
