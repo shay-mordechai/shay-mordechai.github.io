@@ -110,6 +110,11 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
+        .publication {
+            border-left: 4px solid var(--accent);
+            background: #f0f7ff;
+        }
+
         .project-header {
             display: flex;
             justify-content: space-between;
@@ -131,6 +136,24 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: nowrap;
+        }
+
+        .read-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            border: 1px solid var(--accent);
+            padding: 5px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .read-link:hover {
+            background: var(--accent);
+            color: white;
         }
 
         ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
@@ -155,7 +178,7 @@
     <div class="links">
         <a href="cv.pdf" class="pdf" target="_blank">📄 Download CV</a>
         <a href="https://github.com/shay-mordechai" class="github" target="_blank">📂 GitHub</a>
-        <a href="https://www.linkedin.com/in/shay-mor/" class="linkedin" target="_blank">🔗 LinkedIn</a>
+        <a href="https://www.linkedin.com/in/shay-mordechai/" class="linkedin" target="_blank">🔗 LinkedIn</a>
     </div>
 
     <h2>Executive Summary</h2>
@@ -167,13 +190,13 @@
 
     <h2>Core Expertise</h2>
     <div class="highlights">
-        <div class="highlight-item">🐛 <strong>Vulnerability Research:</strong> Zero-Day, Fuzzing, CVEs</div>
-        <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, DPI, Wireshark</div>
-        <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, Threat Modeling, WAF</div>
-        <div class="highlight-item">🤖 <strong>AI & Data:</strong> Python, Gemini Pro, XGBoost, SQL</div>
+        <div class="highlight-item">🐛 <strong>Vulnerability Research:</strong> Zero-Day, Fuzzing, JIT Internals</div>
+        <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, L2-L7 Analysis</div>
+        <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, RSC Security, WAF</div>
+        <div class="highlight-item">🤖 <strong>AI & Data:</strong> Python, LLM-Augmented Research, SQL</div>
     </div>
 
-    <h2>Featured Projects</h2>
+    <h2>Featured Research & Projects</h2>
     
     <div class="project">
         <div class="project-header">
@@ -195,21 +218,22 @@
         <p>Advanced research on deterministic network-layer defenses and protocol manipulation.</p>
         <ul>
             <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement, validated by industry vendors (TP-Link PSIRT).</li>
-            <li><strong>Scapy TLS Creator:</strong> Implemented core protocols (HTTP/DNS/SMTP) from scratch using Raw Sockets for deep packet inspection.</li>
-            <li><strong>MITM Platform:</strong> Developed a Python-based CTF platform simulating attacks on Certificate Authorities.</li>
+            <li><strong>RSC Security:</strong> Active research into the <strong>Flight Protocol</strong> for insecure deserialization and logic bypass vectors in Next.js environments.</li>
         </ul>
     </div>
 
-    <div class="project">
+    <h2>Technical Publications</h2>
+    <div class="project publication">
         <div class="project-header">
-            <span class="project-title">Predator: Quantitative Trading Engine</span> 
-            <span class="tag">AI & Anomaly Detection</span>
+            <span class="project-title">V8 JIT Internals & RWX Exploitation</span>
+            <span class="tag">Browser Security</span>
         </div>
-        <p>Automated trading system fusing <strong>XGBoost</strong> models with a <strong>Gemini Pro</strong> decision engine to analyze market sentiment.</p>
+        <p>A deep-dive technical analysis into modern browser engines, focusing on how JIT compilers bypass traditional memory isolation boundaries.</p>
         <ul>
-            <li>Developed a heuristic engine to identify behavioral anomalies in real-time.</li>
-            <li>Engineered a robust fail-safe logic layer for API stability.</li>
+            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine.</li>
+            <li>Explored the transition from data to executable code and its implications on <strong>Control Flow Integrity (CFI)</strong>.</li>
         </ul>
+        <a href="https://www.linkedin.com/pulse/%D7%94%D7%9E%D7%A7%D7%A6%D7%95%D7%A2-%D7%94%D7%97%D7%93%D7%A9-fullstack-security-researcher-shay-mordechai-r2e8e/" target="_blank" class="read-link">📖 Read Article</a>
     </div>
 
     <h2>Professional Experience</h2>
