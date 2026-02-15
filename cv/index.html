@@ -187,9 +187,9 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Security Researcher specializing in <strong>vulnerability discovery</strong> and <strong>automated threat hunting</strong>. 
+        Security Researcher specializing in <strong>vulnerability discovery</strong>, <strong>automated threat hunting</strong>, and <strong>Web Architecture</strong>. 
         Proven track record in identifying Zero-Day vulnerabilities in complex systems using AI-augmented workflows. 
-        Expert in bridging low-level system analysis with high-volume data processing and web-based security architecture.
+        Expert in bridging low-level system analysis with high-volume data processing, geopolitical quantitative research, and modern AppSec engineering.
     </p>
 
     <h2>Core Expertise</h2>
@@ -198,32 +198,69 @@
         <div class="highlight-item">🐧 <strong>OS Internals:</strong> Linux, Namespaces, Cgroups, Podman</div>
         <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, L2-L7 Analysis</div>
         <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, RSC Security, WAF</div>
-        <div class="highlight-item">🤖 <strong>AI & Data:</strong> Python, LLM-Augmented Research, SQL</div>
+        <div class="highlight-item">🤖 <strong>AI & Quant:</strong> Python, LLM-Augmented Research, ML</div>
     </div>
 
     <h2>Featured Research & Projects</h2>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Automated Trading Engine ("Predator")</span> 
+            <span class="tag">AI & Quantitative Research</span>
+        </div>
+        <p>A low-latency quantitative trading engine utilizing a hybrid intelligence stack to detect market anomalies and manage dynamic risk.</p>
+        <ul>
+            <li><strong>Architecture:</strong> Engineered in Python using asynchronous multi-threading via the Alpaca API, fusing <strong>XGBoost ML</strong> models with a <strong>Google Gemini LLM</strong> integration for real-time sentiment analysis.</li>
+            <li><strong>Quantitative Expertise:</strong> Leveraged 6+ years of fundamental market research to translate real-world geopolitical and financial anomalies (e.g., global defense sector shifts) into automated execution logic.</li>
+            <li><strong>Impact:</strong> Successfully applied rigorous analytical methodologies to scale a personal investment portfolio from 150K to over 800K ILS through systematic anomaly identification.</li>
+        </ul>
+    </div>
     
     <div class="project">
         <div class="project-header">
             <span class="project-title">AI-Augmented Vulnerability Research (SBCL)</span> 
             <span class="tag">Zero-Day Discovery</span>
         </div>
-        <p>Orchestrated an AI-driven fuzzing workflow identifying <strong>3 Zero-Day vulnerabilities</strong> (Memory Corruption, Buffer Overflow) in the SBCL compiler.</p>
+        <p>Orchestrated an AI-driven fuzzing workflow identifying <strong>3 Zero-Day vulnerabilities</strong> in the SBCL compiler.</p>
         <ul>
-            <li>Performed binary analysis on symbol flag modification processes.</li>
-            <li><strong>Impact:</strong> Verified 100% success rate for DoS attack vectors (Reported to Israel National CERT).</li>
+            <li>Engineered a custom Python fuzzer with 6 attack vectors, pinpointing a missing validation root cause in the compiler's <code>proclaim</code> function.</li>
+            <li><strong>Impact:</strong> Developed weaponized PoCs demonstrating lexical scope isolation bypass, achieving a 100% DoS success rate. Disclosed to MITRE and Israel National CERT (Ref: #11265).</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">LeadFlowAI Platform</span> 
+            <span class="tag">Zero Trust & AppSec</span>
+        </div>
+        <p>A Secure-by-Design Full-Stack SaaS Platform demonstrating enterprise-grade DevSecOps.</p>
+        <ul>
+            <li><strong>Dark Server Architecture:</strong> Eliminated public attack surface (0 inbound ports) on AWS by routing traffic exclusively via Cloudflare Argo Tunnels and rootless Podman containers.</li>
+            <li><strong>Application Security:</strong> Engineered a Next.js/FastAPI stack utilizing <strong>React Server Components (RSC)</strong> to prevent client-side exposure, managed by an automated GitHub Actions CI/CD pipeline with AWS SSM secret injection.</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">TLS 1.2 Handshake & PCAP Simulator</span> 
+            <span class="tag">Network Internals</span>
+        </div>
+        <p>A comprehensive framework to simulate full TLS 1.2 handshake sessions and generate accurate PCAP traffic for deep network analysis.</p>
+        <ul>
+            <li><strong>Low-Level Implementation:</strong> Authored 4,000+ lines of Python using Scapy, implementing RSA key exchange, Master Secret PRF derivation, and AES-128-CBC encryption from scratch.</li>
+            <li><strong>Forensics Tooling:</strong> Developed an automated SSLKeyLog generator to enable traffic decryption and deep packet inspection in Wireshark.</li>
         </ul>
     </div>
 
     <div class="project">
         <div class="project-header">
             <span class="project-title">Network Protocol Research & Analysis</span> 
-            <span class="tag">Network Internals</span>
+            <span class="tag">Protocol Hardening</span>
         </div>
         <p>Advanced research on deterministic network-layer defenses and protocol manipulation.</p>
         <ul>
-            <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement, validated by industry vendors (TP-Link PSIRT).</li>
-            <li><strong>RSC Security:</strong> Active research into the <strong>Flight Protocol</strong> for insecure deserialization and logic bypass vectors in Next.js environments.</li>
+            <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement, validated by industry vendors (<strong>TP-Link PSIRT</strong>).</li>
+            <li><strong>RSC Security:</strong> Active research into the Flight Protocol for insecure deserialization and logic bypass vectors in Next.js environments.</li>
         </ul>
     </div>
 
@@ -242,16 +279,33 @@
     </div>
 
     <h2>Professional Experience</h2>
+    
     <div class="project" style="padding: 20px;">
         <div class="job-header">
             <span>DevSecOps Intern</span>
             <span>Israel Tax Authority</span>
         </div>
-        <div class="job-role">2024 - 2025</div>
+        <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            Orchestrated multi-layered security across the SDLC. Integrated SAST/SCA pipelines and enforced JSON/XML schema hardening on IBM DataPower. Partnered with SOC teams on incident response.
+            Spearheaded end-to-end Secure SDLC processes and Threat Modeling. Pioneered the enterprise cloud migration to <strong>Checkmarx One</strong> (SAST/SCA) across 15+ CI/CD pipelines to mitigate critical vulnerabilities (SQLi, DOM XSS). Hardened transaction gateways via strict JSON schemas on IBM DataPower, and performed massive data manipulation on 1TB+ of daily logs to drive actionable incident response.
         </p>
     </div>
+
+    <div class="project" style="padding: 20px;">
+        <div class="job-header">
+            <span>Combat Soldier | Intelligence Collection Corps</span>
+            <span>IDF (Hesder)</span>
+        </div>
+        <div class="job-role">Aug 2016 – Nov 2019</div>
+        <p style="margin-top: 10px; font-size: 0.95em;">
+            Executed covert reconnaissance operations, deploying multi-day stealth observation posts in hostile territory.
+        </p>
+        <ul>
+            <li><strong>Physical Anomaly Detection:</strong> Identified concealed enemy assets (e.g., thermal-shielded weapons caches), translating visual patterns into actionable intelligence.</li>
+            <li><strong>Threat Intelligence & Proactivity:</strong> Voluntarily returned to active combat duty in 2019 based on independent geopolitical analysis anticipating the Northern border escalation, successfully integrating into a veteran unit to elevate team morale.</li>
+        </ul>
+    </div>
+
 </div>
 
 </body>
