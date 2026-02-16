@@ -8,6 +8,7 @@
     <link rel="icon" href="https://fav.farm/🛡️">
     
     <style>
+        /* CSS Variables for consistent color scheme */
         :root {
             --primary: #0f172a;
             --accent: #2563eb; 
@@ -18,6 +19,7 @@
             --card-bg: #ffffff;
         }
 
+        /* Base styles */
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
@@ -28,6 +30,7 @@
             background-color: var(--bg);
         }
 
+        /* Main container styling */
         .container {
             background: var(--card-bg);
             padding: 50px;
@@ -36,6 +39,7 @@
             border-top: 6px solid var(--primary);
         }
 
+        /* Typography */
         h1 { color: var(--primary); margin-bottom: 8px; font-size: 2.5em; letter-spacing: -1px; }
         
         .subtitle { 
@@ -46,6 +50,7 @@
             letter-spacing: 0.5px;
         }
 
+        /* Link buttons styling */
         .links { margin: 30px 0; display: flex; gap: 15px; flex-wrap: wrap; }
         
         .links a {
@@ -76,6 +81,7 @@
             letter-spacing: -0.5px;
         }
 
+        /* Highlights grid */
         .highlights {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -95,6 +101,7 @@
             font-weight: 500;
         }
 
+        /* Project and Experience cards */
         .project { 
             margin-bottom: 25px; 
             padding: 24px;
@@ -110,6 +117,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
+        /* Special styling for publications */
         .publication {
             border-left: 4px solid var(--accent);
             background: #f0f7ff;
@@ -138,6 +146,7 @@
             white-space: nowrap;
         }
 
+        /* Read article link */
         .read-link {
             display: inline-block;
             margin-top: 15px;
@@ -156,12 +165,15 @@
             color: white;
         }
 
+        /* List styling within projects */
         ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
         li { margin-bottom: 6px; }
 
+        /* Job header styling */
         .job-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary); margin-bottom: 5px; }
         .job-role { color: var(--accent); font-weight: 500; font-size: 0.95em; }
 
+        /* Responsive design adjustments */
         @media (max-width: 600px) {
             .container { padding: 25px; }
             h1 { font-size: 2em; }
@@ -208,11 +220,11 @@
             <span class="project-title">Automated Trading Engine ("Predator")</span> 
             <span class="tag">AI & Quantitative Research</span>
         </div>
-        <p>A low-latency quantitative trading engine utilizing a hybrid intelligence stack to detect market anomalies and manage dynamic risk.</p>
+        <p>A quantitative trading engine built to automate a proven analytical methodology, currently in live forward-testing (Paper Trading).</p>
         <ul>
             <li><strong>Architecture:</strong> Engineered in Python using asynchronous multi-threading via the Alpaca API, fusing <strong>XGBoost ML</strong> models with a <strong>Google Gemini LLM</strong> integration for real-time sentiment analysis.</li>
-            <li><strong>Quantitative Expertise:</strong> Leveraged 6+ years of fundamental market research to translate real-world geopolitical and financial anomalies (e.g., global defense sector shifts) into automated execution logic.</li>
-            <li><strong>Impact:</strong> Successfully applied rigorous analytical methodologies to scale a personal investment portfolio from 150K to over 800K ILS through systematic anomaly identification.</li>
+            <li><strong>Quantitative Foundation:</strong> The engine's core logic is directly derived from 6+ years of rigorous fundamental market research—the exact manual methodologies and anomaly identification used to successfully scale a personal investment portfolio from 150K to over 800K ILS.</li>
+            <li><strong>Current Status:</strong> Translating real-world geopolitical and financial anomalies (e.g., global defense sector shifts) into automated execution algorithms within a simulated live environment.</li>
         </ul>
     </div>
     
@@ -279,6 +291,17 @@
     </div>
 
     <h2>Professional Experience</h2>
+
+    <div class="project" style="padding: 20px;">
+        <div class="job-header">
+            <span>Founder & Security Architect</span>
+            <span>LeadFlowAI</span>
+        </div>
+        <div class="job-role">Jan 2026 – Present</div>
+        <p style="margin-top: 10px; font-size: 0.95em;">
+            Architected a Secure-by-Design Full-Stack SaaS platform (CRM & AI Agents) demonstrating enterprise-grade DevSecOps. Eliminated the public attack surface (0 inbound ports) on AWS by routing traffic exclusively via Cloudflare Argo Tunnels and rootless Podman containers. Engineered a secure Next.js/FastAPI stack utilizing React Server Components (RSC) to prevent client-side exposure.
+        </p>
+    </div>
     
     <div class="project" style="padding: 20px;">
         <div class="job-header">
@@ -296,7 +319,7 @@
             <span>Combat Soldier | Intelligence Collection Corps</span>
             <span>IDF (Hesder)</span>
         </div>
-        <div class="job-role">Aug 2016 – Nov 2019</div>
+        <div class="job-role">Aug 2016 – Apr 2018</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
             Executed covert reconnaissance operations, deploying multi-day stealth observation posts in hostile territory.
         </p>
