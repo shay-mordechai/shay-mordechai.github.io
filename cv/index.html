@@ -206,10 +206,11 @@
 
     <h2>Core Expertise</h2>
     <div class="highlights">
-        <div class="highlight-item">🐛 <strong>Vulnerability Research:</strong> Zero-Day, Fuzzing, JIT Internals</div>
+        <div class="highlight-item">🐛 <strong>Vulnerability Research:</strong> Zero-Day, Fuzzing, Malware Analysis</div>
         <div class="highlight-item">🐧 <strong>OS Internals:</strong> Linux, Namespaces, Cgroups, Podman</div>
         <div class="highlight-item">📡 <strong>Network:</strong> Scapy, Raw Sockets, L2-L7 Analysis</div>
         <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, RSC Security, WAF</div>
+        <div class="highlight-item">📱 <strong>Endpoint & Mobile:</strong> V8 Internals, Yara Rules, Incident Response</div>
         <div class="highlight-item">🤖 <strong>AI & Quant:</strong> Python, LLM-Augmented Research, ML</div>
     </div>
 
@@ -271,7 +272,7 @@
         </div>
         <p>Advanced research on deterministic network-layer defenses and protocol manipulation.</p>
         <ul>
-            <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement, validated by industry vendors (<strong>TP-Link PSIRT</strong>).</li>
+            <li><strong>TTL-Based Hardening:</strong> Proposed an architectural mitigation for DNS Rebinding (LANJack) via Deterministic TTL Enforcement. <strong>This research directly addresses vectors where mobile devices are used as proxies to exploit local internal networks.</strong> Validated by industry vendors (<strong>TP-Link PSIRT</strong>).</li>
             <li><strong>RSC Security:</strong> Active research into the Flight Protocol for insecure deserialization and logic bypass vectors in Next.js environments.</li>
         </ul>
     </div>
@@ -280,9 +281,9 @@
     <div class="project publication">
         <div class="project-header">
             <span class="project-title">V8 JIT Internals & RWX Exploitation</span>
-            <span class="tag">Browser Security</span>
+            <span class="tag">Mobile & Browser Security</span>
         </div>
-        <p>A deep-dive technical analysis into modern browser engines, focusing on how JIT compilers bypass traditional memory isolation boundaries.</p>
+        <p>A deep-dive technical analysis into modern browser engines (highly relevant to <strong>Android Webview and mobile exploit chains</strong>), focusing on how JIT compilers bypass traditional memory isolation boundaries.</p>
         <ul>
             <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine.</li>
             <li>Explored the transition from data to executable code and its implications on <strong>Control Flow Integrity (CFI)</strong>.</li>
@@ -310,7 +311,7 @@
         </div>
         <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            Spearheaded end-to-end Secure SDLC processes and Threat Modeling. Pioneered the enterprise cloud migration to <strong>Checkmarx One</strong> (SAST/SCA) across 15+ CI/CD pipelines to mitigate critical vulnerabilities (SQLi, DOM XSS). Hardened transaction gateways via strict JSON schemas on IBM DataPower, and performed massive data manipulation on 1TB+ of daily logs to drive actionable incident response.
+            Spearheaded end-to-end Secure SDLC processes and Threat Modeling. Pioneered the enterprise cloud migration to <strong>Checkmarx One</strong> (SAST/SCA) across 15+ CI/CD pipelines to mitigate critical vulnerabilities (SQLi, DOM XSS). Analyzed <strong>1TB+ daily system/device logs</strong> using <strong>SQL</strong> and <strong>Python</strong> to proactively hunt for anomalous and <strong>malicious activity</strong>, developing automated workflows to accelerate <strong>Incident Response</strong> processes.
         </p>
     </div>
 
