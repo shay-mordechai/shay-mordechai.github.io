@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shay Mordechai | Security Researcher</title>
+    <title>Shay Mordechai | Offensive Security Researcher</title>
     
     <link rel="icon" href="https://fav.farm/🛡️">
     
@@ -187,7 +187,7 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Systems, Network Internals & Embedded Security</p>
+    <p class="subtitle">Offensive Security Researcher | Network Internals & Reverse Engineering</p>
 
     <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
         📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a> | 📞 052-306-4991
@@ -201,19 +201,32 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Security Researcher specializing in <strong>Network Internals</strong>, <strong>OS Architecture</strong>, and <strong>Embedded Security</strong>. 
-        Expertise bridging low-level system execution (Rust, Memory Safety, firmware isolation) with high-level network architectures (Zero-Trust, Proxies). 
-        Passionate about uncovering architectural logic flaws and engineering highly performant, memory-safe security appliances for edge and cloud environments.
+        Offensive Security Researcher specializing in advanced vulnerability discovery, Reverse Engineering, and Network/OS Internals. 
+        Proven expertise in executing technically rigorous security research, dynamic analysis, and developing novel bypass techniques against complex execution environments (V8, Compilers) and Web APIs. 
+        Passionate about Red Teaming AI-augmented systems, analyzing sophisticated TTPs, and uncovering zero-day logic flaws from the network layer up to the application logic.
     </p>
 
     <h2>Core Expertise</h2>
     <div class="highlights">
+        <div class="highlight-item">⚔️ <strong>Offensive Sec:</strong> Red Teaming, TTPs, Bypass Techniques</div>
+        <div class="highlight-item">🛠️ <strong>Dynamic Analysis:</strong> IDA, WinDbg, x32dbg, Scapy</div>
         <div class="highlight-item">🦀 <strong>Systems:</strong> Embedded Rust, no_std, Wasm</div>
-        <div class="highlight-item">🐧 <strong>OS Internals:</strong> Linux, JIT Compilers, Memory Isolation</div>
-        <div class="highlight-item">📡 <strong>Network:</strong> DPI, L2-L7 Analysis, Scapy</div>
-        <div class="highlight-item">🛡️ <strong>AppSec:</strong> Zero Trust, Cloudflare Tunnels, Envoy</div>
-        <div class="highlight-item">🐛 <strong>Vuln Research:</strong> Semantic Fuzzing, Logic Flaws</div>
-        <div class="highlight-item">🤖 <strong>AI/ML:</strong> Copilot Agents, Threat Hunting</div>
+        <div class="highlight-item">🐧 <strong>OS Internals:</strong> Runtime Hooking, JIT, Memory Isolation</div>
+        <div class="highlight-item">🐛 <strong>Vuln Research:</strong> Semantic Fuzzing, Logic Flaws, Bug Bounty</div>
+        <div class="highlight-item">📡 <strong>Network:</strong> DPI, L2-L7 Protocol Analysis</div>
+    </div>
+
+    <h2>Education</h2>
+    <div class="project" style="padding: 20px;">
+        <div class="job-header">
+            <span>B.Sc. Computer Science</span>
+            <span>Jerusalem College of Technology</span>
+        </div>
+        <div class="job-role">2021 – 2025 | GPA: 89</div>
+        <p style="margin-top: 10px; font-size: 0.95em;">
+            <strong>Reverse Engineering & Malware Analysis (93):</strong> Conducted hands-on static and dynamic analysis of x86/x64 compiled binaries. Utilized <strong>IDA, WinDbg, and x32dbg</strong> to reverse-engineer proprietary logic, bypass anti-debugging mechanisms, and deobfuscate self-modifying code execution flows.<br><br>
+            <strong>Additional Coursework:</strong> Network Analysis (97), Information Security (90).
+        </p>
     </div>
 
     <h2>Professional Experience</h2>
@@ -223,11 +236,11 @@
             <span>Independent Security Researcher & Architect</span>
             <span>Self-Directed / MyLeads AI</span>
         </div>
-        <div class="job-role">Aug 2025 – Present</div>
+        <div class="job-role">Jan 2026 – Present</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
             <strong>Embedded Security Engineering:</strong> Developing a bare-metal (<code>no_std</code>) secure network gateway on ESP32 using <strong>Rust</strong>. Implementing Deep Packet Inspection (DPI) to enforce strict TTL policies and mitigate Layer-7 attacks (e.g., DNS Rebinding) at the hardware edge.<br><br>
-            <strong>Zero-Trust Architecture:</strong> Architected a Secure-by-Design Full-Stack SaaS platform demonstrating enterprise-grade DevSecOps. Eliminated the public attack surface (0 inbound ports) on AWS by routing traffic exclusively via Cloudflare Argo Tunnels and rootless Podman containers.<br><br>
-            <strong>Wasm DLP Firewall:</strong> Engineered a custom Data Loss Prevention (DLP) filter in Rust (compiled to WebAssembly) for Envoy Proxy, actively inspecting and redacting sensitive secrets from outbound traffic.
+            <strong>Red Teaming & Web Penetration Testing:</strong> Conducted comprehensive Web penetration testing and architecture reviews for B2B AWS platforms. Researched and secured API endpoints against advanced network layer attacks (TTPs) and bypass attempts.<br><br>
+            <strong>Wasm DLP Firewall:</strong> Engineered a high-performance WebAssembly (Wasm) filter written in Rust for Envoy Proxy. Intercepts and redacts sensitive egress traffic in real-time to prevent Information Disclosure (CWE-209).
         </p>
     </div>
     
@@ -256,39 +269,14 @@
 
     <h2>Featured Research & Architectural Projects</h2>
 
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">Hardware-Enforced Network Guard (Rust/ESP32)</span> 
-            <span class="tag">Embedded Security</span>
-        </div>
-        <p>A research project focused on mitigating network spoofing and L7 attacks at the hardware level using a custom-built secure gateway.</p>
-        <ul>
-            <li><strong>Embedded Rust Implementation:</strong> Developing a Bare-metal (<code>no_std</code>) network proxy on ESP32 to enforce strict TTL (Time-to-Live) policies and intercept DNS Rebinding attempts.</li>
-            <li><strong>Adversarial Testing:</strong> Conducting packet injection attacks using an AR9271 (Atheros) chipset to validate hardware-level isolation.</li>
-        </ul>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Data Hop Firewall (Envoy Wasm)</span> 
-            <span class="tag">Rust & Infrastructure</span>
-        </div>
-        <p>Engineered a high-performance WebAssembly (Wasm) filter written in <strong>Rust</strong> for Envoy Proxy.</p>
-        <ul>
-            <li><strong>L7 Egress Inspection:</strong> Deep-scans response payloads to identify and redact sensitive credentials in real-time.</li>
-            <li><strong>Zero-Trust Architecture:</strong> Utilizes a strict "Fail-Closed" model directly within the proxy layer, intercepting vulnerabilities before they reach the public internet.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/wasm-dlp-firewall" target="_blank" class="read-link">🛡️ View Firewall Repository</a>
-    </div>
-
     <div class="project">
         <div class="project-header">
             <span class="project-title">AI-Augmented Security Research (SBCL)</span> 
-            <span class="tag">Vuln Research</span>
+            <span class="tag">Red Teaming</span>
         </div>
-        <p>A rapid research sprint demonstrating the power of AI-augmented threat hunting using GitHub Copilot Agent Pro.</p>
+        <p>Led Red Team research and pre-deployment testing via AI-augmented semantic fuzzing in Python.</p>
         <ul>
-            <li><strong>Architectural Findings:</strong> Successfully proved a theoretical lexical scope bypass (Dynamic Binding Attack) and discovered memory boundary violations in the SBCL compiler. Findings submitted to MITRE and Israel National CERT (#11265).</li>
+            <li><strong>Architectural Findings:</strong> Discovered bypass techniques for lexical scope and memory boundary violations, reporting 3 pending Zero-Days (CERT-IL #11265).</li>
         </ul>
         <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
     </div>
@@ -300,9 +288,32 @@
         </div>
         <p>A deep-dive technical analysis into modern browser engines, focusing on how JIT compilers bypass traditional memory isolation boundaries.</p>
         <ul>
-            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine and their implications on Control Flow Integrity (CFI).</li>
+            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, utilizing runtime code manipulation concepts and execution hooking techniques to bypass Control Flow Integrity (CFI).</li>
         </ul>
         <a href="https://www.linkedin.com/pulse/%D7%94%D7%9E%D7%A7%D7%A6%D7%95%D7%A2-%D7%94%D7%97%D7%93%D7%A9-fullstack-security-researcher-shay-mordechai-r2e8e/" target="_blank" class="read-link">📖 Read Article</a>
+    </div>
+
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Network Protocol Security (DNS & TTL)</span> 
+            <span class="tag">Vulnerability Disclosure</span>
+        </div>
+        <p>Discovered local management interface bypasses via DNS Rebinding attacks.</p>
+        <ul>
+            <li><strong>Reporting & Remediation:</strong> Authored comprehensive and technically rigorous reports detailing the exploit chain, leading to mitigation validations by TP-Link & Palo Alto PSIRT.</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Hardware-Enforced Network Guard (Rust/ESP32)</span> 
+            <span class="tag">Embedded Security</span>
+        </div>
+        <p>A research project focused on mitigating network spoofing and L7 attacks at the hardware level using a custom-built secure gateway.</p>
+        <ul>
+            <li><strong>Embedded Rust Implementation:</strong> Developing a Bare-metal (<code>no_std</code>) network proxy on ESP32 to enforce strict TTL (Time-to-Live) policies and intercept DNS Rebinding attempts.</li>
+            <li><strong>Adversarial Testing:</strong> Conducting packet injection attacks using an AR9271 (Atheros) chipset to validate hardware-level isolation.</li>
+        </ul>
     </div>
 
     <div class="project">
