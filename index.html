@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shay Mordechai | Security Researcher & Malware Analyst</title>
-    
+
     <link rel="icon" href="https://fav.farm/🛡️">
-    
+
     <style>
         /* CSS Variables for consistent color scheme */
         :root {
             --primary: #0f172a;
-            --accent: #2563eb; 
+            --accent: #2563eb;
             --danger: #dc2626;
             --success: #16a34a;
             --bg: #f1f5f9;
@@ -41,18 +41,18 @@
 
         /* Typography */
         h1 { color: var(--primary); margin-bottom: 8px; font-size: 2.5em; letter-spacing: -1px; }
-        
-        .subtitle { 
-            color: var(--accent); 
-            font-weight: 600; 
-            font-size: 1.2em; 
+
+        .subtitle {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1.2em;
             margin-top: 0;
             letter-spacing: 0.5px;
         }
 
         /* Link buttons styling */
         .links { margin: 30px 0; display: flex; gap: 15px; flex-wrap: wrap; }
-        
+
         .links a {
             text-decoration: none;
             color: #fff;
@@ -72,38 +72,32 @@
         .links a.github { background: #24292e; }
         .links a.linkedin { background: #0077b5; }
 
-        h2 { 
-            border-bottom: 2px solid #e2e8f0; 
-            padding-bottom: 12px; 
-            margin-top: 45px; 
+        h2 {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-top: 45px;
             color: var(--primary);
             font-size: 1.5em;
             letter-spacing: -0.5px;
         }
 
-        /* Highlights grid */
-        .highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        /* Core Skills Banner */
+        .core-skills-banner {
+            font-size: 1.05em;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: center;
+            background: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
             margin-top: 20px;
         }
 
-        .highlight-item {
-            font-size: 0.9em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            font-weight: 500;
-        }
-
         /* Project and Experience cards */
-        .project { 
-            margin-bottom: 25px; 
+        .project {
+            margin-bottom: 25px;
             padding: 24px;
             border-radius: 12px;
             border: 1px solid #e2e8f0;
@@ -111,9 +105,9 @@
             background: #fff;
             position: relative;
         }
-        
-        .project:hover { 
-            border-color: var(--accent); 
+
+        .project:hover {
+            border-color: var(--accent);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
@@ -133,7 +127,7 @@
         }
 
         .project-title { font-weight: 700; color: var(--primary); font-size: 1.2em; display: flex; align-items: center; gap: 10px;}
-        
+
         .tag {
             font-size: 0.75em;
             background: #eff6ff;
@@ -181,6 +175,56 @@
             h1 { font-size: 2em; }
             .project-header { flex-direction: column; align-items: flex-start; }
         }
+
+        /* --- DESIGN UPGRADES --- */
+
+        /* 1. Smooth Fade-In Animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .container { animation: fadeUp 0.6s ease-out; }
+        .project { animation: fadeUp 0.5s ease-out both; }
+
+        /* Staggered animation delays for projects */
+        .project:nth-child(odd) { animation-delay: 0.1s; }
+        .project:nth-child(even) { animation-delay: 0.2s; }
+
+        /* 2. Automatic Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #f8fafc;
+                --accent: #60a5fa;
+                --bg: #0f172a;
+                --text: #cbd5e1;
+                --card-bg: #1e293b;
+            }
+
+            body { background-color: var(--bg); }
+            .container { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+
+            /* Adjusting elements for dark mode */
+            .project { background: #1e293b; border-color: #334155; }
+            .project:hover { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
+
+            /* Core skills banner dark mode */
+            .core-skills-banner { background: #1e3a8a; color: #bfdbfe; border: 1px solid #3b82f6; box-shadow: none; }
+
+            /* Publication styling for dark mode */
+            .publication { background: #172033; }
+
+            /* Text & lines */
+            ul { color: #94a3b8; }
+            h2 { border-bottom-color: #334155; }
+            .tag { background: #1e3a8a; color: #bfdbfe; }
+
+            /* Contact info link */
+            .contact-info a { border-bottom-color: #475569; }
+
+            /* GitHub button contrast */
+            .links a.github { background: #334155; }
+            .links a.github:hover { background: #475569; }
+        }
     </style>
 </head>
 <body>
@@ -201,19 +245,12 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Offensive Security Researcher specializing in advanced vulnerability discovery, Reverse Engineering, and Network/OS Internals. 
-        Proven expertise in executing technically rigorous security research, dynamic analysis, and developing novel bypass techniques against complex execution environments (V8, Compilers) and Web APIs. 
-        Passionate about Red Teaming systems, analyzing sophisticated TTPs, and uncovering zero-day logic flaws from the network layer up to the application logic.
+        Highly motivated <strong>Security Researcher</strong> dedicated to performing <strong>advanced offensive security assessments</strong>. Proven ability to execute sophisticated <strong>Red Team projects</strong>, develop <strong>novel bypass techniques</strong> for established security controls, and conduct <strong>proprietary protocols investigation</strong>. Expert in dynamic analysis, reverse engineering, and tracking advanced TTPs. Passionate about solving complex problems and authoring <strong>technically rigorous reports</strong>.
     </p>
 
-    <h2>Core Expertise</h2>
-    <div class="highlights">
-        <div class="highlight-item">🦠 <strong>Malware Analysis:</strong> PE Format, WinAPI, Unpacking</div>
-        <div class="highlight-item">🔬 <strong>Reverse Engineering:</strong> IDA Pro, x64dbg, WinDbg</div>
-        <div class="highlight-item">⚔️ <strong>Offensive Sec:</strong> TTPs, Binary Patching, Evasion</div>
-        <div class="highlight-item">🐧 <strong>OS Internals:</strong> Memory Isolation, Hooking, JIT</div>
-        <div class="highlight-item">🐛 <strong>Vuln Research:</strong> Semantic Fuzzing, Zero-Days</div>
-        <div class="highlight-item">📡 <strong>Network:</strong> DPI, L2-L7 Protocol Analysis</div>
+    <h2>Core Expertise & Tools</h2>
+    <div class="core-skills-banner">
+        Web PT &bull; TTPs &bull; IDA Pro &bull; Hooking &bull; Detours &bull; Python &bull; JavaScript &bull; Network Analysis
     </div>
 
     <h2>Professional Experience</h2>
@@ -225,124 +262,91 @@
         </div>
         <div class="job-role">Jan 2026 – Present</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Offensive Auditing & Protocol Analysis:</strong> Conducted deep traffic inspection and manipulation using Burp Suite to map and exploit complex API architectures. Bypassed validation mechanisms to uncover logic flaws and mitigate critical IDOR vulnerabilities.<br><br>
-            <strong>Low-Level DLP Firewall (Rust/Wasm):</strong> Engineered a custom memory-safe Data Loss Prevention filter written in Rust (WebAssembly) for Envoy Proxy. Operating at the network edge to dynamically parse, hook, and redact sensitive payloads from outbound traffic.<br><br>
-            <strong>OS Internals & Isolation:</strong> Hardened execution environments bypassing traditional virtualization by leveraging Rootless Podman and Linux namespaces to isolate processes and prevent privilege escalation.
+            <strong>Application Security Analysis & Web PT:</strong> Conducted deep traffic inspection via Burp Suite to identify <strong>undisclosed API endpoints</strong>. Developed <strong>novel bypass techniques</strong> for established validation controls, uncovering critical logic flaws and IDORs.<br><br>
+            <strong>Secure API Architecture:</strong> Architected encrypted microservice tunnels using Envoy Proxy filters to dynamically redact egress traffic and prevent browser-side data leakage.<br><br>
+            <strong>OS Internals & Isolation:</strong> Hardened execution environments bypassing traditional virtualization by leveraging Rootless Podman and Linux namespaces.
         </p>
     </div>
-    
+
     <div class="project" style="padding: 20px;">
         <div class="job-header">
-            <span>DevSecOps Intern</span>
+            <span>Application Security Intern</span>
             <span>Israel Tax Authority</span>
         </div>
         <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>AppSec & CI/CD Security:</strong> Orchestrated the enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Performed technical triage of security findings and led hands-on training for R&D teams to mitigate OWASP Top 10 vulnerabilities.<br><br>
-            <strong>Defense-in-Depth & IAM:</strong> Managed Threat Modeling and strict access controls (DB, Dev, Prod). Hardened enterprise transaction gateways via strict JSON validation schemas on IBM DataPower.
+            <strong>Application Security Analysis:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Authored technical reports on OWASP Top 10 mitigations.<br><br>
+            <strong>Defense-in-Depth & IAM:</strong> Managed Threat Modeling and strict access controls (DB, Dev, Prod). Hardened enterprise transaction gateways via strict JSON validation schemas.
         </p>
     </div>
 
-    <h2>Education</h2>
-    <div class="project" style="padding: 20px;">
-        <div class="job-header">
-            <span>B.Sc. Computer Science</span>
-            <span>Jerusalem College of Technology</span>
-        </div>
-        <div class="job-role">2021 – 2025 | GPA: 89</div>
-        <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Reverse Engineering & Malware Analysis (93):</strong> Conducted hands-on static and dynamic analysis of x86/x64 binaries. Utilized IDA Pro, WinDbg, and x32dbg to reverse-engineer proprietary logic and bypass anti-debugging mechanisms. Successfully solved the highly selective <strong>Israeli Security Agency (ISA / Shabak) Reverse Engineering Challenge (Level 1)</strong>.<br><br>
-            <strong>Additional Coursework:</strong> Network Analysis (97), Information Security (90).
-        </p>
-    </div>
-
-    <h2>Featured Technical Portfolio</h2>
+    <h2>Published Security Research & Write-Ups</h2>
 
     <div class="project publication">
         <div class="project-header">
-            <span class="project-title">Advanced Binary Analysis ("Whoof!" Challenge)</span> 
+            <span class="project-title">V8 JIT Internals & Runtime Code Manipulation</span>
+            <span class="tag">Browser Internals</span>
+        </div>
+        <p>A comprehensive, technically rigorous report detailing modern browser engines and memory isolation boundaries.</p>
+        <ul>
+            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, focusing heavily on <strong>runtime code manipulation, detours, hooking</strong>, and CFI evasion techniques.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/security-research-journal/tree/main/Browser-Internals" target="_blank" class="read-link">📖 Read Published Research</a>
+    </div>
+
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Proprietary Network Protocol Investigation (DNS Rebinding)</span>
+            <span class="tag">Network Protocols / PSIRT</span>
+        </div>
+        <p>Architectural mitigation against DNS Rebinding (LANJack) data exfiltration targeting edge routers.</p>
+        <ul>
+            <li>Authored a comprehensive technical report proposing a deterministic network-layer defense. Acknowledged by <strong>Palo Alto Networks PSIRT</strong> and <strong>TP-Link PSIRT</strong>.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/security-research-journal/tree/main/Network-Protocols" target="_blank" class="read-link">📖 Read Research Report</a>
+    </div>
+
+    <h2>Featured Technical Portfolio & Online Achievements</h2>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Advanced RE Challenges (Shabak / Whoof!)</span>
             <span class="tag">Malware Analysis & RE</span>
         </div>
-        <p>A deep dive into reconstructing PE structures and manipulating execution flows.</p>
+        <p>A deep dive into reconstructing PE structures and dynamic analysis.</p>
         <ul>
-            <li><strong>Anti-Analysis Evasion:</strong> Reverse-engineered a multi-stage Windows executable, successfully identifying and bypassing <strong>TLS Callbacks</strong> and <code>IsDebuggerPresent</code> checks.</li>
-            <li><strong>Custom Payload Decryptor:</strong> Developed a C++ decryptor to extract a hidden PE payload (`Java.dll`) encrypted via dual-key XOR, utilizing static algorithmic analysis to reconstruct the execution flow.</li>
+            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro and WinDbg</strong>.</li>
+            <li><strong>Online Achievements:</strong> Solved the highly selective <strong>ISA (Shabak) Level 1 challenge</strong> via static/dynamic patching, and authored write-ups on bypassing TLS Callbacks and anti-debugging mechanisms.</li>
         </ul>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/advanced-whoof-reversing" target="_blank" class="read-link">🔍 Read Technical Write-Up</a>
-    </div>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">WinMain GUI Code Injection (InjectMe)</span> 
-            <span class="tag">Binary Patching</span>
-        </div>
-        <p>Executing malicious payloads within graphical Windows applications.</p>
-        <ul>
-            <li><strong>Entry Point Hijacking:</strong> Statically injected custom executable code into a compiled Windows GUI application.</li>
-            <li><strong>Code Cave Utilization:</strong> Hijacked the entry point to push `.data` strings and execute the <code>MessageBox</code> WinAPI function before the original `WinMain` logic initialized.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/winmain-gui-patching-injectme" target="_blank" class="read-link">🔍 View Injection Methodology</a>
-    </div>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">ISA (Shabak) Reverse Engineering Task 1</span> 
-            <span class="tag">Control Flow Hijacking</span>
-        </div>
-        <p>Solving a defense agency challenge through binary manipulation.</p>
-        <ul>
-            <li><strong>Environmental Evasion:</strong> Bypassed file-system checks (<code>GetFileAttributesExA</code>) by patching conditional logic checks (<code>jz</code> to <code>jmp short</code>) to force the extraction of the hidden flag.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/isa-shabak-airplane-task1" target="_blank" class="read-link">🔍 Read Analysis</a>
+        <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
     </div>
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">AI-Augmented Security Research (SBCL)</span> 
+            <span class="project-title">AI-Augmented Security Research (SBCL)</span>
             <span class="tag">Vulnerability Research</span>
         </div>
-        <p>Led Red Team research and pre-deployment testing via AI-augmented semantic fuzzing in Python.</p>
+        <p>Led Red Team research and pre-deployment testing via an AI-driven semantic fuzzing workflow.</p>
         <ul>
-            <li><strong>Zero-Day Discovery:</strong> Discovered bypass techniques for lexical scope and memory boundary violations, reporting 3 pending Zero-Days (CERT-IL #11265).</li>
+            <li><strong>Task Automation:</strong> Demonstrated strong proficiency in <strong>developing and automating tasks using Python</strong>, identifying 3 pending Zero-Days (CERT-IL #11265) in the SBCL compiler.</li>
         </ul>
-        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View PoC & Methodology</a>
+        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
     </div>
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Network Exfiltration & C2 Simulation (Operation Blackbird)</span> 
-            <span class="tag">Red Teaming / Network Internals</span>
+            <span class="project-title">Sophisticated Red Team Project (Operation Blackbird)</span>
+            <span class="tag">Red Teaming / Network Analysis</span>
         </div>
         <p>Engineered an advanced CTF platform modeling nation-state exfiltration tactics.</p>
         <ul>
-            <li><strong>Covert Channels:</strong> Implemented custom ICMP covert channels via Scapy and PKI infrastructure infiltration using MITM (Burp Suite) to simulate advanced malware communication protocols.</li>
+            <li><strong>Advanced TTPs:</strong> Demonstrated deep, hands-on knowledge of the latest <strong>tactics, techniques, and procedures (TTPs)</strong> used in advanced penetration testing and network analysis via custom ICMP covert channels.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/Operation-Blackbird" target="_blank" class="read-link">📂 View Project Source</a>
     </div>
 
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">TLS 1.2 Handshake & PCAP Simulator</span> 
-            <span class="tag">Protocol Engineering</span>
-        </div>
-        <p>A comprehensive framework to simulate full TLS cryptographic sessions.</p>
-        <ul>
-            <li><strong>Low-Level Implementation:</strong> Authored a 4,000+ line Python framework using Scapy to simulate TLS 1.2 from scratch (RSA key exchange, Master Secret PRF, AES-128-CBC).</li>
-            <li><strong>Forensics Tooling:</strong> Developed an automated SSLKeyLog generator to enable traffic decryption and Deep Packet Inspection (DPI) in Wireshark.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Scapy-TLS-Creator" target="_blank" class="read-link">📂 View Framework Source</a>
-    </div>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">V8 JIT Internals & RWX Exploitation</span>
-            <span class="tag">Browser Internals</span>
-        </div>
-        <p>A deep-dive technical analysis into modern browser engines, focusing on how JIT compilers bypass traditional memory isolation boundaries.</p>
-        <ul>
-            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, discussing runtime code manipulation and CFI evasion.</li>
-        </ul>
-        <a href="https://www.linkedin.com/pulse/%D7%94%D7%9E%D7%A7%D7%A6%D7%95%D7%A2-%D7%94%D7%97%D7%93%D7%A9-fullstack-security-researcher-shay-mordechai-r2e8e/" target="_blank" class="read-link">📖 Read Article</a>
+    <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85em; color: #94a3b8;">
+        © 2026 Shay Mordechai. Built with a focus on Offensive Security Research.
     </div>
 
 </div>
