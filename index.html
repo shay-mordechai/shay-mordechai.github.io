@@ -231,7 +231,7 @@
 
 <div class="container">
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Vulnerability Research & Malware Analysis</p>
+    <p class="subtitle">Security Researcher | Vulnerability Research & OS Internals</p>
 
     <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
         📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a> | 📞 052-306-4991
@@ -245,12 +245,12 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Highly motivated <strong>Security Researcher</strong> dedicated to performing <strong>advanced offensive security assessments</strong>. Proven ability to execute sophisticated <strong>Red Team projects</strong>, develop <strong>novel bypass techniques</strong> for established security controls, and conduct <strong>proprietary protocols investigation</strong>. Expert in dynamic analysis, reverse engineering, and tracking advanced TTPs. Passionate about solving complex problems and authoring <strong>technically rigorous reports</strong>.
+        Highly motivated <strong>Offensive Security Researcher</strong> specializing in vulnerability discovery, Reverse Engineering, and OS Internals. Proven expertise in bypassing anti-analysis mechanisms, auditing complex execution environments, and executing sophisticated <strong>Red Team projects</strong>. Passionate about developing novel bypass techniques for established security controls and authoring <strong>technically rigorous reports</strong>.
     </p>
 
     <h2>Core Expertise & Tools</h2>
     <div class="core-skills-banner">
-        Web PT &bull; TTPs &bull; IDA Pro &bull; Hooking &bull; Detours &bull; Python &bull; JavaScript &bull; Network Analysis
+        Web PT &bull; TTPs &bull; IDA Pro &bull; Python &bull; Network Analysis &bull; Mobile API &bull; Vuln Research
     </div>
 
     <h2>Professional Experience</h2>
@@ -262,9 +262,8 @@
         </div>
         <div class="job-role">Jan 2026 – Present</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Application Security Analysis & Web PT:</strong> Conducted deep traffic inspection via Burp Suite to identify <strong>undisclosed API endpoints</strong>. Developed <strong>novel bypass techniques</strong> for established validation controls, uncovering critical logic flaws and IDORs.<br><br>
-            <strong>Secure API Architecture:</strong> Architected encrypted microservice tunnels using Envoy Proxy filters to dynamically redact egress traffic and prevent browser-side data leakage.<br><br>
-            <strong>OS Internals & Isolation:</strong> Hardened execution environments bypassing traditional virtualization by leveraging Rootless Podman and Linux namespaces.
+            <strong>Application Security Analysis & Web PT:</strong> Conducted deep traffic inspection via Burp Suite to identify <strong>undisclosed API endpoints</strong>. Developed <strong>advanced TTPs</strong> and bypass techniques for established validation controls, uncovering critical logic flaws and IDORs.<br><br>
+            <strong>Secure Architecture & Isolation:</strong> Architected encrypted microservice tunnels using Envoy Proxy filters to dynamically redact egress traffic and prevent data leakage. Hardened execution environments by leveraging Rootless Podman and Linux namespaces.
         </p>
     </div>
 
@@ -275,8 +274,7 @@
         </div>
         <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Application Security Analysis:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Authored technical reports on OWASP Top 10 mitigations.<br><br>
-            <strong>Defense-in-Depth & IAM:</strong> Managed Threat Modeling and strict access controls (DB, Dev, Prod). Hardened enterprise transaction gateways via strict JSON validation schemas.
+            <strong>AppSec & Defense-in-Depth:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Trained R&D on OWASP Top 10 and hardened enterprise transaction gateways via strict JSON validation schemas.
         </p>
     </div>
 
@@ -284,12 +282,12 @@
 
     <div class="project publication">
         <div class="project-header">
-            <span class="project-title">V8 JIT Internals & Runtime Code Manipulation</span>
+            <span class="project-title">V8 JIT Internals & Memory Protection</span>
             <span class="tag">Browser Internals</span>
         </div>
         <p>A comprehensive, technically rigorous report detailing modern browser engines and memory isolation boundaries.</p>
         <ul>
-            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, focusing heavily on <strong>runtime code manipulation, detours, hooking</strong>, and CFI evasion techniques.</li>
+            <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, focusing on bypassing modern memory protection mitigations.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/security-research-journal/tree/main/Browser-Internals" target="_blank" class="read-link">📖 Read Published Research</a>
     </div>
@@ -310,13 +308,25 @@
 
     <div class="project">
         <div class="project-header">
+            <span class="project-title">Mobile API Security (Ongoing Research)</span>
+            <span class="tag">Mobile RE / Dynamic Analysis</span>
+        </div>
+        <p>Practical vulnerability research focusing on Android application traffic interception.</p>
+        <ul>
+            <li><strong>Dynamic Analysis:</strong> Intercepting Android traffic utilizing <strong>Frida</strong> and <strong>Objection</strong> to bypass SSL Pinning and Root Detection mechanisms.</li>
+            <li><strong>Static Analysis:</strong> Performing static analysis and decompilation of APK structures using <strong>JADX</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
             <span class="project-title">Advanced RE Challenges (Shabak / Whoof!)</span>
             <span class="tag">Malware Analysis & RE</span>
         </div>
         <p>A deep dive into reconstructing PE structures and dynamic analysis.</p>
         <ul>
             <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro and WinDbg</strong>.</li>
-            <li><strong>Online Achievements:</strong> Solved the highly selective <strong>ISA (Shabak) Level 1 challenge</strong> via static/dynamic patching, and authored write-ups on bypassing TLS Callbacks and anti-debugging mechanisms.</li>
+            <li><strong>Online Achievements:</strong> Solved the highly selective <strong>ISA (Shabak) Level 1 challenge</strong>, and authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
     </div>
@@ -340,7 +350,7 @@
         </div>
         <p>Engineered an advanced CTF platform modeling nation-state exfiltration tactics.</p>
         <ul>
-            <li><strong>Advanced TTPs:</strong> Demonstrated deep, hands-on knowledge of the latest <strong>tactics, techniques, and procedures (TTPs)</strong> used in advanced penetration testing and network analysis via custom ICMP covert channels.</li>
+            <li><strong>Advanced TTPs:</strong> Demonstrated deep, hands-on knowledge of the latest <strong>tactics, techniques, and procedures (TTPs)</strong> used in advanced penetration testing via custom ICMP covert channels and PKI MITM.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/Operation-Blackbird" target="_blank" class="read-link">📂 View Project Source</a>
     </div>
