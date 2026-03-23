@@ -245,12 +245,12 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Highly motivated <strong>Offensive Security Researcher</strong> specializing in vulnerability discovery, Reverse Engineering, and OS Internals. Proven expertise in bypassing anti-analysis mechanisms, auditing complex execution environments, and executing sophisticated <strong>Red Team projects</strong>. Passionate about developing novel bypass techniques for established security controls and authoring <strong>technically rigorous reports</strong>.
+        Highly motivated <strong>Offensive Security Researcher</strong> specializing in Vulnerability Research, Reverse Engineering, and OS Internals. Proven expertise in bypassing anti-analysis mechanisms, auditing complex execution environments (JIT, FFI/JNI), and authoring <strong>technically rigorous reports</strong>.
     </p>
 
     <h2>Core Expertise & Tools</h2>
     <div class="core-skills-banner">
-        Web PT &bull; TTPs &bull; IDA Pro &bull; Python &bull; Network Analysis &bull; Mobile API &bull; Vuln Research
+        Web PT &bull; TTPs &bull; IDA Pro &bull; Python &bull; Network Analysis &bull; Mobile Native RE &bull; Vuln Research &bull; Frida &bull; Wireshark &bull; Debuggers
     </div>
 
     <h2>Professional Experience</h2>
@@ -274,7 +274,7 @@
         </div>
         <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>AppSec & Defense-in-Depth:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Trained R&D on OWASP Top 10 and hardened enterprise transaction gateways via strict JSON validation schemas.
+            <strong>AppSec & Defense-in-Depth:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Trained R&D on OWASP Top 10 and hardened enterprise transaction gateways.
         </p>
     </div>
 
@@ -282,12 +282,13 @@
 
     <div class="project publication">
         <div class="project-header">
-            <span class="project-title">V8 JIT Internals & Memory Protection</span>
+            <span class="project-title">Execution Environments: V8 JIT Internals & FFI Bridges</span>
             <span class="tag">Browser Internals</span>
         </div>
-        <p>A comprehensive, technically rigorous report detailing modern browser engines and memory isolation boundaries.</p>
+        <p>A comprehensive, technically rigorous report detailing modern execution engines, memory isolation boundaries, and cross-language vulnerabilities.</p>
         <ul>
             <li>Analyzed <strong>RWX (Read-Write-Execute)</strong> memory page allocation patterns in the V8 engine, focusing on bypassing modern memory protection mitigations.</li>
+            <li>Investigated the security implications of <strong>JIT-Compiled FFI Bridges</strong>, demonstrating how Managed to Native code transitions break isolation boundaries.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/security-research-journal/tree/main/Browser-Internals" target="_blank" class="read-link">📖 Read Published Research</a>
     </div>
@@ -308,24 +309,26 @@
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Mobile API Security (Ongoing Research)</span>
-            <span class="tag">Mobile RE / Dynamic Analysis</span>
+            <span class="project-title">Mobile Native RE (OWASP UnCrackable L2)</span>
+            <span class="tag">Dynamic Binary Instrumentation</span>
         </div>
-        <p>Practical vulnerability research focusing on Android application traffic interception.</p>
+        <p>Advanced dynamic and static analysis of Android Native code (C/C++) and JNI execution boundaries.</p>
         <ul>
-            <li><strong>Dynamic Analysis:</strong> Intercepting Android traffic utilizing <strong>Frida</strong> and <strong>Objection</strong> to bypass SSL Pinning and Root Detection mechanisms.</li>
-            <li><strong>Static Analysis:</strong> Performing static analysis and decompilation of APK structures using <strong>JADX</strong>.</li>
+            <li><strong>Anti-Analysis Bypass:</strong> Analyzed and neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) embedded within native <code>.so</code> libraries.</li>
+            <li><strong>Inline Hooking:</strong> Utilized <strong>Frida</strong> to perform inline hooking on JNI boundaries, intercepting runtime data streams crossing from Managed (Java) to Native contexts.</li>
+            <li><strong>Static Analysis:</strong> Decompiled APK structures via <strong>JADX</strong> and mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
         </ul>
+        <a href="https://github.com/shay-mordechai" target="_blank" class="read-link">📖 Read Level 2 Write-Up</a>
     </div>
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Advanced RE Challenges (Shabak / Whoof!)</span>
+            <span class="project-title">Advanced RE Challenges (Shabak / Flare-On style)</span>
             <span class="tag">Malware Analysis & RE</span>
         </div>
         <p>A deep dive into reconstructing PE structures and dynamic analysis.</p>
         <ul>
-            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro and WinDbg</strong>.</li>
+            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro and WinDbg/x32dbg</strong>.</li>
             <li><strong>Online Achievements:</strong> Solved the highly selective <strong>ISA (Shabak) Level 1 challenge</strong>, and authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
