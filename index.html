@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta property="og:title" content="Shay Mordechai | Security Researcher">
-    <meta property="og:description" content="Offensive Security Researcher specializing in Vulnerability Research, Reverse Engineering, and OS Internals.">
+    <meta property="og:title" content="Shay Mordechai | Malware Researcher">
+    <meta property="og:description" content="Malware Researcher & Reverse Engineer specializing in Execution Flow Analysis, JADX, Frida, and OS Internals.">
     <meta property="og:image" content="https://shay-mordechai.github.io/portfolio.png">
     <meta property="og:url" content="https://shay-mordechai.github.io/">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Shay Mordechai | Security Researcher">
-    <meta name="twitter:description" content="Offensive Security Researcher specializing in Vulnerability Research, Reverse Engineering, and OS Internals.">
+    <meta name="twitter:title" content="Shay Mordechai | Malware Researcher">
+    <meta name="twitter:description" content="Malware Researcher & Reverse Engineer specializing in Execution Flow Analysis, JADX, Frida, and OS Internals.">
     <meta name="twitter:image" content="https://shay-mordechai.github.io/portfolio.png">
 
-    <title>Shay Mordechai | Security Researcher & Malware Analyst</title>
+    <title>Shay Mordechai | Malware Researcher & Reverse Engineer</title>
 
     <link rel="icon" href="https://fav.farm/🛡️">
 
@@ -257,7 +257,7 @@
     <img src="portfolio.png" alt="Shay Mordechai - Security Researcher Portfolio" class="profile-banner">
 
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Vulnerability Research & OS Internals</p>
+    <p class="subtitle">Malware Researcher | Reverse Engineer & OS Internals</p>
 
     <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
         📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a> | 📞 052-306-4991
@@ -271,25 +271,25 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Highly motivated <strong>Offensive Security Researcher</strong> specializing in Vulnerability Research, Reverse Engineering, and OS Internals. Proven expertise in bypassing anti-analysis mechanisms, auditing complex execution environments (JIT, FFI/JNI), and authoring <strong>technically rigorous reports</strong>.
+        Highly motivated <strong>Malware Researcher & Reverse Engineer</strong> with a strong foundation in software development. Expert in tracing execution flow (זרימת ביצוע) across complex applications (Java OOP, C/C++) and bypassing anti-analysis mechanisms using IDA Pro, JADX, and Frida.
     </p>
 
     <h2>Core Expertise & Tools</h2>
     <div class="core-skills-banner">
-        Web PT &bull; TTPs &bull; IDA Pro &bull; Python &bull; Network Analysis &bull; Mobile Native RE &bull; Vuln Research &bull; Frida &bull; Wireshark &bull; Debuggers
+        Reverse Engineering &bull; JADX &bull; IDA Pro &bull; Frida &bull; Execution Flow &bull; Java OOP &bull; Network Analysis (Burp/Wireshark)
     </div>
 
     <h2>Professional Experience</h2>
 
     <div class="project" style="padding: 20px;">
         <div class="job-header">
-            <span>Security Architect & Researcher</span>
+            <span>Security Software Developer</span>
             <span>MyLeads AI (Independent)</span>
         </div>
         <div class="job-role">Jan 2026 – Present</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Application Security Analysis & Web PT:</strong> Conducted deep traffic inspection via Burp Suite to identify <strong>undisclosed API endpoints</strong>. Developed <strong>advanced TTPs</strong> and bypass techniques for established validation controls, uncovering critical logic flaws and IDORs.<br><br>
-            <strong>Secure Architecture & Isolation:</strong> Architected encrypted microservice tunnels using Envoy Proxy filters to dynamically redact egress traffic and prevent data leakage. Hardened execution environments by leveraging Rootless Podman and Linux namespaces.
+            <strong>Application Security & Network Analysis:</strong> Conducted deep HTTP debugging via <strong>Burp Suite</strong> and <strong>Wireshark</strong> to map API architectures and uncover logic flaws.<br><br>
+            <strong>Runtime Guardrails:</strong> Diagnosed cascading failures and implemented runtime resource guardrails (Memory/Swap) to ensure system stability during high-load AI operations.
         </p>
     </div>
 
@@ -300,39 +300,26 @@
         </div>
         <div class="job-role">Aug 2024 – Jul 2025</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>AppSec & Defense-in-Depth:</strong> Orchestrated enterprise cloud migration to Checkmarx One, integrating automated SAST/SCA security gates into 15+ CI/CD pipelines. Trained R&D on OWASP Top 10 and hardened enterprise transaction gateways.
+            <strong>Vulnerability Triage & Code Analysis:</strong> Traced execution flow through deep code analysis to reach accurate verdicts on OWASP Top 10 security findings. Identified common malware threats to train R&D teams.
         </p>
     </div>
 
-    <h2>Published Security Research & Write-Ups</h2>
+    <h2>Vulnerability Research & Advisories</h2>
 
     <div class="project publication">
         <div class="project-header">
-            <span class="project-title">Security Research Journal</span>
-            <span class="tag">Browser Internals / OS Security / Protocols</span>
+            <span class="project-title">Security Advisories & Root Cause Analysis</span>
+            <span class="tag">OS Internals / Network Security</span>
         </div>
-        <p>A central repository housing in-depth, technically rigorous research articles and architectural analyses.</p>
+        <p>A structured repository containing official security advisories and kernel-level diagnostics reported to major vendors.</p>
         <ul>
-            <li><strong>Browser Internals & Sandbox Isolation:</strong> Analyzed Flatpak IPC boundaries, KeePassXC integration, hardware token restrictions, and OS-hardware trade-offs. Investigated V8 JIT RWX memory allocation and JIT-Compiled FFI Bridges.</li>
-            <li><strong>Proprietary Network Protocols:</strong> Proposed and authored architectural mitigations against DNS Rebinding (LANJack) data exfiltration, acknowledged by Palo Alto Networks and TP-Link PSIRTs.</li>
+            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed hardware-firmware interface failures, reporting PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
+            <li><strong>TP-Link & Palo Alto Networks:</strong> Proposed architectural mitigations against DNS Rebinding (LANJack) data exfiltration using deterministic TTL=1 enforcement.</li>
         </ul>
-        <a href="https://github.com/shay-mordechai/security-research-journal" target="_blank" class="read-link">📖 Access Research Journal</a>
+        <a href="https://github.com/shay-mordechai/Security-Advisories-and-RCA" target="_blank" class="read-link">📖 Read Advisories</a>
     </div>
 
-    <h2>Featured Technical Portfolio & Online Achievements</h2>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Manual TLS 1.2 Handshake (PCAP Creator)</span>
-            <span class="tag">Network Internals / Cryptography</span>
-        </div>
-        <p>Engineered a custom tool to manually construct and execute a full TLS 1.2 Handshake.</p>
-        <ul>
-            <li><strong>Protocol Mastery:</strong> Demonstrated deep understanding of low-level networking and cryptographic protocols by manually assembling TLS records, Key Exchange mechanisms, and cipher suite negotiations.</li>
-            <li><strong>Tool Development:</strong> Developed a PCAP generation utility to capture and analyze the custom-built handshake, showcasing practical skills in network traffic manipulation and analysis.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai" target="_blank" class="read-link">📂 View Project</a>
-    </div>
+    <h2>Featured Malware Research & RE Portfolio</h2>
 
     <div class="project">
         <div class="project-header">
@@ -341,52 +328,40 @@
         </div>
         <p>Advanced dynamic and static analysis of Android Native code (C/C++) and JNI execution boundaries.</p>
         <ul>
-            <li><strong>Anti-Analysis Bypass:</strong> Analyzed and neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) embedded within native <code>.so</code> libraries.</li>
-            <li><strong>Inline Hooking:</strong> Utilized <strong>Frida</strong> to perform inline hooking on JNI boundaries, intercepting runtime data streams crossing from Managed (Java) to Native contexts.</li>
-            <li><strong>Static Analysis:</strong> Decompiled APK structures via <strong>JADX</strong> and mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
+            <li><strong>Execution Flow Tracing:</strong> Decompiled complex Java applications using <strong>JADX</strong>.</li>
+            <li><strong>Anti-Analysis Bypass:</strong> Neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) in native <code>.so</code> libraries utilizing <strong>Frida</strong> dynamic binary instrumentation (DBI).</li>
+            <li><strong>Static Analysis:</strong> Mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
         </ul>
         <a href="https://github.com/shay-mordechai" target="_blank" class="read-link">📖 Read Level 2 Write-Up</a>
     </div>
 
     <div class="project">
         <div class="project-header">
+            <span class="project-title">Manual TLS 1.2 Handshake (PCAP Creator)</span>
+            <span class="tag">Network Internals / Protocol Analysis</span>
+        </div>
+        <p>Engineered a custom tool to manually construct and execute a full TLS 1.2 Handshake for forensic analysis.</p>
+        <ul>
+            <li><strong>Network Debugging:</strong> Demonstrated deep understanding of networking fundamentals by assembling TLS records and generating deep <strong>PCAP</strong> network patterns.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai" target="_blank" class="read-link">📂 View Project</a>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
             <span class="project-title">Advanced RE Challenges (Shabak / Flare-On style)</span>
-            <span class="tag">Malware Analysis & RE</span>
+            <span class="tag">Malware Analysis</span>
         </div>
         <p>A deep dive into reconstructing PE structures and dynamic analysis.</p>
         <ul>
-            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro and WinDbg/x32dbg</strong>.</li>
-            <li><strong>Online Achievements:</strong> Solved the highly selective <strong>ISA (Shabak) Level 1 challenge</strong>, and authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
+            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro</strong> and <strong>x32dbg</strong>.</li>
+            <li><strong>Malware Techniques:</strong> Authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
     </div>
 
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">AI-Augmented Security Research (SBCL)</span>
-            <span class="tag">Vulnerability Research</span>
-        </div>
-        <p>Led Red Team research and pre-deployment testing via an AI-driven semantic fuzzing workflow.</p>
-        <ul>
-            <li><strong>Task Automation:</strong> Demonstrated strong proficiency in <strong>developing and automating tasks using Python</strong>, identifying 3 pending Zero-Days (CERT-IL #11265) in the SBCL compiler.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Sophisticated Red Team Project (Operation Blackbird)</span>
-            <span class="tag">Red Teaming / Network Analysis</span>
-        </div>
-        <p>Engineered an advanced CTF platform modeling nation-state exfiltration tactics.</p>
-        <ul>
-            <li><strong>Advanced TTPs:</strong> Demonstrated deep, hands-on knowledge of the latest <strong>tactics, techniques, and procedures (TTPs)</strong> used in advanced penetration testing via custom ICMP covert channels and PKI MITM.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Operation-Blackbird" target="_blank" class="read-link">📂 View Project Source</a>
-    </div>
-
     <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85em; color: #94a3b8;">
-        © 2026 Shay Mordechai. Built with a focus on Offensive Security Research.
+        © 2026 Shay Mordechai. Built with a focus on Malware Research & Reverse Engineering.
     </div>
 
 </div>
