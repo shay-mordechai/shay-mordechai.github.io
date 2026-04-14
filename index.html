@@ -199,20 +199,16 @@
         }
 
         /* --- DESIGN UPGRADES --- */
-
-        /* 1. Smooth Fade-In Animation */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .container { animation: fadeUp 0.6s ease-out; }
         .project { animation: fadeUp 0.5s ease-out both; }
-
-        /* Staggered animation delays for projects */
         .project:nth-child(odd) { animation-delay: 0.1s; }
         .project:nth-child(even) { animation-delay: 0.2s; }
 
-        /* 2. Automatic Dark Mode */
+        /* Automatic Dark Mode */
         @media (prefers-color-scheme: dark) {
             :root {
                 --primary: #f8fafc;
@@ -221,31 +217,17 @@
                 --text: #cbd5e1;
                 --card-bg: #1e293b;
             }
-
             body { background-color: var(--bg); }
-            .container { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-
+            .container { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); border-color: #334155;}
             .profile-banner { border-color: #334155; }
-
-            /* Adjusting elements for dark mode */
             .project { background: #1e293b; border-color: #334155; }
             .project:hover { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
-
-            /* Core skills banner dark mode */
             .core-skills-banner { background: #1e3a8a; color: #bfdbfe; border: 1px solid #3b82f6; box-shadow: none; }
-
-            /* Publication styling for dark mode */
             .publication { background: #172033; }
-
-            /* Text & lines */
             ul { color: #94a3b8; }
             h2 { border-bottom-color: #334155; }
             .tag { background: #1e3a8a; color: #bfdbfe; }
-
-            /* Contact info link */
             .contact-info a { border-bottom-color: #475569; }
-
-            /* GitHub button contrast */
             .links a.github { background: #334155; }
             .links a.github:hover { background: #475569; }
         }
@@ -276,7 +258,7 @@
 
     <h2>Core Expertise & Tools</h2>
     <div class="core-skills-banner">
-        Reverse Engineering &bull; JADX &bull; IDA Pro &bull; Frida &bull; Execution Flow &bull; Java OOP &bull; Network Analysis (Burp/Wireshark)
+        Reverse Engineering &bull; Vuln Research &bull; JADX &bull; IDA Pro &bull; Frida &bull; Execution Flow &bull; PCAP/Burp Analysis
     </div>
 
     <h2>Professional Experience</h2>
@@ -304,7 +286,20 @@
         </p>
     </div>
 
-    <h2>Vulnerability Research & Advisories</h2>
+    <h2>Vulnerability Research & Publications</h2>
+
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Compiler Vulnerability Research (SBCL 0-Days)</span>
+            <span class="tag">Vuln Research / Fuzzing / 0-Day</span>
+        </div>
+        <p>Led Red Team research via an AI-augmented semantic fuzzing architecture on the SBCL compiler.</p>
+        <ul>
+            <li><strong>Vulnerability Discovery:</strong> Discovered 3 pending Zero-Days (CERT-IL #11265) in SBCL (v2.3.2).</li>
+            <li><strong>Exploitation Mechanics:</strong> Identified a critical logical flaw allowing lexical scope bypass via dynamic binding injection (<code>proclaim</code>), alongside parser buffer overflows and macro stack exhaustion.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
+    </div>
 
     <div class="project publication">
         <div class="project-header">
@@ -313,13 +308,40 @@
         </div>
         <p>A structured repository containing official security advisories and kernel-level diagnostics reported to major vendors.</p>
         <ul>
-            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed hardware-firmware interface failures, reporting PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
+            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
             <li><strong>TP-Link & Palo Alto Networks:</strong> Proposed architectural mitigations against DNS Rebinding (LANJack) data exfiltration using deterministic TTL=1 enforcement.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📖 Read Advisories</a>
     </div>
 
-    <h2>Featured Malware Research & RE Portfolio</h2>
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Security Research Journal</span>
+            <span class="tag">Browser Internals / Execution Flow</span>
+        </div>
+        <p>A central repository housing in-depth architectural security studies and vulnerability theories.</p>
+        <ul>
+            <li><strong>Browser Security:</strong> Authored deep-dive analysis on V8 Engine JIT compilation, RWX memory allocation, and Control Flow Integrity (CFI) bypasses.</li>
+            <li><strong>Compiler Mechanics:</strong> Analyzed execution flow differences between runtime function calls and compile-time macro expansions, mapping new attack surfaces.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/security-research-journal" target="_blank" class="read-link">📖 Access Research Journal</a>
+    </div>
+
+    <h2>Malware Research & Red Teaming Portfolio</h2>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Advanced Red Teaming CTF (Operation Blackbird)</span>
+            <span class="tag">PKI Infiltration / Steganography</span>
+        </div>
+        <p>Engineered and solved an advanced CTF platform modeling nation-state exfiltration tactics and spy networks.</p>
+        <ul>
+            <li><strong>Network Infiltration:</strong> Exploited PKI infrastructure via Burp Suite MITM to forge Certificate Authority (CA) signatures and intercept TLS traffic.</li>
+            <li><strong>Covert Channels:</strong> Reverse-engineered custom ICMP payload progression and timing constraints to bypass firewalls.</li>
+            <li><strong>Steganography & Crypto:</strong> Extracted Enigma machine configurations from Hex data and decrypted ID3 metadata (Morse code) from audio streams.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/Operation-Blackbird" target="_blank" class="read-link">📂 View Operation Blackbird</a>
+    </div>
 
     <div class="project">
         <div class="project-header">
@@ -337,18 +359,6 @@
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Manual TLS 1.2 Handshake (PCAP Creator)</span>
-            <span class="tag">Network Internals / Protocol Analysis</span>
-        </div>
-        <p>Engineered a custom tool to manually construct and execute a full TLS 1.2 Handshake for forensic analysis.</p>
-        <ul>
-            <li><strong>Network Debugging:</strong> Demonstrated deep understanding of networking fundamentals by assembling TLS records and generating deep <strong>PCAP</strong> network patterns.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Scapy-TLS-Creator" target="_blank" class="read-link">📂 View Project</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
             <span class="project-title">Advanced RE Challenges (Shabak / Flare-On style)</span>
             <span class="tag">Malware Analysis</span>
         </div>
@@ -358,6 +368,18 @@
             <li><strong>Malware Techniques:</strong> Authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
         </ul>
         <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Manual TLS 1.2 Handshake (PCAP Creator)</span>
+            <span class="tag">Network Internals / Protocol Analysis</span>
+        </div>
+        <p>Engineered a custom tool to manually construct and execute a full TLS 1.2 Handshake for forensic analysis.</p>
+        <ul>
+            <li><strong>Network Debugging:</strong> Demonstrated deep understanding of networking fundamentals by assembling TLS records and generating deep <strong>PCAP</strong> network patterns.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/Scapy-TLS-Creator" target="_blank" class="read-link">📂 View Project</a>
     </div>
 
     <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85em; color: #94a3b8;">
