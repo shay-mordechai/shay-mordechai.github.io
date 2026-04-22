@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta property="og:title" content="Shay Mordechai | Malware Researcher">
-    <meta property="og:description" content="Malware Researcher & Reverse Engineer specializing in Execution Flow Analysis, JADX, Frida, and OS Internals.">
+    <meta property="og:title" content="Shay Mordechai | Mobile & Browser Security Researcher">
+    <meta property="og:description" content="Security Researcher specializing in Mobile Internals (Android/Frida), Browser Architecture (V8/IPC), and Execution Flow Analysis.">
     <meta property="og:image" content="https://shay-mordechai.github.io/portfolio.png">
     <meta property="og:url" content="https://shay-mordechai.github.io/">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Shay Mordechai | Malware Researcher">
-    <meta name="twitter:description" content="Malware Researcher & Reverse Engineer specializing in Execution Flow Analysis, JADX, Frida, and OS Internals.">
+    <meta name="twitter:title" content="Shay Mordechai | Mobile & Browser Security Researcher">
+    <meta name="twitter:description" content="Security Researcher specializing in Mobile Internals (Android/Frida), Browser Architecture (V8/IPC), and Execution Flow Analysis.">
     <meta name="twitter:image" content="https://shay-mordechai.github.io/portfolio.png">
 
-    <title>Shay Mordechai | Malware Researcher & Reverse Engineer</title>
+    <title>Shay Mordechai | Mobile & Browser Security Researcher</title>
 
     <link rel="icon" href="https://fav.farm/🛡️">
 
@@ -139,6 +139,16 @@
             background: #f0f7ff;
         }
 
+        .series-box {
+            border-left: 4px solid #8b5cf6; /* Distinct purple for the series */
+            background: #f5f3ff;
+        }
+        
+        .series-tag {
+            background: #ede9fe !important;
+            color: #7c3aed !important;
+        }
+
         .project-header {
             display: flex;
             justify-content: space-between;
@@ -186,6 +196,9 @@
         /* List styling within projects */
         ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
         li { margin-bottom: 6px; }
+        
+        .article-list li { margin-bottom: 12px; }
+        .article-list strong { color: var(--primary); }
 
         /* Job header styling */
         .job-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary); margin-bottom: 5px; }
@@ -224,7 +237,10 @@
             .project:hover { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
             .core-skills-banner { background: #1e3a8a; color: #bfdbfe; border: 1px solid #3b82f6; box-shadow: none; }
             .publication { background: #172033; }
+            .series-box { background: #1c192b; border-left-color: #a78bfa; }
+            .series-tag { background: #2e1065 !important; color: #c4b5fd !important; }
             ul { color: #94a3b8; }
+            .article-list strong { color: #e2e8f0; }
             h2 { border-bottom-color: #334155; }
             .tag { background: #1e3a8a; color: #bfdbfe; }
             .contact-info a { border-bottom-color: #475569; }
@@ -239,7 +255,7 @@
     <img src="portfolio.png" alt="Shay Mordechai - Security Researcher Portfolio" class="profile-banner">
 
     <h1>Shay Mordechai</h1>
-    <p class="subtitle">Malware Researcher | Reverse Engineer & OS Internals</p>
+    <p class="subtitle">Mobile & Browser Security Researcher | OS Internals</p>
 
     <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
         📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a> | 📞 052-306-4991
@@ -253,12 +269,76 @@
 
     <h2>Executive Summary</h2>
     <p>
-        Highly motivated <strong>Malware Researcher & Reverse Engineer</strong> with a strong foundation in software development. Expert in tracing execution flow across complex applications (Java OOP, C/C++) and bypassing anti-analysis mechanisms using IDA Pro, JADX, and Frida.
+        Highly motivated <strong>Mobile & Browser Security Researcher</strong> with a strong foundation in OS internals and execution flow analysis. Expert in dissecting Android application security via dynamic binary instrumentation (<strong>Frida, JADX</strong>), analyzing browser architectural boundaries (<strong>V8 Engine, IPC, Sandboxing</strong>), and bypassing anti-analysis mechanisms.
     </p>
 
-    <h2>Core Expertise & Tools</h2>
+    <h2>Core Expertise</h2>
     <div class="core-skills-banner">
-        Reverse Engineering &bull; Vuln Research &bull; JADX &bull; IDA Pro &bull; Frida &bull; Execution Flow &bull; PCAP/Burp Analysis
+        Mobile Security (Android) &bull; Browser Internals (V8/IPC) &bull; Dynamic Instrumentation (Frida) &bull; JADX / IDA Pro &bull; Execution Flow Analysis
+    </div>
+
+    <h2>Article Series: "The Paradox of Mutability"</h2>
+    
+    <div class="project series-box">
+        <div class="project-header">
+            <span class="project-title">An architectural analysis of modern execution environments</span>
+            <span class="tag series-tag">Featured LinkedIn Series</span>
+        </div>
+        <p style="font-size: 0.95em; margin-bottom: 15px;">
+            An in-depth 5-part article series exploring the inherent tension between performance, usability, and security. This series dissects how execution flow boundaries are systematically broken across different architectural layers, transitioning from browser memory models to OS-level runtime manipulation.
+        </p>
+        <ul class="article-list">
+            <li><strong>Part 1: V8 Engine's (Dis-)Security</strong> – Analyzing JIT compilation, RWX memory allocation, and the paradox of code mutating into data and back to achieve high performance.</li>
+            <li><strong>Part 2: JNI as an (Un-)Safe Bridge</strong> – Exploring the semantic dissonance and the critical loss of memory safety when execution crosses the boundary from Java to Native C/C++.</li>
+            <li><strong>Part 3: Flatpak & Linux Sandbox Isolation</strong> – Investigating OS-level sandboxing, IPC communication boundaries, and the security risks introduced by "drilling holes" for usability via Portals.</li>
+            <li><strong>Part 4: Browser Privilege Boundary</strong> – Breaking down Site Isolation, the Renderer vs. Browser process architecture, and the new threat vectors introduced by highly-privileged Agentic AI.</li>
+            <li><strong>Part 5: Frida – The Break in the Execution Boundary</strong> – Demonstrating how Dynamic Binary Instrumentation leverages OS debugging mechanisms (ptrace) to alter the instruction flow and bypass static security assumptions at runtime.</li>
+        </ul>
+        <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read the Full Series on LinkedIn</a>
+    </div>
+
+    <h2>Mobile & Native Reverse Engineering</h2>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Mobile Native RE (OWASP UnCrackable L2)</span>
+            <span class="tag">Android Internals / Frida</span>
+        </div>
+        <p>Advanced dynamic and static analysis of Android Native code (C/C++) and JNI execution boundaries.</p>
+        <ul>
+            <li><strong>Execution Flow Tracing:</strong> Decompiled complex Java applications and traced logic utilizing <strong>JADX</strong>.</li>
+            <li><strong>Anti-Analysis Bypass:</strong> Neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) in native <code>.so</code> libraries utilizing <strong>Frida</strong> dynamic binary instrumentation.</li>
+            <li><strong>Static Analysis:</strong> Mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/mobile-security-lab" target="_blank" class="read-link">📖 Read Research Write-Up</a>
+    </div>
+
+    <h2>Vulnerability Research & Publications</h2>
+
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Compiler Vulnerability Research (SBCL 0-Days)</span>
+            <span class="tag">Vuln Research / Memory Corruption</span>
+        </div>
+        <p>Led Red Team research via an AI-augmented semantic fuzzing architecture on the SBCL compiler.</p>
+        <ul>
+            <li><strong>Vulnerability Discovery:</strong> Discovered 3 pending Zero-Days (CERT-IL #11265) in SBCL (v2.3.2).</li>
+            <li><strong>Exploitation Mechanics:</strong> Identified a critical logical flaw allowing lexical scope bypass via dynamic binding injection, alongside parser buffer overflows and macro stack exhaustion.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
+    </div>
+
+    <div class="project publication">
+        <div class="project-header">
+            <span class="project-title">Security Advisories & Root Cause Analysis</span>
+            <span class="tag">OS Internals / Networking</span>
+        </div>
+        <p>A structured repository containing official security advisories and kernel-level diagnostics reported to major vendors.</p>
+        <ul>
+            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
+            <li><strong>TP-Link & Palo Alto Networks:</strong> Proposed architectural mitigations against DNS Rebinding (LANJack) data exfiltration using deterministic TTL=1 enforcement.</li>
+        </ul>
+        <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📖 Read Advisories</a>
     </div>
 
     <h2>Professional Experience</h2>
@@ -271,7 +351,7 @@
         <div class="job-role">Jan 2026 – Present</div>
         <p style="margin-top: 10px; font-size: 0.95em;">
             <strong>Application Security & Network Analysis:</strong> Conducted deep HTTP debugging via <strong>Burp Suite</strong> and <strong>Wireshark</strong> to map API architectures and uncover logic flaws.<br><br>
-            <strong>Runtime Guardrails:</strong> Diagnosed cascading failures and implemented runtime resource guardrails (Memory/Swap) to ensure system stability during high-load AI operations.
+            <strong>Runtime Guardrails:</strong> Diagnosed cascading failures and implemented runtime resource guardrails (Memory/Swap) to ensure system stability during high-load operations.
         </p>
     </div>
 
@@ -286,104 +366,8 @@
         </p>
     </div>
 
-    <h2>Vulnerability Research & Publications</h2>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">Compiler Vulnerability Research (SBCL 0-Days)</span>
-            <span class="tag">Vuln Research / Fuzzing / 0-Day</span>
-        </div>
-        <p>Led Red Team research via an AI-augmented semantic fuzzing architecture on the SBCL compiler.</p>
-        <ul>
-            <li><strong>Vulnerability Discovery:</strong> Discovered 3 pending Zero-Days (CERT-IL #11265) in SBCL (v2.3.2).</li>
-            <li><strong>Exploitation Mechanics:</strong> Identified a critical logical flaw allowing lexical scope bypass via dynamic binding injection (<code>proclaim</code>), alongside parser buffer overflows and macro stack exhaustion.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
-    </div>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">Security Advisories & Root Cause Analysis</span>
-            <span class="tag">OS Internals / Network Security</span>
-        </div>
-        <p>A structured repository containing official security advisories and kernel-level diagnostics reported to major vendors.</p>
-        <ul>
-            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
-            <li><strong>TP-Link & Palo Alto Networks:</strong> Proposed architectural mitigations against DNS Rebinding (LANJack) data exfiltration using deterministic TTL=1 enforcement.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📖 Read Advisories</a>
-    </div>
-
-    <div class="project publication">
-        <div class="project-header">
-            <span class="project-title">Security Research Journal</span>
-            <span class="tag">Browser Internals / Execution Flow</span>
-        </div>
-        <p>A central repository housing in-depth architectural security studies and vulnerability theories.</p>
-        <ul>
-            <li><strong>Browser Security:</strong> Authored deep-dive analysis on V8 Engine JIT compilation, RWX memory allocation, and Control Flow Integrity (CFI) bypasses.</li>
-            <li><strong>Compiler Mechanics:</strong> Analyzed execution flow differences between runtime function calls and compile-time macro expansions, mapping new attack surfaces.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/security-research-journal" target="_blank" class="read-link">📖 Access Research Journal</a>
-    </div>
-
-    <h2>Malware Research & Red Teaming Portfolio</h2>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Advanced Red Teaming CTF (Operation Blackbird)</span>
-            <span class="tag">PKI Infiltration / Steganography</span>
-        </div>
-        <p>Engineered and solved an advanced CTF platform modeling nation-state exfiltration tactics and spy networks.</p>
-        <ul>
-            <li><strong>Network Infiltration:</strong> Exploited PKI infrastructure via Burp Suite MITM to forge Certificate Authority (CA) signatures and intercept TLS traffic.</li>
-            <li><strong>Covert Channels:</strong> Reverse-engineered custom ICMP payload progression and timing constraints to bypass firewalls.</li>
-            <li><strong>Steganography & Crypto:</strong> Extracted Enigma machine configurations from Hex data and decrypted ID3 metadata (Morse code) from audio streams.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Operation-Blackbird" target="_blank" class="read-link">📂 View Operation Blackbird</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Mobile Native RE (OWASP UnCrackable L2)</span>
-            <span class="tag">Dynamic Binary Instrumentation</span>
-        </div>
-        <p>Advanced dynamic and static analysis of Android Native code (C/C++) and JNI execution boundaries.</p>
-        <ul>
-            <li><strong>Execution Flow Tracing:</strong> Decompiled complex Java applications using <strong>JADX</strong>.</li>
-            <li><strong>Anti-Analysis Bypass:</strong> Neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) in native <code>.so</code> libraries utilizing <strong>Frida</strong> dynamic binary instrumentation (DBI).</li>
-            <li><strong>Static Analysis:</strong> Mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/mobile-security-lab" target="_blank" class="read-link">📖 Read Level 2 Write-Up</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Advanced RE Challenges (Shabak / Flare-On style)</span>
-            <span class="tag">Malware Analysis</span>
-        </div>
-        <p>A deep dive into reconstructing PE structures and dynamic analysis.</p>
-        <ul>
-            <li><strong>Industry-Standard Tools:</strong> Extensive hands-on experience utilizing <strong>IDA Pro</strong> and <strong>x32dbg</strong>.</li>
-            <li><strong>Malware Techniques:</strong> Authored write-ups on bypassing TLS Callbacks and extracting PE payloads.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">📂 View RE Write-Ups</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Manual TLS 1.2 Handshake (PCAP Creator)</span>
-            <span class="tag">Network Internals / Protocol Analysis</span>
-        </div>
-        <p>Engineered a custom tool to manually construct and execute a full TLS 1.2 Handshake for forensic analysis.</p>
-        <ul>
-            <li><strong>Network Debugging:</strong> Demonstrated deep understanding of networking fundamentals by assembling TLS records and generating deep <strong>PCAP</strong> network patterns.</li>
-        </ul>
-        <a href="https://github.com/shay-mordechai/Scapy-TLS-Creator" target="_blank" class="read-link">📂 View Project</a>
-    </div>
-
     <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85em; color: #94a3b8;">
-        © 2026 Shay Mordechai. Built with a focus on Malware Research & Reverse Engineering.
+        © 2026 Shay Mordechai. Built with a focus on Mobile & Browser Security Research.
     </div>
 
 </div>
