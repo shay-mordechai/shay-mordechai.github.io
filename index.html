@@ -140,7 +140,7 @@
         }
 
         .series-box {
-            border-left: 4px solid #8b5cf6; /* Distinct purple for the series */
+            border-left: 4px solid #8b5cf6; 
             background: #f5f3ff;
         }
         
@@ -341,19 +341,24 @@
         <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📖 Read Advisories</a>
     </div>
 
-    <h2>Professional Experience</h2>
+    <h2>Independent Architecture Projects</h2>
 
-    <div class="project" style="padding: 20px;">
-        <div class="job-header">
-            <span>Security Software Developer</span>
-            <span>MyLeads AI (Independent)</span>
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">MyLeads AI – Security Architecture & Offensive Auditing</span>
+            <span class="tag">DevSecOps / OS Hardening</span>
         </div>
-        <div class="job-role">Jan 2026 – Present</div>
-        <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Application Security & Network Analysis:</strong> Conducted deep HTTP debugging via <strong>Burp Suite</strong> and <strong>Wireshark</strong> to map API architectures and uncover logic flaws.<br><br>
-            <strong>Runtime Guardrails:</strong> Diagnosed cascading failures and implemented runtime resource guardrails (Memory/Swap) to ensure system stability during high-load operations.
-        </p>
+        <div class="job-role" style="margin-bottom: 10px;">Jan 2026 – Mar 2026</div>
+        <p style="font-size: 0.95em;">Architected and audited a production-grade AI application, focusing on API security, traffic manipulation, and OS-level hardening.</p>
+        <ul>
+            <li><strong>Offensive Auditing & API Security:</strong> Leveraged <strong>Burp Suite</strong> for deep traffic manipulation to uncover logic flaws. Engineered a custom <strong>Rust (WebAssembly)</strong> DLP filter for Envoy Proxy to dynamically prevent egress data leakage.</li>
+            <li><strong>OS Internals & Hardening:</strong> Migrated infrastructure to Rootless <strong>Podman</strong> on Amazon Linux, utilizing Linux namespaces to block privilege escalation. Established a Zero Trust network via <strong>Cloudflare Tunnels</strong>.</li>
+            <li><strong>DevSecOps & Resilience:</strong> Mitigated a cascading "Denial of Wallet" risk by orchestrating automated schema validations. Secured runtime credentials using <strong>AWS SSM/KMS</strong> via IAM Instance Profiles, eliminating static keys.</li>
+            <li><strong>Tech Stack:</strong> Python (FastAPI), Rust, AWS (EC2, SSM, KMS), Podman, Cloudflare Tunnel, Burp Suite.</li>
+        </ul>
     </div>
+
+    <h2>Professional Experience</h2>
 
     <div class="project" style="padding: 20px;">
         <div class="job-header">
