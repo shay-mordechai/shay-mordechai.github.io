@@ -317,13 +317,14 @@
 
     <div class="project publication">
         <div class="project-header">
-            <span class="project-title">Compiler Vulnerability Research (SBCL 0-Days)</span>
-            <span class="tag">Vuln Research / Memory Corruption</span>
+            <span class="project-title">SBCL Compiler Research: Exploring Scoping Boundaries</span>
+            <span class="tag">Compiler Internals / Fuzzing</span>
         </div>
-        <p>Led Red Team research via an AI-augmented semantic fuzzing architecture on the SBCL compiler.</p>
+        <p>Conducted independent research on the SBCL Lisp compiler to test variable isolation and scoping rules using an automated testing harness.</p>
         <ul>
-            <li><strong>Vulnerability Discovery:</strong> Discovered 3 pending Zero-Days (CERT-IL #11265) in SBCL (v2.3.2).</li>
-            <li><strong>Exploitation Mechanics:</strong> Identified a critical logical flaw allowing lexical scope bypass via dynamic binding injection, alongside parser buffer overflows and macro stack exhaustion.</li>
+            <li><strong>Semantic Fuzzing Harness:</strong> Developed an AI-assisted Python fuzzing framework to systematically generate and execute structured Lisp payloads, monitoring for anomalous compiler behaviors and crashes.</li>
+            <li><strong>Lexical vs. Dynamic Scope:</strong> Identified logical edge cases where dynamic binding patterns (e.g., <code>proclaim</code> within macros) could affect or override expected lexical isolation.</li>
+            <li><strong>Edge Case Discovery:</strong> Uncovered previously undocumented behaviors and denial-of-service conditions (e.g., symbol-length buffer exhaustion), reporting findings as security-relevant edge cases (CERT-IL #11265).</li>
         </ul>
         <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
     </div>
