@@ -5,260 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta property="og:title" content="Shay Mordechai | Mobile & Browser Security Researcher">
-    <meta property="og:description" content="Security Researcher specializing in Mobile Internals (Android/Frida), Browser Architecture (V8/IPC), and Execution Flow Analysis.">
-    <meta property="og:image" content="https://shay-mordechai.github.io/portfolio.png">
-    <meta property="og:url" content="https://shay-mordechai.github.io/">
-    <meta property="og:type" content="website">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Shay Mordechai | Mobile & Browser Security Researcher">
-    <meta name="twitter:description" content="Security Researcher specializing in Mobile Internals (Android/Frida), Browser Architecture (V8/IPC), and Execution Flow Analysis.">
-    <meta name="twitter:image" content="https://shay-mordechai.github.io/portfolio.png">
-
+    <meta property="og:description" content="Security Researcher specializing in Mobile Internals, Browser Architecture, and Execution Flow Analysis.">
     <title>Shay Mordechai | Mobile & Browser Security Researcher</title>
 
     <link rel="icon" href="https://fav.farm/🛡️">
 
     <style>
-        /* CSS Variables for consistent color scheme */
         :root {
             --primary: #0f172a;
             --accent: #2563eb;
             --danger: #dc2626;
-            --success: #16a34a;
             --bg: #f1f5f9;
             --text: #334155;
             --card-bg: #ffffff;
         }
 
-        /* Base styles */
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
             color: var(--text);
-            max-width: 900px;
+            max-width: 850px;
             margin: 40px auto;
             padding: 0 20px;
             background-color: var(--bg);
         }
 
-        /* Main container styling */
         .container {
             background: var(--card-bg);
-            padding: 50px;
+            padding: 45px;
             border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             border-top: 6px solid var(--primary);
+            animation: fadeUp 0.6s ease-out;
         }
 
-        /* Banner Image Styling */
-        .profile-banner {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-        }
-
-        /* Typography */
-        h1 { color: var(--primary); margin-bottom: 8px; font-size: 2.5em; letter-spacing: -1px; }
-
-        .subtitle {
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 1.2em;
-            margin-top: 0;
-            letter-spacing: 0.5px;
-        }
-
-        /* Link buttons styling */
-        .links { margin: 30px 0; display: flex; gap: 15px; flex-wrap: wrap; }
-
-        .links a {
-            text-decoration: none;
-            color: #fff;
-            background: var(--primary);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95em;
-        }
-
-        .links a:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .links a.pdf { background: var(--danger); }
-        .links a.github { background: #24292e; }
-        .links a.linkedin { background: #0077b5; }
-
-        h2 {
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
-            margin-top: 45px;
-            color: var(--primary);
-            font-size: 1.5em;
-            letter-spacing: -0.5px;
-        }
-
-        /* Core Skills Banner */
-        .core-skills-banner {
-            font-size: 1.05em;
-            color: var(--primary);
-            font-weight: 600;
-            text-align: center;
-            background: #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            letter-spacing: 0.5px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-            margin-top: 20px;
-        }
-
-        /* Project and Experience cards */
-        .project {
-            margin-bottom: 25px;
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
-            background: #fff;
-            position: relative;
-        }
-
-        .project:hover {
-            border-color: var(--accent);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Special styling for publications and major RE projects */
-        .publication {
-            border-left: 4px solid var(--accent);
-            background: #f0f7ff;
-        }
-
-        .series-box {
-            border-left: 4px solid #8b5cf6; 
-            background: #f5f3ff;
-        }
-        
-        .series-tag {
-            background: #ede9fe !important;
-            color: #7c3aed !important;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .project-title { font-weight: 700; color: var(--primary); font-size: 1.2em; display: flex; align-items: center; gap: 10px;}
-
-        .tag {
-            font-size: 0.75em;
-            background: #eff6ff;
-            padding: 4px 10px;
-            border-radius: 20px;
-            color: var(--accent);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        /* Read article link */
-        .read-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 15px;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9em;
-            border: 1px solid var(--accent);
-            padding: 5px 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .read-link:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        /* List styling within projects */
-        ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.95em; color: #475569; }
-        li { margin-bottom: 6px; }
-        
-        .article-list li { margin-bottom: 12px; }
-        .article-list strong { color: var(--primary); }
-
-        /* Job header styling */
-        .job-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--primary); margin-bottom: 5px; }
-        .job-role { color: var(--accent); font-weight: 500; font-size: 0.95em; }
-
-        /* Responsive design adjustments */
-        @media (max-width: 600px) {
-            .container { padding: 25px; }
-            h1 { font-size: 2em; }
-            .project-header { flex-direction: column; align-items: flex-start; }
-        }
-
-        /* --- DESIGN UPGRADES --- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .container { animation: fadeUp 0.6s ease-out; }
-        .project { animation: fadeUp 0.5s ease-out both; }
-        .project:nth-child(odd) { animation-delay: 0.1s; }
-        .project:nth-child(even) { animation-delay: 0.2s; }
 
-        /* Automatic Dark Mode */
+        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.2em; letter-spacing: -1px; }
+        .subtitle { color: var(--accent); font-weight: 600; font-size: 1.1em; margin-top: 0; }
+        
+        .links { margin: 20px 0 10px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .links a {
+            text-decoration: none; color: #fff; background: var(--primary);
+            padding: 8px 18px; border-radius: 8px; font-weight: 500; font-size: 0.9em;
+            transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .links a.pdf { background: var(--danger); }
+        .links a.github { background: #24292e; }
+        .links a.linkedin { background: #0077b5; }
+        .links a:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 40px; color: var(--primary); font-size: 1.4em; }
+
+        .core-skills-banner {
+            font-size: 0.9em; color: var(--primary); font-weight: 600; text-align: center;
+            background: #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 20px;
+        }
+
+        .project {
+            margin-bottom: 25px; padding: 24px; border-radius: 12px;
+            border: 1px solid #e2e8f0; background: #fff; transition: 0.2s;
+            animation: fadeUp 0.5s ease-out both;
+        }
+        .project:hover { border-color: var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        
+        .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .project-title { font-weight: 700; color: var(--primary); font-size: 1.15em; }
+        .tag { font-size: 0.7em; background: #eff6ff; padding: 4px 10px; border-radius: 20px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+
+        .series-box { border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.02); }
+        .series-tag { background: #ede9fe !important; color: #7c3aed !important; }
+
+        ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.9em; color: #475569; }
+        li { margin-bottom: 4px; }
+
+        .key-insight { 
+            margin-top: 12px; font-size: 0.9em; font-weight: 600; 
+            padding-left: 10px; border-left: 3px solid var(--accent); color: var(--primary);
+        }
+
+        .read-link {
+            display: inline-flex; align-items: center; gap: 5px; margin-top: 15px;
+            color: var(--accent); text-decoration: none; font-weight: 700; font-size: 0.85em;
+        }
+
+        .job-header { display: flex; justify-content: space-between; font-weight: 700; color: var(--primary); }
+        .job-role { color: var(--accent); font-size: 0.9em; font-weight: 600; }
+
         @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #f8fafc;
-                --accent: #60a5fa;
-                --bg: #0f172a;
-                --text: #cbd5e1;
-                --card-bg: #1e293b;
-            }
-            body { background-color: var(--bg); }
-            .container { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); border-color: #334155;}
-            .profile-banner { border-color: #334155; }
+            :root { --primary: #f8fafc; --accent: #60a5fa; --bg: #0f172a; --text: #cbd5e1; --card-bg: #1e293b; }
             .project { background: #1e293b; border-color: #334155; }
-            .project:hover { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
-            .core-skills-banner { background: #1e3a8a; color: #bfdbfe; border: 1px solid #3b82f6; box-shadow: none; }
-            .publication { background: #172033; }
-            .series-box { background: #1c192b; border-left-color: #a78bfa; }
-            .series-tag { background: #2e1065 !important; color: #c4b5fd !important; }
-            ul { color: #94a3b8; }
-            .article-list strong { color: #e2e8f0; }
+            .core-skills-banner { background: #1e3a8a; color: #bfdbfe; }
             h2 { border-bottom-color: #334155; }
+            ul { color: #94a3b8; }
             .tag { background: #1e3a8a; color: #bfdbfe; }
-            .contact-info a { border-bottom-color: #475569; }
-            .links a.github { background: #334155; }
-            .links a.github:hover { background: #475569; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="portfolio.png" alt="Shay Mordechai - Security Researcher Portfolio" class="profile-banner">
-
     <h1>Shay Mordechai</h1>
     <p class="subtitle">Mobile & Browser Security Researcher | OS Internals</p>
 
     <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
-        📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a> | 📞 052-306-4991
+        📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a>
     </div>
 
     <div class="links">
@@ -266,116 +120,126 @@
         <a href="https://github.com/shay-mordechai" class="github" target="_blank">📂 GitHub</a>
         <a href="https://www.linkedin.com/in/shay-mordechai/" class="linkedin" target="_blank">🔗 LinkedIn</a>
     </div>
-
-    <h2>Executive Summary</h2>
-    <p>
-        Highly motivated <strong>Mobile & Browser Security Researcher</strong> with a strong foundation in OS internals and execution flow analysis. Expert in dissecting Android application security via dynamic binary instrumentation (<strong>Frida, JADX</strong>), analyzing browser architectural boundaries (<strong>V8 Engine, IPC, Sandboxing</strong>), and bypassing anti-analysis mechanisms.
+    <p style="font-size: 0.85em; opacity: 0.7; margin-bottom: 20px;">
+        Selected projects are linked below. Full code available on GitHub.
     </p>
 
-    <h2>Core Expertise</h2>
+    <h2>Overview</h2>
+    <p style="font-size: 0.95em;">
+        Security researcher focused on mobile, browser, and OS internals. 
+        Analyzing execution flow boundaries through <strong>reverse engineering</strong>, <strong>dynamic instrumentation (Frida)</strong>, and <strong>V8 engine memory models</strong>.
+    </p>
+
     <div class="core-skills-banner">
-        Mobile Security (Android) &bull; Browser Internals (V8/IPC) &bull; Dynamic Instrumentation (Frida) &bull; JADX / IDA Pro &bull; Execution Flow Analysis
+        Android Native Security • Browser Internals (V8/JIT) • Frida Instrumentation • Reverse Engineering • Network Attacks
     </div>
 
-    <h2>Article Series: "The Paradox of Mutability"</h2>
-    
+    <h2>Featured Series: Execution Boundaries</h2>
     <div class="project series-box">
         <div class="project-header">
-            <span class="project-title">An architectural analysis of modern execution environments</span>
-            <span class="tag series-tag">Featured LinkedIn Series</span>
+            <span class="project-title">"The Paradox of Mutability"</span>
+            <span class="tag series-tag">Article Series</span>
         </div>
-        <p style="font-size: 0.95em; margin-bottom: 15px;">
-            An in-depth 5-part article series exploring the inherent tension between performance, usability, and security. This series dissects how execution flow boundaries are systematically broken across different architectural layers, transitioning from browser memory models to OS-level runtime manipulation.
-        </p>
-        <ul class="article-list">
-            <li><strong>Part 1: V8 Engine's (Dis-)Security</strong> – Analyzing JIT compilation, RWX memory allocation, and the paradox of code mutating into data and back to achieve high performance.</li>
-            <li><strong>Part 2: JNI as an (Un-)Safe Bridge</strong> – Exploring the semantic dissonance and the critical loss of memory safety when execution crosses the boundary from Java to Native C/C++.</li>
-            <li><strong>Part 3: Flatpak & Linux Sandbox Isolation</strong> – Investigating OS-level sandboxing, IPC communication boundaries, and the security risks introduced by "drilling holes" for usability via Portals.</li>
-            <li><strong>Part 4: Browser Privilege Boundary</strong> – Breaking down Site Isolation, the Renderer vs. Browser process architecture, and the new threat vectors introduced by highly-privileged Agentic AI.</li>
-            <li><strong>Part 5: Frida – The Break in the Execution Boundary</strong> – Demonstrating how Dynamic Binary Instrumentation leverages OS debugging mechanisms (ptrace) to alter the instruction flow and bypass static security assumptions at runtime.</li>
+        <p style="font-size: 0.9em;">5-part series on how security boundaries break across browser, runtime, and OS layers.</p>
+        <ul>
+            <li>V8 JIT & RWX memory behavior</li>
+            <li>JNI boundary & loss of memory safety</li>
+            <li>Linux sandboxing & IPC trade-offs</li>
+            <li>Browser privilege separation</li>
+            <li>Frida & runtime manipulation</li>
         </ul>
-        <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read the Full Series on LinkedIn</a>
+        <div class="key-insight">Key insight: Security guarantees degrade when execution crosses abstraction layers.</div>
+        <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read Series on LinkedIn</a>
     </div>
 
-    <h2>Mobile & Native Reverse Engineering</h2>
+    <h2>Selected Research & Work</h2>
 
     <div class="project">
         <div class="project-header">
-            <span class="project-title">Mobile Native RE (OWASP UnCrackable L2)</span>
-            <span class="tag">Android Internals / Frida</span>
+            <span class="project-title">Android Native Reverse Engineering</span>
+            <span class="tag">Mobile / Frida</span>
         </div>
-        <p>Advanced dynamic and static analysis of Android Native code (C/C++) and JNI execution boundaries.</p>
+        <p style="font-size: 0.9em;">Analyzed execution flow across Java, JNI, and native layers in Android apps.</p>
         <ul>
-            <li><strong>Execution Flow Tracing:</strong> Decompiled complex Java applications and traced logic utilizing <strong>JADX</strong>.</li>
-            <li><strong>Anti-Analysis Bypass:</strong> Neutralized Linux-level anti-debugging mechanisms (<code>ptrace</code>) in native <code>.so</code> libraries utilizing <strong>Frida</strong> dynamic binary instrumentation.</li>
-            <li><strong>Static Analysis:</strong> Mapped native ARM64 assembly instructions and Export Tables using <strong>IDA Pro</strong>.</li>
+            <li><strong>Bypassed</strong> runtime anti-debugging (<code>ptrace</code>, integrity checks) using Frida.</li>
+            <li><strong>Hooked</strong> JNI boundaries to intercept data flow between Java and C++.</li>
+            <li><strong>Analyzed</strong> ARM64 binaries and export tables in IDA Pro.</li>
         </ul>
-        <a href="https://github.com/shay-mordechai/mobile-security-lab" target="_blank" class="read-link">📖 Read Research Write-Up</a>
+        <div class="key-insight">Impact: Demonstrated how client-side protections can be neutralized at runtime.</div>
+        <a href="https://github.com/shay-mordechai/mobile-security-lab" target="_blank" class="read-link">📖 View Write-up</a>
     </div>
 
-    <h2>Vulnerability Research & Publications</h2>
-
-    <div class="project publication">
+    <div class="project">
         <div class="project-header">
-            <span class="project-title">SBCL Compiler Research: Exploring Scoping Boundaries</span>
-            <span class="tag">Compiler Internals / Fuzzing</span>
+            <span class="project-title">V8 Execution Model Research</span>
+            <span class="tag">Browser Internals</span>
         </div>
-        <p>Conducted independent research on the SBCL Lisp compiler to test variable isolation and scoping rules using an automated testing harness.</p>
+        <p style="font-size: 0.9em;">Analyzed execution behavior and memory transitions in modern JavaScript engines.</p>
         <ul>
-            <li><strong>Semantic Fuzzing Harness:</strong> Developed an AI-assisted Python fuzzing framework to systematically generate and execute structured Lisp payloads, monitoring for anomalous compiler behaviors and crashes.</li>
-            <li><strong>Lexical vs. Dynamic Scope:</strong> Identified logical edge cases where dynamic binding patterns (e.g., <code>proclaim</code> within macros) could affect or override expected lexical isolation.</li>
-            <li><strong>Edge Case Discovery:</strong> Uncovered previously undocumented behaviors and denial-of-service conditions (e.g., symbol-length buffer exhaustion), reporting findings as security-relevant edge cases (CERT-IL #11265).</li>
+            <li><strong>Explored</strong> JIT compilation and RWX memory transitions.</li>
+            <li><strong>Analyzed</strong> FFI bridges and their impact on memory safety.</li>
         </ul>
-        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Methodology</a>
+        <div class="key-insight">Key insight: Performance optimizations introduce controlled violations of memory safety guarantees.</div>
     </div>
 
-    <div class="project publication">
+    <div class="project">
         <div class="project-header">
-            <span class="project-title">Security Advisories & Root Cause Analysis</span>
-            <span class="tag">OS Internals / Networking</span>
+            <span class="project-title">SBCL Compiler Fuzzing</span>
+            <span class="tag">Compiler / Fuzzing</span>
         </div>
-        <p>A structured repository containing official security advisories and kernel-level diagnostics reported to major vendors.</p>
+        <p style="font-size: 0.9em;">Tested isolation and scoping behavior in the SBCL compiler.</p>
         <ul>
-            <li><strong>Red Hat Bugzilla (OS Internals):</strong> Diagnosed PCI-E/iwlwifi driver corruption (Bug #2418652) and Btrfs structural deadlocks (Bug #2415015) via kernel buffers and sysfs.</li>
-            <li><strong>TP-Link & Palo Alto Networks:</strong> Proposed architectural mitigations against DNS Rebinding (LANJack) data exfiltration using deterministic TTL=1 enforcement.</li>
+            <li><strong>Engineered</strong> a Python-based testing harness to automate test execution.</li>
+            <li><strong>Identified</strong> edge cases in dynamic vs lexical scope isolation.</li>
+            <li><strong>Triggered</strong> DoS conditions via malformed input handling.</li>
         </ul>
+        <div class="key-insight">Impact: Discovered security-relevant undocumented behaviors (CERT-IL #11265).</div>
+        <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔍 View Research</a>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">DNS Rebinding Research</span>
+            <span class="tag">Network Attacks</span>
+        </div>
+        <p style="font-size: 0.9em;">Explored DNS rebinding as a vector for internal network access.</p>
+        <ul>
+            <li><strong>Built</strong> browser-based LAN access PoC targeting IoT management interfaces.</li>
+            <li><strong>Proposed</strong> deterministic mitigation via TTL=1 enforcement.</li>
+        </ul>
+        <div class="key-insight">Impact: Findings acknowledged by TP-Link and Palo Alto Networks PSIRTs.</div>
         <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📖 Read Advisories</a>
     </div>
 
-    <h2>Independent Architecture Projects</h2>
-
+    <h2>Architecture & Security Engineering</h2>
     <div class="project">
         <div class="project-header">
-            <span class="project-title">MyLeads AI – Security Architecture & Offensive Auditing</span>
-            <span class="tag">DevSecOps / OS Hardening</span>
+            <span class="project-title">MyLeads AI – Security Architecture</span>
+            <span class="tag">Architecture</span>
         </div>
-        <div class="job-role" style="margin-bottom: 10px;">Jan 2026 – Mar 2026</div>
-        <p style="font-size: 0.95em;">Architected and audited a production-grade AI application, focusing on API security, traffic manipulation, and OS-level hardening.</p>
         <ul>
-            <li><strong>Offensive Auditing & API Security:</strong> Leveraged <strong>Burp Suite</strong> for deep traffic manipulation to uncover logic flaws. Engineered a custom <strong>Rust (WebAssembly)</strong> DLP filter for Envoy Proxy to dynamically prevent egress data leakage.</li>
-            <li><strong>OS Internals & Hardening:</strong> Migrated infrastructure to Rootless <strong>Podman</strong> on Amazon Linux, utilizing Linux namespaces to block privilege escalation. Established a Zero Trust network via <strong>Cloudflare Tunnels</strong>.</li>
-            <li><strong>DevSecOps & Resilience:</strong> Mitigated a cascading "Denial of Wallet" risk by orchestrating automated schema validations. Secured runtime credentials using <strong>AWS SSM/KMS</strong> via IAM Instance Profiles, eliminating static keys.</li>
-            <li><strong>Tech Stack:</strong> Python (FastAPI), Rust, AWS (EC2, SSM, KMS), Podman, Cloudflare Tunnel, Burp Suite.</li>
+            <li><strong>Identified</strong> logic flaws via deep traffic manipulation in Burp Suite.</li>
+            <li><strong>Engineered</strong> Wasm-based DLP filter for Envoy to redact sensitive egress data.</li>
+            <li><strong>Hardened</strong> production via Rootless Podman and Linux namespaces.</li>
         </ul>
+        <div class="key-insight">Impact: Eliminated inbound attack surface (no exposed ports).</div>
     </div>
 
-    <h2>Professional Experience</h2>
-
-    <div class="project" style="padding: 20px;">
+    <h2>Experience</h2>
+    <div class="project">
         <div class="job-header">
             <span>Application Security Intern</span>
-            <span>Israel Tax Authority</span>
+            <span>2024 – 2025</span>
         </div>
-        <div class="job-role">Aug 2024 – Jul 2025</div>
-        <p style="margin-top: 10px; font-size: 0.95em;">
-            <strong>Vulnerability Triage & Code Analysis:</strong> Traced execution flow through deep code analysis to reach accurate verdicts on OWASP Top 10 security findings. Identified common malware threats to train R&D teams.
+        <div class="job-role">Israel Tax Authority</div>
+        <p style="font-size: 0.9em; margin-top: 8px;">
+            Analyzed vulnerabilities and traced execution paths to validate security findings across sensitive governmental financial systems.
         </p>
     </div>
 
-    <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85em; color: #94a3b8;">
-        © 2026 Shay Mordechai. Built with a focus on Mobile & Browser Security Research.
+    <div style="text-align: center; margin-top: 50px; font-size: 0.8em; opacity: 0.5;">
+        © 2026 Shay Mordechai. Built for Precision & Impact.
     </div>
-
 </div>
 
 </body>
