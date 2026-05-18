@@ -80,6 +80,8 @@
         .series-tag { background: #ede9fe !important; color: #7c3aed !important; }
         .framework-box { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.02); }
         .framework-tag { background: #d1fae5 !important; color: #059669 !important; }
+        .research-box { border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.02); }
+        .research-tag { background: #fee2e2 !important; color: #b91c1c !important; }
 
         ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.9em; color: #475569; }
         li { margin-bottom: 4px; }
@@ -106,6 +108,7 @@
             .tag { background: #1e3a8a; color: #bfdbfe; }
             .series-box { background: rgba(139, 92, 246, 0.05); border-left-color: #8b5cf6; }
             .framework-box { background: rgba(16, 185, 129, 0.05); border-left-color: #10b981; }
+            .research-box { background: rgba(239, 68, 68, 0.05); border-left-color: #ef4444; }
         }
     </style>
 </head>
@@ -121,20 +124,20 @@
 
     <div class="links">
         <a href="cv.pdf" class="pdf" target="_blank">📄 Download CV</a>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="github" target="_blank">📂 GitHub Labs</a>
+        <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="github" target="_blank">📂 GitHub Vault</a>
         <a href="https://www.linkedin.com/in/shay-mordechai/" class="linkedin" target="_blank">🔗 LinkedIn</a>
     </div>
     <p style="font-size: 0.85em; opacity: 0.7; margin-bottom: 20px;">
-        Selected projects are linked below. Full research repository available on GitHub.
+        Selected projects and whitepapers are linked below. Full research repository available on GitHub.
     </p>
 
     <h2>Overview</h2>
     <p style="font-size: 0.95em;">
-        Offensive Security Researcher with a background in Senior Software Engineering. Specialized in vulnerability discovery, binary analysis, and developing structured methodologies for malware triage. Focusing on execution flow boundaries across Native Windows, Android, and Browser architecture.
+        Offensive Security Researcher with a background in Senior Software Engineering. Specialized in vulnerability discovery, binary analysis, and developing structured methodologies for malware triage. Focusing on execution flow boundaries and OS-level architecture across Native Windows, Android, and Web environments.
     </p>
 
     <div class="core-skills-banner">
-        Malware Triage • Reverse Engineering (x86/ARM) • Android Native Security • Frida (DBI) • Browser Internals
+        OS Internals & Architecture • Malware Triage • Reverse Engineering (x86/ARM) • Frida (DBI) • Browser Execution
     </div>
 
     <h2>Featured Methodology</h2>
@@ -146,22 +149,49 @@
         </div>
         <p style="font-size: 0.9em;">A structured approach bridging software development and malware research by focusing on <strong>intent</strong> rather than <strong>syntax</strong> when analyzing obfuscated code under time constraints.</p>
         <ul>
-            <li><strong>Layer 1 - The Engine:</strong> Core logic, data collection, and initial triggering.</li>
-            <li><strong>Layer 2 - Sinks & Crypto:</strong> Network I/O, file writes, and payload decryption.</li>
-            <li><strong>Layer 3 - Dynamic Execution:</strong> Reflection, JNI bridges, and dynamic loading.</li>
-            <li><strong>Layer 4 - Evasion:</strong> Sandbox detection, timing delays, and anti-debugging.</li>
-            <li><strong>Layer 5 - Kill Chain:</strong> Full execution flow reconstruction.</li>
+            <li><strong>Layer 1 to 5:</strong> Progressing systematically from static Code Obfuscation & Business Logic Camouflage to Dynamic Sinks, Evasion checks, and full Kill Chain mapping.</li>
+            <li><strong>AI-Augmented Threats:</strong> Extended the framework to map Agentic AI Tool Abuse (MCP), LLM-as-C2 execution primitives, and polymorphic evasion techniques.</li>
         </ul>
-        <div class="key-insight">Key insight: Analyzing behavioral flow ("What enters? What changes? Where does it go?") rapidly neutralizes syntactic obfuscation across Java, JS, C, and Assembly.</div>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="read-link">🔗 View Framework & Repositories</a>
+        <div class="key-insight">Key insight: Analyzing behavioral execution flows rapidly neutralizes syntactic obfuscation across Java, JS, C, and Assembly.</div>
+        <a href="https://github.com/shay-mordechai/malware-reversing-labs/blob/main/Mobile%20Malware%20Research/01_Static_Triage/%F0%9F%93%84%2000_Master_5_Layers_Framew.md" target="_blank" class="read-link">🔗 View Master Framework</a>
     </div>
 
     <h2>Selected Research & Reverse Engineering</h2>
 
+    <div class="project research-box">
+        <div class="project-header">
+            <span class="project-title">Android Bootstrap Hijacking & OS Internals</span>
+            <span class="tag research-tag">Deep Research / Internals</span>
+        </div>
+        <p style="font-size: 0.9em;">Architectural analysis of early execution timing races during the Android process bootstrap phase, bridging AOSP internals with real-world banking malware (Anatsa 2024).</p>
+        <ul>
+            <li><strong>Mapped</strong> the Android boot chain from the Zygote fork to <code>ActivityThread</code> reflection instantiation.</li>
+            <li><strong>Analyzed</strong> early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
+            <li><strong>Engineered</strong> advanced Frida early-instrumentation wrappers (<code>Java.performImmediate</code>) to intercept application loading and win the runtime injection timing race.</li>
+        </ul>
+        <div class="key-insight">Impact: Authored a comprehensive whitepaper detailing how modern malware hijacks the OS process lifecycle before a single screen is drawn.</div>
+        <a href="https://github.com/shay-mordechai/malware-reversing-labs/blob/main/Articles/Android%20Bootstrap%20Hijacking%20%E2%80%94%20How%20Malware%20Executes%20Before%20the%20UI%20Exists.md" target="_blank" class="read-link">📖 Read the Whitepaper</a>
+    </div>
+
+    <div class="project">
+        <div class="project-header">
+            <span class="project-title">Mobile Malware & Dynamic Instrumentation</span>
+            <span class="tag">Android / Frida / Native</span>
+        </div>
+        <p style="font-size: 0.9em;">Analyzed execution flow across Java, JNI, and native layers in highly protected Android applications (OWASP UnCrackable series & live malware).</p>
+        <ul>
+            <li><strong>Defeated</strong> root detection and runtime anti-debugging (<code>ptrace</code>) using Frida (DBI).</li>
+            <li><strong>Hooked</strong> JNI boundaries to intercept data flow between Java and C++.</li>
+            <li><strong>Analyzed</strong> ARM64 binaries and bypassed strict SSL pinning mechanisms.</li>
+        </ul>
+        <div class="key-insight">Impact: Demonstrated how advanced client-side protections and timing evasion techniques can be neutralized at runtime.</div>
+        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Mobile" target="_blank" class="read-link">📖 View Mobile Write-ups</a>
+    </div>
+
     <div class="project">
         <div class="project-header">
             <span class="project-title">Advanced Windows Malware Reversing</span>
-            <span class="tag">Reverse Engineering / C++</span>
+            <span class="tag">Reverse Engineering / x86 / C++</span>
         </div>
         <p style="font-size: 0.9em;">Analysis of multi-stage Windows binaries utilizing anti-analysis techniques to drop encrypted payloads (e.g., "Whoof!" & ISA Challenges).</p>
         <ul>
@@ -171,21 +201,6 @@
         </ul>
         <div class="key-insight">Impact: Successfully reconstructed hidden PE files and neutralized environmental validation checks.</div>
         <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Desktop" target="_blank" class="read-link">📖 Read Desktop Write-ups</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Mobile Malware & AppSec Research</span>
-            <span class="tag">Android / Frida</span>
-        </div>
-        <p style="font-size: 0.9em;">Analyzed execution flow across Java, JNI, and native layers in Android applications (OWASP UnCrackable series).</p>
-        <ul>
-            <li><strong>Defeated</strong> root detection and runtime anti-debugging (<code>ptrace</code>) using Frida (DBI).</li>
-            <li><strong>Hooked</strong> JNI boundaries to intercept data flow between Java and C++.</li>
-            <li><strong>Analyzed</strong> ARM64 binaries and bypassed strict SSL pinning mechanisms.</li>
-        </ul>
-        <div class="key-insight">Impact: Demonstrated how client-side protections and evasion techniques can be neutralized at runtime.</div>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Mobile" target="_blank" class="read-link">📖 View Mobile Write-ups</a>
     </div>
 
     <div class="project series-box">
@@ -204,32 +219,18 @@
         <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read Series on LinkedIn</a>
     </div>
 
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">SBCL Compiler Fuzzing</span>
-            <span class="tag">Compiler / Fuzzing</span>
-        </div>
-        <p style="font-size: 0.9em;">Tested isolation and scoping behavior in the SBCL compiler.</p>
-        <ul>
-            <li><strong>Engineered</strong> a Python-based testing harness to automate test execution.</li>
-            <li><strong>Identified</strong> edge cases in dynamic vs lexical scope isolation.</li>
-            <li><strong>Triggered</strong> DoS conditions via malformed input handling.</li>
-        </ul>
-        <div class="key-insight">Impact: Discovered security-relevant undocumented behaviors (CERT-IL #11265).</div>
-    </div>
-
     <h2>Architecture & Security Engineering</h2>
     <div class="project">
         <div class="project-header">
             <span class="project-title">MyLeads AI – Security Architecture</span>
-            <span class="tag">Architecture</span>
+            <span class="tag">Architecture / Cloud Native</span>
         </div>
         <ul>
             <li><strong>Identified</strong> logic flaws via deep traffic manipulation in Burp Suite.</li>
             <li><strong>Engineered</strong> Wasm-based DLP filter for Envoy to redact sensitive egress data.</li>
-            <li><strong>Hardened</strong> production via Rootless Podman and Linux namespaces.</li>
+            <li><strong>Hardened</strong> production environments via Rootless Podman and Linux namespaces.</li>
         </ul>
-        <div class="key-insight">Impact: Eliminated inbound attack surface (no exposed ports).</div>
+        <div class="key-insight">Impact: Eliminated inbound attack surface (no exposed external ports).</div>
     </div>
 
     <h2>Experience</h2>
