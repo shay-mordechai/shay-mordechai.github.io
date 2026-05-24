@@ -3,255 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta property="og:title" content="Shay Mordechai | Security Researcher & Malware Analyst">
-    <meta property="og:description" content="Offensive Security Researcher specializing in Malware Triage, Reverse Engineering, and Low-Level System Architecture.">
-    <title>Shay Mordechai | Security Researcher & Malware Analyst</title>
-
+    <meta property="og:title" content="Shay Mordechai | Mobile Security Researcher">
+    <meta property="og:description" content="Mobile Security Researcher & Malware Analyst specializing in Android OS Internals, Frida, and Reverse Engineering.">
+    <title>Shay Mordechai | Mobile Security Researcher & Malware Analyst</title>
     <link rel="icon" href="https://fav.farm/🛡️">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #2563eb;
-            --danger: #dc2626;
-            --bg: #f1f5f9;
-            --text: #334155;
-            --card-bg: #ffffff;
+            --bg-color: #0f1115;
+            --surface-color: #1a1d24;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #2e3440;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            line-height: 1.5;
-            color: var(--text);
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 0 20px;
-            background-color: var(--bg);
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            background: var(--card-bg);
-            padding: 45px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border-top: 6px solid var(--primary);
-            animation: fadeUp 0.6s ease-out;
+        /* Typography & Header */
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
         }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.2em; letter-spacing: -1px; }
-        .subtitle { color: var(--accent); font-weight: 600; font-size: 1.1em; margin-top: 0; }
         
-        .links { margin: 20px 0 10px 0; display: flex; gap: 12px; flex-wrap: wrap; }
-        .links a {
-            text-decoration: none; color: #fff; background: var(--primary);
-            padding: 8px 18px; border-radius: 8px; font-weight: 500; font-size: 0.9em;
-            transition: all 0.2s; display: flex; align-items: center; gap: 8px;
-        }
-        .links a.pdf { background: var(--danger); }
-        .links a.github { background: #24292e; }
-        .links a.linkedin { background: #0077b5; }
-        .links a:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-        h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 40px; color: var(--primary); font-size: 1.4em; }
-
-        .core-skills-banner {
-            font-size: 0.9em; color: var(--primary); font-weight: 600; text-align: center;
-            background: #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 20px;
+        .subtitle {
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05em;
+            margin-top: 0;
+            margin-bottom: 25px;
         }
 
-        .project {
-            margin-bottom: 25px; padding: 24px; border-radius: 12px;
-            border: 1px solid #e2e8f0; background: #fff; transition: 0.2s;
-            animation: fadeUp 0.5s ease-out both;
+        h2 {
+            font-size: 1.3em;
+            color: #ffffff;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: inline-block;
         }
-        .project:hover { border-color: var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        p { color: var(--text-muted); }
+
+        /* Links & Badges */
+        .links-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .action-btn {
+            background: var(--surface-color);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .core-skills {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Project Cards */
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover { border-color: var(--text-muted); }
+
+        /* Left-side color bars for cards */
+        .card.series { border-left: 4px solid var(--accent-purple); }
+        .card.research { border-left: 4px solid var(--accent-red); }
+        .card.methodology { border-left: 4px solid var(--accent-blue); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
         
-        .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .project-title { font-weight: 700; color: var(--primary); font-size: 1.15em; }
-        .tag { font-size: 0.7em; background: #eff6ff; padding: 4px 10px; border-radius: 20px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+        .tag.series { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; }
+        .tag.research { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+        .tag.methodology { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
 
-        .series-box { border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.02); }
-        .series-tag { background: #ede9fe !important; color: #7c3aed !important; }
-        .framework-box { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.02); }
-        .framework-tag { background: #d1fae5 !important; color: #059669 !important; }
-        .research-box { border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.02); }
-        .research-tag { background: #fee2e2 !important; color: #b91c1c !important; }
+        ul {
+            margin: 15px 0 0 20px;
+            padding: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
 
-        ul { margin: 10px 0 0 20px; padding: 0; font-size: 0.9em; color: #475569; }
-        li { margin-bottom: 4px; }
+        li { margin-bottom: 8px; }
+        li strong { color: var(--text-main); }
 
-        .key-insight { 
-            margin-top: 12px; font-size: 0.9em; font-weight: 600; 
-            padding-left: 10px; border-left: 3px solid var(--accent); color: var(--primary);
+        .insight-box {
+            margin-top: 20px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 2px solid var(--accent-blue);
+            font-size: 0.9em;
+            color: var(--text-main);
+            border-radius: 0 6px 6px 0;
         }
 
         .read-link {
-            display: inline-flex; align-items: center; gap: 5px; margin-top: 15px;
-            color: var(--accent); text-decoration: none; font-weight: 700; font-size: 0.85em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: color 0.2s;
         }
 
-        .job-header { display: flex; justify-content: space-between; font-weight: 700; color: var(--primary); }
-        .job-role { color: var(--accent); font-size: 0.9em; font-weight: 600; }
+        .read-link:hover { color: #ffffff; }
 
-        @media (prefers-color-scheme: dark) {
-            :root { --primary: #f8fafc; --accent: #60a5fa; --bg: #0f172a; --text: #cbd5e1; --card-bg: #1e293b; }
-            .project { background: #1e293b; border-color: #334155; }
-            .core-skills-banner { background: #1e3a8a; color: #bfdbfe; }
-            h2 { border-bottom-color: #334155; }
-            ul { color: #94a3b8; }
-            .tag { background: #1e3a8a; color: #bfdbfe; }
-            .series-box { background: rgba(139, 92, 246, 0.05); border-left-color: #8b5cf6; }
-            .framework-box { background: rgba(16, 185, 129, 0.05); border-left-color: #10b981; }
-            .research-box { background: rgba(239, 68, 68, 0.05); border-left-color: #ef4444; }
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Shay Mordechai</h1>
-    <p class="subtitle">Security Researcher | Malware Analysis & Reverse Engineering</p>
+    <header>
+        <h1>Shay Mordechai</h1>
+        <p class="subtitle">Mobile Security Researcher & Malware Analyst</p>
 
-    <div class="contact-info" style="margin-top: 10px; font-size: 0.95em; color: #64748b;">
-        📧 <a href="mailto:shay.mordechai@proton.me" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #94a3b8;">shay.mordechai@proton.me</a>
-    </div>
-
-    <div class="links">
-        <a href="cv.pdf" class="pdf" target="_blank">📄 Download CV</a>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="github" target="_blank">📂 GitHub Vault</a>
-        <a href="https://www.linkedin.com/in/shay-mordechai/" class="linkedin" target="_blank">🔗 LinkedIn</a>
-    </div>
-    <p style="font-size: 0.85em; opacity: 0.7; margin-bottom: 20px;">
-        Selected projects and whitepapers are linked below. Full research repository available on GitHub.
-    </p>
-
-    <h2>Overview</h2>
-    <p style="font-size: 0.95em;">
-        Offensive Security Researcher with a background in Senior Software Engineering. Specialized in vulnerability discovery, binary analysis, and developing structured methodologies for malware triage. Focusing on execution flow boundaries and OS-level architecture across Native Windows, Android, and Web environments.
-    </p>
-
-    <div class="core-skills-banner">
-        OS Internals & Architecture • Malware Triage • Reverse Engineering (x86/ARM) • Frida (DBI) • Browser Execution
-    </div>
-
-    <h2>Featured Methodology</h2>
-    
-    <div class="project framework-box">
-        <div class="project-header">
-            <span class="project-title">The 5-Layer Malware Triage Framework</span>
-            <span class="tag framework-tag">Research & Methodology</span>
+        <div class="links-container">
+            <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
+            <a href="cv.pdf" class="action-btn" target="_blank">📄 Résumé</a>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 GitHub Vault</a>
+            <a href="https://www.linkedin.com/in/shay-mordechai/" class="action-btn" target="_blank">🔗 LinkedIn</a>
         </div>
-        <p style="font-size: 0.9em;">A structured approach bridging software development and malware research by focusing on <strong>intent</strong> rather than <strong>syntax</strong> when analyzing obfuscated code under time constraints.</p>
-        <ul>
-            <li><strong>Layer 1 to 5:</strong> Progressing systematically from static Code Obfuscation & Business Logic Camouflage to Dynamic Sinks, Evasion checks, and full Kill Chain mapping.</li>
-            <li><strong>AI-Augmented Threats:</strong> Extended the framework to map Agentic AI Tool Abuse (MCP), LLM-as-C2 execution primitives, and polymorphic evasion techniques.</li>
-        </ul>
-        <div class="key-insight">Key insight: Analyzing behavioral execution flows rapidly neutralizes syntactic obfuscation across Java, JS, C, and Assembly.</div>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/blob/main/Mobile%20Malware%20Research/01_Static_Triage/%F0%9F%93%84%2000_Master_5_Layers_Framew.md" target="_blank" class="read-link">🔗 View Master Framework</a>
-    </div>
 
-    <h2>Selected Research & Reverse Engineering</h2>
-
-    <div class="project research-box">
-        <div class="project-header">
-            <span class="project-title">Android Bootstrap Hijacking & OS Internals</span>
-            <span class="tag research-tag">Deep Research / Internals</span>
-        </div>
-        <p style="font-size: 0.9em;">Architectural analysis of early execution timing races during the Android process bootstrap phase, bridging AOSP internals with real-world banking malware (Anatsa 2024).</p>
-        <ul>
-            <li><strong>Mapped</strong> the Android boot chain from the Zygote fork to <code>ActivityThread</code> reflection instantiation.</li>
-            <li><strong>Analyzed</strong> early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
-            <li><strong>Engineered</strong> advanced Frida early-instrumentation wrappers (<code>Java.performImmediate</code>) to intercept application loading and win the runtime injection timing race.</li>
-        </ul>
-        <div class="key-insight">Impact: Authored a comprehensive whitepaper detailing how modern malware hijacks the OS process lifecycle before a single screen is drawn.</div>
-        <a href="https://github.com/shay-mordechai/security-research-journal/blob/main/Mobile-Malware/Android%20Bootstrap%20Hijacking.md" target="_blank" class="read-link">📖 Read the Whitepaper</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Mobile Malware & Dynamic Instrumentation</span>
-            <span class="tag">Android / Frida / Native</span>
-        </div>
-        <p style="font-size: 0.9em;">Analyzed execution flow across Java, JNI, and native layers in highly protected Android applications (OWASP UnCrackable series & live malware).</p>
-        <ul>
-            <li><strong>Defeated</strong> root detection and runtime anti-debugging (<code>ptrace</code>) using Frida (DBI).</li>
-            <li><strong>Hooked</strong> JNI boundaries to intercept data flow between Java and C++.</li>
-            <li><strong>Analyzed</strong> ARM64 binaries and bypassed strict SSL pinning mechanisms.</li>
-        </ul>
-        <div class="key-insight">Impact: Demonstrated how advanced client-side protections and timing evasion techniques can be neutralized at runtime.</div>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Mobile" target="_blank" class="read-link">📖 View Mobile Write-ups</a>
-    </div>
-
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">Advanced Windows Malware Reversing</span>
-            <span class="tag">Reverse Engineering / x86 / C++</span>
-        </div>
-        <p style="font-size: 0.9em;">Analysis of multi-stage Windows binaries utilizing anti-analysis techniques to drop encrypted payloads (e.g., "Whoof!" & ISA Challenges).</p>
-        <ul>
-            <li><strong>Bypassed</strong> execution hurdles via binary patching (modifying conditional jumps: <code>jz -> jmp</code>).</li>
-            <li><strong>Extracted</strong> embedded payloads and engineered custom C++ decryptors (Dual-Key XOR).</li>
-            <li><strong>Analyzed</strong> TLS Callbacks, Entry Point Hijacking, and Code Cave Injections.</li>
-        </ul>
-        <div class="key-insight">Impact: Successfully reconstructed hidden PE files and neutralized environmental validation checks.</div>
-        <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Desktop" target="_blank" class="read-link">📖 Read Desktop Write-ups</a>
-    </div>
-
-    <div class="project series-box">
-        <div class="project-header">
-            <span class="project-title">"The Paradox of Mutability"</span>
-            <span class="tag series-tag">Article Series</span>
-        </div>
-        <p style="font-size: 0.9em;">5-part series on how security boundaries break across browser, runtime, and OS layers.</p>
-        <ul>
-            <li>V8 JIT & RWX memory behavior</li>
-            <li>JNI boundary & loss of memory safety</li>
-            <li>Linux sandboxing & IPC trade-offs</li>
-            <li>Browser privilege separation</li>
-        </ul>
-        <div class="key-insight">Key insight: Security guarantees degrade when execution crosses abstraction layers.</div>
-        <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read Series on LinkedIn</a>
-    </div>
-
-    <h2>Architecture & Security Engineering</h2>
-    <div class="project">
-        <div class="project-header">
-            <span class="project-title">MyLeads AI – Security Architecture</span>
-            <span class="tag">Architecture / Cloud Native</span>
-        </div>
-        <ul>
-            <li><strong>Identified</strong> logic flaws via deep traffic manipulation in Burp Suite.</li>
-            <li><strong>Engineered</strong> Wasm-based DLP filter for Envoy to redact sensitive egress data.</li>
-            <li><strong>Hardened</strong> production environments via Rootless Podman and Linux namespaces.</li>
-        </ul>
-        <div class="key-insight">Impact: Eliminated inbound attack surface (no exposed external ports).</div>
-    </div>
-
-    <h2>Experience</h2>
-    <div class="project">
-        <div class="job-header">
-            <span>Application Security Intern</span>
-            <span>2024 – 2025</span>
-        </div>
-        <div class="job-role">Israel Tax Authority</div>
-        <p style="font-size: 0.9em; margin-top: 8px;">
-            Analyzed vulnerabilities and traced execution paths to validate security findings across sensitive governmental financial systems.
+        <p style="font-size: 1.05em; color: var(--text-main); margin-bottom: 30px;">
+            I specialize in Android OS Internals, dynamic instrumentation, and reverse engineering. I don't just look at how systems work—I look for exactly where their boundaries break, because that is exactly where malware hides.
         </p>
-    </div>
 
-    <div style="text-align: center; margin-top: 50px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fshay-mordechai%2Fshay-mordechai.github.io&count_bg=%232563EB&title_bg=%230F172A&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=true" alt="Profile Views">
-        <div style="font-size: 0.8em; opacity: 0.5;">
-            © 2026 Shay Mordechai. Built for Precision & Impact.
+        <div class="core-skills">
+            [ Android Internals ] [ Frida / DBI ] [ Malware Triage ] [ Reverse Engineering (ARM/x86) ]
         </div>
-    </div>
-</div>
+    </header>
+
+    <main>
+        <div class="card series">
+            <div class="card-header">
+                <span class="card-title">"The Paradox of Mutability" & Digital Whisper Publications</span>
+                <span class="tag series">Research Series</span>
+            </div>
+            <p>A complete 7-part research journey exploring one core concept: <strong>Boundaries are built to protect, and malware knows exactly how to cross them.</strong></p>
+            <ul>
+                <li><strong>Part 1 — V8 JIT:</strong> DATA turns into EXECUTION at runtime.</li>
+                <li><strong>Part 2 — JNI:</strong> The language boundary — Java loses memory safety protections when crossing to C.</li>
+                <li><strong>Part 3 — Flatpak:</strong> Sandbox protects — but only if you don't drill holes in it.</li>
+                <li><strong>Part 4 — Browser Privilege Boundary:</strong> AI gets super-privileges and bypasses the Sandbox.</li>
+                <li><strong>Part 5 — Frida vs Zygote:</strong> An analysis tool fights a timing race against the OS Bootstrap.</li>
+                <li><strong>Part 6 — Digital Whisper (Pub):</strong> Bootstrap Hijacking — Malware runs before the UI, hijacking the boot phase.</li>
+                <li><strong>Part 7 — Digital Whisper (In Progress):</strong> Accessibility Abuse — The malware is alive; now it needs to see. The ultimate Android Sandbox hole.</li>
+            </ul>
+            <div class="insight-box">
+                <strong>Philosophy:</strong> Understanding the theoretical boundary is the first step. Engineering the exploit to cross it is the real research.
+            </div>
+            <a href="https://www.linkedin.com/in/shay-mordechai/" target="_blank" class="read-link">🔗 Read the Series</a>
+        </div>
+
+        <div class="card research">
+            <div class="card-header">
+                <span class="card-title">Android Bootstrap Hijacking & Banking Trojans</span>
+                <span class="tag research">Deep OS Internals</span>
+            </div>
+            <p>Architectural analysis of early execution timing races during the Android process bootstrap phase, bridging AOSP internals with real-world banking malware (Anatsa 2024).</p>
+            <ul>
+                <li><strong>Mapped</strong> the Android boot chain from the Zygote fork to <code>ActivityThread</code> reflection instantiation.</li>
+                <li><strong>Analyzed</strong> early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
+                <li><strong>Engineered</strong> advanced Frida early-instrumentation wrappers to intercept application loading and win the runtime injection timing race.</li>
+            </ul>
+            <a href="https://github.com/shay-mordechai/security-research-journal/blob/main/Mobile-Malware/Android%20Bootstrap%20Hijacking.md" target="_blank" class="read-link">📖 Read the Whitepaper</a>
+        </div>
+
+        <div class="card methodology">
+            <div class="card-header">
+                <span class="card-title">The 5-Layer Malware Triage Framework</span>
+                <span class="tag methodology">Methodology</span>
+            </div>
+            <p>A structured approach bridging software development and malware research by focusing on <strong>intent</strong> rather than <strong>syntax</strong> when analyzing obfuscated code under time constraints.</p>
+            <ul>
+                <li><strong>Layer 1 to 5:</strong> Progressing systematically from static Code Obfuscation & Business Logic Camouflage to Dynamic Sinks, Evasion checks, and full Kill Chain mapping.</li>
+                <li><strong>AI-Augmented Threats:</strong> Extended the framework to map Agentic AI Tool Abuse (MCP), LLM-as-C2 execution primitives, and polymorphic evasion techniques.</li>
+            </ul>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Analyzing behavioral execution flows rapidly neutralizes syntactic obfuscation across Java, JS, C, and Assembly.
+            </div>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs/blob/main/Mobile%20Malware%20Research/01_Static_Triage/%F0%9F%93%84%2000_Master_5_Layers_Framew.md" target="_blank" class="read-link">🔗 View Master Framework</a>
+        </div>
+
+        <div class="card research">
+            <div class="card-header">
+                <span class="card-title">Mobile Dynamic Instrumentation & Reversing</span>
+                <span class="tag research">Frida / RE</span>
+            </div>
+            <p>Hands-on analysis of execution flow across Java, JNI, and native layers in highly protected Android applications (OWASP UnCrackable series & live malware).</p>
+            <ul>
+                <li><strong>Defeated</strong> root detection and runtime anti-debugging (<code>ptrace</code>) using Frida (DBI).</li>
+                <li><strong>Hooked</strong> JNI boundaries to intercept data flow between Java and C++ layers.</li>
+                <li><strong>Bypassed</strong> strict SSL pinning mechanisms and reconstructed hidden payloads via Memory Dumping.</li>
+            </ul>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main/WriteUps/Mobile" target="_blank" class="read-link">📖 View Reverse Engineering Labs</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fshay-mordechai%2Fshay-mordechai.github.io&count_bg=%233b82f6&title_bg=%231a1d24&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=true" alt="Profile Views" style="margin-bottom: 15px;">
+        <div>© 2026 Shay Mordechai. Built for Precision & Impact.</div>
+    </footer>
 
 </body>
 </html>
