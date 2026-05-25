@@ -246,7 +246,7 @@
             </div>
             <p>Deep-dive research into compilation pipelines, semantic fuzzing, and hardware-level network mitigation.</p>
             <ul>
-                <li><strong>SBCL Compiler Exploration (CERT-IL #11265):</strong> Developed an AI-Augmented Semantic Fuzzer to inject compiler directives via Lisp macros. Discovered critical edge cases in lexical isolation and dynamic binding logic at compile-time. Validated via binary analysis in IDA Pro/GDB.</li>
+                <li><strong>SBCL Compiler Exploration:</strong> Identified security-relevant edge cases in SBCL compiler (CERT-IL #11265) via AI-assisted behavioral fuzzing — including scope isolation anomalies and crash conditions under extreme inputs.</li>
                 <li><strong>Network Boundary Mitigation (LANJack):</strong> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
                 <li><strong>JNI/Rust Boundary Tunnels:</strong> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
             </ul>
