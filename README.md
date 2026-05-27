@@ -1,1 +1,0 @@
-# shay-mordechai.github.io
