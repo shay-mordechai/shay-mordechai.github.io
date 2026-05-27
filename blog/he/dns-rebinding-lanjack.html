@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>DNS Rebinding & LANjack: Router-Level Mitigation</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/compiler-zero-days-research.html">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</a></li><li><a href="/blog/he/dns-rebinding-lanjack.html">DNS Rebinding <body> LANjack: ניתוח והצעה לתיקון בראוטר הביתי</a></li><li><a href="/blog/he/fedora-kinoite-isolation.html">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/life-of-a-packet-routing.html">The Life of a Packet: From Application to Routing</a></li><li><a href="/blog/he/pt-web-registration-diagnostic.html">Web API Diagnostics: Looking Behind the UI Freeze</a></li><li><a href="/blog/he/rust-envoy-tunnel.html">בניית Data Hop Firewall ב-Rust (In Process)</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/trading-bot-project.html">בוט מסחר אלגוריתמי (In Process)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>DNS Rebinding & LANjack: ניתוח והצעה לתיקון בראוטר הביתי</h1>
+    <p><em>מאת שי מרדכי | 26 באפריל 2026</em></p>
+
+    <p>בעקבות חשיפת צוות המחקר של GeoEdge על קמפיין ה-LANjack, שבו תוקפים מנצלים שרתי DNS לא מאובטחים כדי להפוך דפדפנים ב-Mobile ו-IoT ל-Proxy, עלתה שאלה ארכיטקטונית מעניינת: האם ניתן לחסום זאת ברמת הראוטר?</p>
+
+    <h2>האנלוגיה ל-AWS</h2>
+    <p>ב-AWS, התמודדו עם אתגר SSRF דומה, ויישמו פתרון ברמת ה-Service שדורש טוקן ומגביל חבילות ל-TTL=1. שאלתי את עצמי – למה לא ליישם מנגנון אבטחה דומה בראוטר הביתי?</p>
+    <p>אם יצרנים כמו TP-Link יגדירו בממשק הראוטר TTL=1 במקום TTL=64, מידע חסוי יוכל להגיע רק למכשירי ה-LAN, אך לא לצאת החוצה אל ה-WAN. כך אנחנו חוסמים זליגת מידע, גם אם הדפדפן של המשתמש פרוץ.</p>
+
+    <h2>התגובה הרשמית מ-TP-Link</h2>
+    <p>הצגתי את הניתוח הטכני לצוות האבטחה של TP-Link. הם אישרו שהצעת ה-TTL=1 אכן יעילה וחוסמת את זליגת המידע. עם זאת, הם הצביעו על אתגר משמעותי: <strong>Usability</strong>. החמרה כזו תפריע לשימושיות ברשתות מורכבות, בעיקר בשימוש ב-VPN.</p>
+
+    <h2>ניהול סיכונים: אבטחה מול שימושיות</h2>
+    <p>הדיון מול TP-Link חידד אצלי תובנה חשובה: אבטחה היא לא רק "לסגור את הדלת". אבטחה טובה היא ניהול סיכונים תוך כדי שהמוצר ממשיך לעבוד עבור המשתמשים. TP-Link ציינו שהם שוקלים את ההצעה שלי כפיצ'ר "Opt-in" עתידי.</p>
+    <p>שמחתי לתרום את חלקי לדיון הארכיטקטוני הזה. זה הזכיר לי שחוקר אבטחה לא רק מוצא באגים, אלא מציע פתרונות פרקטיים שמתחשבים באילוצים של העולם האמיתי.</p>
+</div>
+</body>
+</html>
