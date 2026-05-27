@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web API Diagnostics: Looking Behind the UI Freeze</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/compiler-zero-days-research.html">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/life-of-a-packet-routing.html">The Life of a Packet: From Application to Routing</a></li><li><a href="/blog/he/pt-web-registration-diagnostic.html">Web API Diagnostics: Looking Behind the UI Freeze</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>Web API Diagnostics: Looking Behind the UI Freeze</h1>
+    <p><em>מאת שי מרדכי | 16 באפריל 2026</em></p>
+    
+    <p>באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השיכון. עבורי, כלוחם במילואים, זו הייתה נקודת ציון קריטית (לאור עדכון מכסות הזכאות ל-50%). השעה הגיעה, אבל האתר קפא. ה-UI לא איפשר הרשמה.</p>
+    
+    <p>כחוקר אבטחה, כשאתר אומר לי "אי אפשר", האינסטינקט הראשון שלי הוא לשאול: <strong>איפה בדיוק מתרחשת החסימה?</strong> האם זה רק ה-Frontend שמסתיר כפתור, או שה-Backend באמת למטה?</p>
+
+    <h2>The Diagnostic Process: Intercept & Replay</h2>
+    <p>החלטתי לעשות Bypass ל-UI כדי לבדוק את זמינות ה-API. פתחתי את ה-DevTools והתחלתי לנטר את תעבורת ה-Network. גיליתי שהדפדפן שולח בקשה מעניינת:</p>
+<pre><code dir="ltr">GET https://dira.moch.gov.il/api/InvokerAuth?method=Projects&param=%3FfirstApplicantIdentityNumber...%26ProjectStatus%3D4...</code></pre>
+    <p>הסטטוס שחזר היה <code>200 OK</code>. כלומר, ה-API Gateway למעלה ומתפקד! אבל ה-Response Body היה מאכזב:</p>
+<pre><code dir="ltr">{
+    "OpenLotteriesCount": 0,
+    "ActionStatus": 1,
+    "ProjectItems": []
+}</code></pre>
+
+    <h2>Fuzzing the Backend Logic</h2>
+    <p>כאן התחיל שלב המחקר. הבנתי שמבנה השאילתה מבוסס על Wrapper API שמעביר מתודות ופרמטרים ב-URL. הפרמטר הקריטי היה <code>ProjectStatus=4</code>, שמייצג סטטוס "פתוח להרשמה".</p>
+    <p>כדי לבדוק מה המערכת מסתירה ממני, השתמשתי ב-<strong>cURL Capture</strong> מהדפדפן וייבאתי את הבקשה (כולל כל ה-Auth Headers, ה-Tokens וה-Cookies) לתוך Postman ב-Fedora Kinoite שלי. התחלתי לבצע "Fuzzing" (דיג) על שדה הסטטוס.</p>
+    <p>כאשר שיניתי את הסטטוס מ-<code>4</code> ל-<code>2</code>, הפלט התמלא במידע:</p>
+<pre><code dir="ltr">"LotteryNumber": "2667",
+"CityDescription": "אופקים",
+"HU_Reservists_L": 0,
+"HU_CombatReservist_L": 0</code></pre>
+    
+    <h2>השורה התחתונה: ארכיטקטורה מול מציאות</h2>
+    <p>השדות החדשים <code>HU_CombatReservist_L</code> (Housing Units Combat Reservists) היו ההוכחה שחיפשתי. משרד השיכון לא היה ב"קריסת שרתים". הם היו בעיצומו של <strong>Database Migration</strong>. המערכת תמכה כעת לוגית בהקצאות החדשות, והצוות כנראה הריץ באותו לילה פקודות <code>UPDATE</code> ששינו את הפרויקטים החדשים לסטטוס זמני (Draft), כדי שלא נראה אותם עד שהמספרים יתעדכנו.</p>
+    <p>המחקר הלילי הזה הזכיר לי את הכלל הכי חשוב ב-Web Security: <strong>לעולם אל תסמוך על ה-Frontend.</strong> התצוגה היא רק פרשנות של מידע, אבל ה-Source of Truth נמצא בתעבורה בין הלקוח למסד הנתונים.</p>
+</div>
+</body>
+</html>
