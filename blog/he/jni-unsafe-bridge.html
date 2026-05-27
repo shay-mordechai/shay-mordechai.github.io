@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JNI as (Un-)Safe Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>JNI as (Un-)Safe Bridge</h1>
+    <p><em>מאת שי מרדכי | 26 במרץ 2026</em></p>
+    <h2>הפרדוקס בתכנות משפות High-Level ל-Low-Level</h2>
+    <p>שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גישה כמעט ישירה ל-RAM. בעוד ש-Java מונעת זאת ע"י ניהול הזיכרון דרך מתווך - JVM, ונותנת למתכנת רק רפרנס מוגבל. הבידוד הזה עולה ביוקר – כל משתנה סוחב איתו Metadata בנוסף לנתונים עצמם, ודורש הרבה יותר זיכרון. לכן, הרבה שפות High-Level קצת "מרמות", ומאפשרות לגשר (באמצעות FFI) בינן לבין שפות Low-Level כדי להחזיר את הביצועים שאבדו.</p>
+    <h2>אשליית האבטחה</h2>
+    <p>ב-Java למשל, הגשר FFI הזה נקרא JNI (Java Native Interface). הוא הפרוטוקול שמתרגם את "ניהול הזיכרון" של Java, ל"ניהול הזיכרון החסכוני" של שפת C. ה-JNI בעצם משיל מעצמו את כל ההגנות של השפה העילית, כמו ה-Garbage Collector. מפתח ה-High-Level חושב שהוא מתכנת בשפה בטוחה ו"נרדם בשמירה" בזמן הכי קריטי.</p>
+    <h2>סתירה במעבר מחרוזות דרך JNI</h2>
+    <p>ה-JVM עשויה לאמת מחרוזת ולאשר אותה כבטוחה, כי היא בודקת את האורך המפורש שלה. אבל כשאותם נתונים בדיוק חוצים ל-C, שפת C מפרשת אותם אחרת – היא מפסיקה לקרוא ברגע שהיא מזהה תו Null (\0). אנחנו נשארים עם פגם ארכיטקטוני עצום: שתי מערכות מסתכלות על אותם ביטים בזיכרון, אבל מבינות אותם אחרת.</p>
+    <h2>הפתרון שאני מציע: בניית Tunnels בטוחים</h2>
+    <p>הגעתי למסקנה שהתעשייה לא צריכה למהר לזרוק עשרות שנות פיתוח ב-C לעומת Rust באופן מלא, אלא לאבטח את הגשרים אליה. ההצעה שלי היא שכל מעבר מ-Java ל-C יעבור דרך Tunnel ב-Rust. שפת Rust תציע בטיחות זיכרון כבר בזמן הקומפילציה ותחטא את הנתונים, ורק אז תעביר אותם ל-C.</p>
+    <p>יישמתי קונספט ארכיטקטוני זהה בפרויקט שבניתי לאחרונה – Data Hop Firewall. מדובר בפילטר WebAssembly שכתבתי ב-Rust עבור Envoy Proxy. בדיוק כפי שהפילטר ב-Envoy מגן על גבולות הרשת, כך 'מנהרות' ה-Rust ב-JNI צריכות להגן על גבולות הזיכרון.</p>
+</div>
+</body>
+</html>

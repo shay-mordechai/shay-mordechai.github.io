@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnCrackable Level 1 - Mobile Security Writeup</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>UnCrackable Level 1 - Mobile Security Writeup</h1>
+    <p><em>מאת שי מרדכי</em></p>
+    
+    <h2>1. Root & Debug Detection</h2>
+    <pre><code dir="ltr">@Override // android.app.Activity
+protected void onCreate(Bundle bundle) {
+    if (root_detection.a() || root_detection.b() || root_detection.c()) {
+        a("Root detected!");
+    }
+    if (debug_detection.a(getApplicationContext())) {
+        a("App is debuggable!");
+    }
+    super.onCreate(bundle);
+    setContentView(2130903040);
+}</code></pre>
+
+    <p>ה-Debug בודק האם ה-debug flag = 2:</p>
+    <pre><code dir="ltr">public class debug_detection {
+    public static boolean a(Context context) {
+        return (context.getApplicationContext().getApplicationInfo().flags & 2) != 0;
+    }
+}</code></pre>
+
+    <h2>2. Root Detection Breakdown</h2>
+    <p>בדיקה דרך ה-PATH:</p>
+    <pre><code dir="ltr">public static boolean switch_user() {
+    for (String str : System.getenv("PATH").split(":")) {
+        if (new File(str, "su").exists()) {
+            return true;
+        }
+    }
+    return false;
+}</code></pre>
+    <p>בדיקה 3, דרך ה-ROOT FILES שנוספו למכשיר ROOT, מבצעת Syscall דרך ה-JNI לבדיקת קבצים קיימים כגון <code>/system/xbin/daemonsu</code>.</p>
+
+    <h2>3. Validation Logic (AES)</h2>
+    <p>הפונקציה מפענחת (init=2) מחרוזת בעזרת מפתח ואלגוריתם AES. לאחר מכן, משווה את התוצאה ל-Base64 מפוענח.</p>
+
+    <h2>4. Frida Hook Script</h2>
+    <pre><code dir="ltr">/**
+* Frida Script for UnCrackable Level 1
+* Objective: Bypassing security checks and extracting the secret key.
+*/
+Java.perform(function() {
+    // Bypass Root Detection Logic
+    var root_detection = Java.use("sg.vantagepoint.a.c");
+    ['a', 'b', 'c'].forEach(function(method) {
+        root_detection[method].implementation = function() {
+            return false;
+        };
+    }); 
+
+    // Bypass Debug Detection
+    var debug_detection = Java.use("sg.vantagepoint.a.b");
+    debug_detection.a.implementation = function(Context) {
+        return false;
+    };
+
+    // The "Spy" Hook - Intercepting the Decryption process
+    var key_and_cypertext = Java.use("sg.vantagepoint.a.a");
+    key_and_cypertext.a.implementation = function(key, ciphertext) {
+        var plaintextBytes = this.a(key, ciphertext);
+        try {
+            var javaString = Java.use("java.lang.String");
+            var plaintext = javaString.$new(plaintextBytes);
+            console.log("Secret extracted: " + plaintext);
+        } catch (err) { console.error("Error in Spy Hook: " + err.message); }
+        return plaintextBytes;
+    };
+});</code></pre>
+</div>
+</body>
+</html>

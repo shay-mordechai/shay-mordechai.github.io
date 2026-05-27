@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frida in Race - UnCrackable Level 2</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>Frida in Race - UnCrackable Level 2</h1>
+    <p><em>מאת שי מרדכי | 28 באפריל 2026</em></p>
+    <p>במאמר הראשון בסדרה, דיברנו על פרדוקס האבטחה שבמנוע V8, שמסוגל להפוך DATA ל-EXECUTION בזמן ריצה. אי שם בשנת 2010, מפתח בשם Ole André Vadla Ravnås נתקל בחומה. מתוך הצורך הזה נולדה Frida - מערכת שמאפשרת להזריק קוד שמשנה את ה-Execution Flow של תוכנית בזמן אמת.</p>
+    <p>לאחר עבודה על ה-Level2 והעמקה במכשולים שהוצבו שם, נדהמתי מול ה-Execution Flow של JAVA עצמה (כמעט נשרף לי המוח שם - בקטע טוב), ואיך Frida משתלבת בו כ"כ יפה.</p>
+    
+    <h2>איך האפליקציה "נולדת"?</h2>
+    <p>בהרצת האפליקציה, Zygote משכפל את עצמו לפרוסס חדש (Zygote Fork) שיש בו רק thread אחד ראשי - main/ui thread. בפועל, כל מה שאנחנו קוראים לו ‘האפליקציה’ יושב על לולאה אחת (Looper) שחיה בתוך ה-UI thread, שמנוהלת ע״י ActivityThread.</p>
+    
+    <h2>הדרך הרגילה - Attach מול מצב Spawn</h2>
+    <p>המכשול ב-Level 2 - המתכנתים חסמו את אפשרות ה-Attach על ידי העברת הגנות האבטחה לשכבת ה-Native. כבר בהתחלת הריצה, נטען JNI_OnLoad שמבצע ptrace שמונע מ-Frida להזריק shellcode.</p>
+    <p>הדרך לנצח היא Spawn - מריצים את Frida יחד עם האפליקציה, מיד אחרי שנוצר Zygote Fork, אבל עדיין ה-IP לא הריץ פקודה אחת מהקוד. ויש את הדרך האגרסיבית יותר: Zygote Hook - הזרקה לתוך ה-Zygote עצמו כדי שכל אפליקציה תיוולד עם Frida בדם שלה.</p>
+    
+    <h3>עדכון קטן מהשטח:</h3>
+    <p>למרות שהמודל שבניתי סביב Zygote ו-JNI דווקא היה הגיוני לגמרי, ניתוח מעמיק יותר ב-IDA הצביע אחרת: ההגנה ב-Level 2 לא נשענת בפועל על JNI_OnLoad, אלא על מנגנון anti-debug פשוט יותר בשכבת ה-native. לפחות הרווחתי דו-קרב מחשבתי מעניין - ולמדתי שאין תחליף להוכחות בינאריות.</p>
+</div>
+</body>
+</html>

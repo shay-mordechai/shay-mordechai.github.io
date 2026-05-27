@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Bootstrap Hijacking</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>Android Bootstrap Hijacking</h1>
+    <p><em>מאת שי מרדכי</em></p>
+    <p>הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מודעים לנתון הבא: "עולם האנדרואיד" כפי שאנחנו מכירים אותו, לא באמת קיים ברגע שהמכשיר נדלק. בשניות הראשונות, הטלפון שלכם פשוט פלטפורמת Linux רגילה לחלוטין.</p>
+    <p>במאמר זה, ננתח חלק מהנוזקה Anatsa - כלי תקיפה ממשפחת ה-Banking Trojans, המיועד לגניבת פרטי גישה לחשבונות פיננסיים. הנוזקה הזו, מבצעת עקיפה לא שיגרתית של הצגת ה-UI של האפליקציה.</p>
+    
+    <h2>Application vs. Activity - שתי נקודות הכניסה</h2>
+    <p>הפקודה הראשונה של ה-AMS נקראת <code>bindApplication</code>. היא הטריגר שגורם למערכת ההפעלה ליצור את אובייקט ה-Application. הנה ה-Manifest של הנוזקה:</p>
+    <pre><code dir="ltr">&lt;application
+    android:label="PDF Reader: Update"
+    android:icon="@vista6/vista_res_0x7f060000"
+    android:name="ihp.opjhprs.fsthjpoyr.rhhkkff"
+    android:allowBackup="true"
+    android:usesCleartextTraffic="true"&gt;</code></pre>
+    <p>התכונה <code>android:name</code> גורמת למערכת ליצור אובייקט Application מותאם אישית. הקוד ב-Entry Point הזה חייב להיות קצר וקטלני:</p>
+    <pre><code dir="ltr">public class rhhkkff extends Application { 
+    @Override
+    protected void attachBaseContext(Context base) { 
+        super.attachBaseContext(base); 
+        new eomqmgsskufu(base).oqwrkywwlykpu(); 
+        new tttlkqttg(base).mopksfpffv(); 
+    }
+}</code></pre>
+
+    <h2>הדרך לנצח את המירוץ: Zygote Hook ב-Frida</h2>
+    <p>מכיוון שאי אפשר להתחבר מאוחר (Attach), אנחנו נזריק קוד שיכריח את המערכת ליצור אובייקט Default Application נקי, למרות ה-Manifest הזדוני:</p>
+    <pre><code dir="ltr">Java.perform(function() {
+    var reset_entry_point = Java.use("android.app.LoadedApk");
+    
+    reset_entry_point.makeApplicationInner.implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) {
+        forceDefaultAppClass = true;
+        return this.makeApplicationInner(forceDefaultAppClass, instrumentation, allowDuplicateInstances);
+    };
+});</code></pre>
+    
+    <h2>The Crashed Process ו-ContentProvider</h2>
+    <p>בהמשך, נחשף שקוד הנוזקה מורץ מוקדם עוד יותר בעזרת <code>SomeProvider</code> שיורש מ-<code>ContentProvider</code>. המערכת מחייבת אותו לממש את <code>onCreate</code>, והנוזקה מנצלת זאת לטעינת הקוד שלה.</p>
+</div>
+</body>
+</html>

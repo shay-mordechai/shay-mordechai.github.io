@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Privilege Boundary</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>Browser Privilege Boundary</h1>
+    <p><em>מאת שי מרדכי | 3 באפריל 2026</em></p>
+    <p>בעבר, כל דפדפן היה תהליך אחד גדול. כיום, הדפדפנים משתמשים בארכיטקטורה שונה לגמרי. בזכות עיקרון ה-Site Isolation, לכל Tab יש תהליך משלו ב-RAM. לתהליך הזה קוראים Renderer, והוא מכיל שני מנועים עיקריים: מנוע הרינדור ומנוע ה-V8. לתהליך הבן (ה-Renderer) יש גישה רק ל-CPU בשביל חישובים. הוא עטוף ב-Sandbox.</p>
+    <h2>השומר שעל החומה: The Browser Process</h2>
+    <p>איך אנחנו בכל זאת רואים תוכן על המסך או מפעילים מצלמה? כאן נכנס לתמונה התהליך הראשי של הדפדפן (Browser Process). הוא משמש בתור "שומר". ה-Renderer שולח לו בקשות דרך מנגנון תקשורת שנקרא IPC. השומר בודק את ההרשאות, ורק אם הכל תקין, הוא מבצע את הפעולה עבורו. זהו קו הגבול האמיתי – Browser Privilege Boundary.</p>
+    <h2>הסוס הטרויאני של 2026: Agentic AI</h2>
+    <p>ואז נכנסה לתמונה הבינה המלאכותית העצמאית. כדי שסוכן AI שמוטמע בדפדפן יהיה באמת שימושי, חברות הטכנולוגיה פשוט העניקו לסוכני ה-AI "מפתח מאסטר". הן יצרו עבורם סביבות ריצה בעלות הרשאות-על, שפועלות מעל או מחוץ ל-Sandbox הרגיל והמוגבל של הדפדפן. המשמעות: בעידן ה-Agentic AI, האקרים כבר לא צריכים למצוא חולשות מורכבות במנוע ה-V8. כל מה שהם צריכים לעשות זה לנצל את ה-AI בעל ההרשאות הגבוהות.</p>
+    <h2>עדכון - מאי 2026</h2>
+    <p>לפני כחודש פרסמתי מאמר שניתח את ה-Browser Privilege Boundary. לאחרונה, חברות החלו לבנות Self-Hosted Sandboxes ומתן הרשאות ספציפיות באמצעות מודל MCP Tunnels - בדיוק כפי שהצעתי במאמר.</p>
+</div>
+</body>
+</html>

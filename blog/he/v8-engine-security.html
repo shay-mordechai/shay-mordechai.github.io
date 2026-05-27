@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V8 Engine's (Dis-)Security</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>V8 Engine's (Dis-)Security</h1>
+    <p><em>מאת שי מרדכי | 24 בדצמבר 2025</em></p>
+    <p>כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ה-WEB, "Frontend, Backend". בעולם המודרני, מסתבר שיש בעיקר "אפור". אם נסכם את חולשות האבטחה של 2025, הכל מתחיל ומסתיים במושג אחד: בידוד.</p>
+    <h2>הבידוד הפיזי: Code vs Data</h2>
+    <p>בעולם הישן, בקומפיילר (כמו C), הייתה הפרדה ברורה: הפקודות נשמרות ב-Code Section עם הרשאת הרצה, והמשתנים ב-Data Section עם הרשאת כתיבה בלבד. מערכת ההפעלה אכפה בידוד תפקידים – DATA לעולם לא יהפוך ל-CODE.</p>
+    <p>בזמן הקומפילציה, הקומפיילר מכניס את הלוגיקה של התכנית בתור פקודות מכונה ל-Code Section, ומשאיר את המשתנים ב-Data Section, כדי שבזמן הריצה, ישאר למעבד רק להריץ את כל ה-Code ביחד. הבידוד בין DATA ל-CODE נשמר פיזית ע"י ה-Flag - No Execute.</p>
+    <p>מנגד, האינטרפרטר (כמו ה-JS הישנה) הציע ניידות ובטיחות – הכל רץ בתוך "כלא" מוגן שבו הקוד מעולם לא נגע ישירות במעבד. מנוע הדפדפן צריך לעבור כל שורה ב-Data שנוצרה ב-RAM ולהגיד "אה, אני מכיר את הפעולה הזו, יש לי אותו הדבר רק ב-C++ בקוד של עצמי", ומבצע אותה כאילו היא חלק ממנו. המחיר של זה כמובן איטיות בביצועים.</p>
+    <h2>מהפכת ה-V8 והפריצה של חומות ה-JIT</h2>
+    <p>אבל מה אם יום אחד, האינטרפרטר יחליט שנמאס לו לפרש פקודה, לראות שהיא קיימת אצלו ולהריץ אותה, בטענה שרוב הפקודות כבר חוזרות על עצמן? במצב כזה, הוא ירצה לקצר זמן, ובמקום רק לקרוא מה-DATA ואז להריץ מה-CODE (של עצמו), הוא ירצה להריץ ישירות מה-DATA. הייתם מסכימים לו?</p>
+    <p>Google היתה הראשונה להסכים לזה בשנת 2008, באמצעות מנוע V8. הוא נבנה באמצעות טכנולוגית JIT שהיתה קיימת אצל קומפיילרים, והחליטה לבנות את אותו הדבר לאינטרפרטר, דבר שהביא להרחבת וקטור תקיפה לדפדפנים. ה-JIT מתלבש על האינטרפרטר ומאפשר לו לכתוב DATA ולהריץ מאותו מקום ב-RAM (שנקרא RWX), בלי חסימה של Flag NX.</p>
+    <h2>React2Shell ועידן ה-FullStack Security</h2>
+    <p>היום, בגלל שה-JIT מאפשר למידע (Data) להפוך לפקודה (Execute) בזמן אמת, אתרים מודרניים משתמשים באותה שפה (JS) בשני הצדדים ל-Frontend ול-Backend. הנוחות הזו עלתה לנו בחולשה חדשה - React2Shell, שבה קבוצות תקיפה ניצלו את הדינמיות הזו כדי להזריק פקודות לשרת.</p>
+    <p>המעבר של התעשייה ל-XDR ב-2020 לא היה רק שינוי טכנולוגי, אלא שינוי תפיסתי. הבנו שהבידוד בין ה-Web ל-Endpoint מת. כחוקר אבטחה, אני מאמין שהעתיד שייך למי שיודע לחבר את הנקודות – מה-JavaScript ב-Browser ועד ל-Instruction Pointer בזיכרון. זהו ה-FullStack Security האמיתי.</p>
+</div>
+</body>
+</html>

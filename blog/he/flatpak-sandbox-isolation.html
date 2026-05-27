@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flatpak - Linux Sandbox Isolation</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="content">
+    <h1>Flatpak - Linux Sandbox Isolation</h1>
+    <p><em>מאת שי מרדכי | 29 במרץ 2026</em></p>
+    <p>בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום נדבר על מערכת ההפעלה עצמה. Flatpak זוהי סביבת sandboxes מאובטחת עבור מערכות הפעלה מודרניות (כמו Fedora Kinoite שאני עובד עליה). היא לא מסתפקת ב-sandboxes שכל דפדפן פותח, אלא עוטפת את כל התהליך הראשי ב-sandbox מאובטח מאוד.</p>
+    <p>הבעיה מתעוררת כשמנסים להשתמש ב-extensions ותיקים שלא עדכנו את הדרך בה ה-desktop app מדברת עם הדפדפן (IPC). במחקר החדש שלי, יצאתי לחקור מדוע ה-LibreWolf Browser שלי לא תואם ל-KeePassXC. גיליתי שהדרך המודרנית בה Flatpak מצפה שידברו איתו, זו לא הדרך בה KeePassXC מדבר. כדי לגרום לתקשורת לעבוד, הייתי צריך "לקדוח חור" ב-sandbox.</p>
+    <p>מתן הרשאת הרצה על מערכת ההפעלה הופך את ה-Sandbox לשקוף – כל חולשת RCE בדפדפן תהפוך מיד להשתלטות מלאה על המחשב. תקשורת מודרנית חייבת להיות מבוססת הודעות טקסט בלבד (כמו DBus Portals).</p>
+    <hr>
+    
+    <div dir="ltr" style="text-align: left; background-color: #1e293b; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #38bdf8;">Investigating IPC Boundaries and Sandboxing in Flatpak: The LibreWolf & KeePassXC Case</h2>
+        <h3>Executive Summary (TL;DR)</h3>
+        <p><strong>Problem:</strong> Strict OS-level isolation (Flatpak/bubblewrap) breaks essential browser functionality, specifically Native Messaging IPC (KeePassXC) and hardware-based authentication (WebAuthn/USB Security Keys).<br>
+        <strong>Action:</strong> Investigated Flatpak mount namespaces, Unix Domain Sockets, and hardware permissions. Engineered granular sandbox overrides and analyzed browser engine configurations.<br>
+        <strong>Result:</strong> Successfully mapped the trade-off between OS-level sandboxing, functionality, and browser fingerprinting.</p>
+
+        <h3>2. The Investigation: Locating the IPC Socket</h3>
+        <pre><code dir="ltr">shay0129@fedora:~$ ls -l /run/user/1000/app/org.keepassxc.KeePassXC/
+srwx------. 1 shay0129 shay0129 0 Mar 28 21:21 org.keepassxc.KeePassXC.BrowserServer</code></pre>
+
+        <h3>3. Proving the Sandbox Isolation</h3>
+        <pre><code dir="ltr">shay0129@fedora:~$ flatpak run --command=ls io.gitlab.librewolf-community -l /run/user/1000/app/org.keepassxc.KeePassXC/
+F: Not sharing "/dev/bus/usb" with sandbox: Path "/dev" is reserved by Flatpak
+ls: cannot access '/run/user/1000/app/org.keepassxc.KeePassXC/': No such file or directory</code></pre>
+
+        <h3>4. Architectural Solutions</h3>
+        <p>To resolve these isolation barriers without compromising the entire sandbox, granular permissions must be applied:</p>
+        <pre><code dir="ltr">flatpak override --user --filesystem=/run/user/1000/app/org.keepassxc.KeePassXC io.gitlab.librewolf-community</code></pre>
+
+        <h3>5. Resolving the Hardware Token (USB Key)</h3>
+        <pre><code dir="ltr">flatpak override --user --device=all io.gitlab.librewolf-community</code></pre>
+        <p>Browser Engine Configuration LibreWolf modified internal engine flags (about:config):</p>
+        <pre><code dir="ltr">security.webauth.webauthn = true
+security.webauth.u2f = true
+security.webauth.webauthn_enable_usbtoken = true</code></pre>
+        <p><strong>Conclusion:</strong> Legacy IPC mechanisms relying on stdio execution are fundamentally incompatible with strict modern sandboxes.</p>
+    </div>
+</div>
+</body>
+</html>
