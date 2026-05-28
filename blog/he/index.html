@@ -2,72 +2,118 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <link rel='stylesheet' href='../../assets/css/style.css'>
+    <link rel="stylesheet" href="../../assets/css/style.css">
     <title>מאגר המאמרים והפרויקטים של שי מרדכי</title>
     <style>
-        /* עיצוב ייעודי לדף האינדקס */
-        #content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1.main-title {
-            text-align: center;
+        .articles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-bottom: 40px;
-            color: #f8f8f2;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            padding-bottom: 20px;
         }
-        .category-section {
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 25px 35px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .category-section h2 {
-            color: #4ade80; /* ירוק זרחני */
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-            margin-top: 0;
-            font-family: monospace;
-            text-align: left; /* יישור לשמאל כי המילים באנגלית */
-            direction: ltr;
-        }
-        .category-section ul {
-            list-style: none; /* ביטול הנקודות הרגילות */
-            padding: 0;
-            margin: 15px 0 0 0;
-        }
-        .category-section li {
-            margin: 12px 0;
-            padding-right: 20px;
-            position: relative;
-        }
-        /* יצירת סמל (Bullet) טכני לפני כל מאמר */
-        .category-section li::before {
-            content: "/>";
-            color: #4ade80;
-            position: absolute;
-            right: 0;
-            font-family: monospace;
-            font-weight: bold;
-        }
-        .category-section a {
-            color: #e2e8f0;
+        /* מחלקת העיצוב המקורית שהייתה לך */
+        .article-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
             text-decoration: none;
-            font-size: 1.1rem;
-            transition: color 0.2s ease, padding-right 0.2s ease;
-            display: inline-block;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s;
         }
-        .category-section a:hover {
-            color: #4ade80;
-            padding-right: 5px; /* אפקט תזוזה קטן בריחוף */
-        }
+        .article-card:hover { border-color: #8b949e; }
+        @media (max-width: 768px) { .article-card { width: 100%; } }
     </style>
 </head>
 <body>
 <div id="content">
-    <h1 class="main-title">מאגר המאמרים והפרויקטים של שי מרדכי</h1>
-<div class='category-section'><h2>Projects</h2><ul><li><a href='myleads-saas-architecture.html'>Project MyLeads AI: Secure-by-Design SaaS Architecture</a></li><li><a href='pt-web-registration-diagnostic.html'>Web API Diagnostics: Looking Behind the UI Freeze</a></li><li><a href='trading-bot-project.html'>Project Sniper: איך מספרים סיפור בעולמות הסייבר ושוק ההון?</a></li><li><a href='pt-dns-rebinding-mitigation.html'>DNS Rebinding & LANjack: Architectural Mitigation</a></li></ul></div><div class='category-section'><h2>Research</h2><ul><li><a href='android-bootstrap-hijacking.html'>Android Bootstrap Hijacking</a></li><li><a href='browser-privilege-boundary.html'>Browser Privilege Boundary: כש-AI הופך לסוכן</a></li><li><a href='compiler-zero-days-research.html'>מחקר קומפיילר וגילוי 3 חולשות Zero-Day</a></li><li><a href='fedora-kinoite-isolation.html'>איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></li><li><a href='flatpak-sandbox-isolation.html'>Flatpak - Linux Sandbox Isolation</a></li><li><a href='jni-unsafe-bridge.html'>JNI as (Un-)Safe Bridge</a></li><li><a href='permission-paradox.html'>The Permission Paradox</a></li><li><a href='rust-envoy-tunnel.html'>Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</a></li><li><a href='v8-engine-security.html'>V8 Engine's (Dis-)Security</a></li><li><a href='malware-lab-kinoite.html'>איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></li></ul></div><div class='category-section'><h2>Writeups</h2><ul><li><a href='life-of-a-packet-routing.html'>The Life of a Packet: From Application to Routing</a></li><li><a href='uncrackable-level1.html'>UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href='uncrackable-level2.html'>UnCrackable Level 2 - Mobile Security Writeup</a></li></ul></div></div></body></html>
+    <h1>מאגר המאמרים והפרויקטים של שי מרדכי</h1>
+<h2>Projects</h2><div class='articles-grid'>
+        <a href="compiler-zero-days-research.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">תאריך פרסום: בקרוב... (גילוי מקורי: 31 ביולי 2025)</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">סטטוס: כתיבת הדוח הטכני (Writeup) בעיצומה ⏳</div>
+        </a>
+        <a href="myleads-saas-architecture.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Project MyLeads AI: Secure-by-Design SaaS Architecture</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">March 9, 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">By Shay Mordechai | March 9, 2026</div>
+        </a>
+        <a href="pt-web-registration-diagnostic.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Web API Diagnostics: Looking Behind the UI Freeze</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">16 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השיכון. עבורי...</div>
+        </a>
+        <a href="rust-envoy-tunnel.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">15 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את ת...</div>
+        </a>
+        <a href="trading-bot-project.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Project Sniper: איך מספרים סיפור בעולמות הסייבר ושוק ההון?</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בימים האחרונים, תוך כדי הכנה למיוני Security Researcher בפאלו אלטו, חקרתי לעומק את מנגנוני...</div>
+        </a>
+        <a href="pt-dns-rebinding-mitigation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">DNS Rebinding & LANjack: Architectural Mitigation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">26 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בעקבות חשיפת קמפיין LANjack... (הטקסט המאוחד כאן)</div>
+        </a></div><h2>Research</h2><div class='articles-grid'>
+        <a href="android-bootstrap-hijacking.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Android Bootstrap Hijacking</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">27 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">המאמר מתמקד בשבריר השניה לאחר ריצת האפליקציה על מכשיר האנדרואיד, וכיצד נוזקות מתקדמות מנסו...</div>
+        </a>
+        <a href="browser-privilege-boundary.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">עודכן ב-19 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בעבר, כל דפדפן היה תהליך אחד גדול. אם אתר אחד קרס, ה-OS היה מבצע killall וכל ה-Tabs היו נס...</div>
+        </a>
+        <a href="fedora-kinoite-isolation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. הצורך להריץ כמה VMs במקביל לניתוח נוזקות וללימוד עצ...</div>
+        </a>
+        <a href="flatpak-sandbox-isolation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">Flatpak - Linux Sandbox Isolation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">29 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום...</div>
+        </a>
+        <a href="jni-unsafe-bridge.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">JNI as (Un-)Safe Bridge</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">26 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גישה כמעט ישי...</div>
+        </a>
+        <a href="life-of-a-packet-routing.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">The Life of a Packet: From Application to Routing</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">18 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כשמנסים לגשת לאתר (למשל פאלו אלטו) מהטרמינל בלינוקס, קל לחשוב על התהליך כמושג אבסטרקטי. בת...</div>
+        </a>
+        <a href="permission-paradox.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">The Permission Paradox</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">28 במאי 2026 (טיוטה בתהליך)</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">לאחר שחקרנו את Anatsa במאמר הקודם וראינו בעיניים איך היא (בלי בושה) מזריקה קוד ל-Entry Poi...</div>
+        </a>
+        <a href="v8-engine-security.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">V8 Engine's (Dis-)Security</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">24 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ה-WEB, "Fr...</div>
+        </a>
+        <a href="malware-lab-kinoite.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. כשהתחלתי לבנות מעבדת Malware Analysis מקומית, נתקלת...</div>
+        </a></div><h2>Writeups</h2><div class='articles-grid'>
+        <a href="uncrackable-level1.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">UnCrackable Level 1 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">22 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בתחילת האפליקציה, הפונקציה onCreate בודקת האם המכשיר פרוץ או מחובר לדיבאגר[cite: 2]:</div>
+        </a>
+        <a href="uncrackable-level2.html" class="article-card">
+            <div style="font-weight:bold; color:#fff;">UnCrackable Level 2 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">שאלה: מדוע פונקציות NATIVE תמיד ישלחו BYTES לקוד ב-JAVA, ולא STRING או INT? בגלל הדרך בה ע...</div>
+        </a></div></div></body></html>
