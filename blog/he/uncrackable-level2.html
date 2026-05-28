@@ -9,15 +9,51 @@
 <body>
 <div id="content">
     <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים והפרויקטים</a>
+    
     <h1>UnCrackable Level 2 - Mobile Security Writeup</h1>
-    <p><em>מאת שי מרדכי | 30 באפריל 2026</em></p>
+    <p><em>מאת שי מרדכי | 30 באפריל 2026 (טיוטה)</em></p>
     
-    <p>לאחר פיצוח האתגר הראשון, השלב השני בסדרת UnCrackable מעלה את רף הקושי ומציג הגנות מתקדמות יותר ברמת ה-Native Code והזרקות דינמיות.</p>
-    
-    <h2>הניתוח הסטטי וההגנות</h2>
-    <p>בשלב זה ההגנות אינן מסתמכות רק על שכבת ה-Java, אלא משלבות בדיקות מורכבות יותר וטעינת ספריות קוד משותפות (Shared Libraries). השתמשתי ב-Frida כדי לנתח את תהליך ה-Spawn ולבצע Hooks לפונקציות הוולידציה.</p>
-    
-    <p><strong style="color: var(--accent-purple);">[הערת מחקר: פיצוח השלב האחרון וה-Root Validation בוצע בעל פה ובמעבדה הפיזית. ה-Code Blocks והתיעוד המלא יושלמו בהמשך, בעקבות המעבר לכתיבת המאמר ל-Digital Whisper]</strong></p>
+    <h2>איתור מכשולים ב-Java</h2>
+    <p>קובץ ה-Manifest מראה שה-Launcher מתחיל מ-<code>MainActivity</code>[cite: 1]. שם מצאתי פונקציית Native בשם <code>bar</code> המקבלת מערך בייטים[cite: 1].</p>
+    <p><em>שאלה: מדוע פונקציות NATIVE תמיד ישלחו BYTES לקוד ב-JAVA, ולא STRING או INT?</em> בגלל הדרך בה עובד JNI - הוא מסיר את ההגנות על משתנים בזיכרון ומבחינתו זה רק בייטים רציפים[cite: 1].</p>
+
+    <h3>טעינת הספרייה (LoadLibrary) וה-Linker</h3>
+    <p>הקוד <code>System.loadLibrary("foo")</code> מסמן ל-Linker להפנות לקובץ <code>libfoo.so</code>[cite: 1]. בניגוד לשפת C שם הקישור (Static/Dynamic) קורה ב-Compile-time או Load-time, ב-JNI הקישור קורה ב-Runtime (רק כשמפעילים את הפונקציה בפועל)[cite: 1]. לכן, הצהרה על פונקציית Native לפני טעינת הספרייה לא תקריס את האפליקציה[cite: 1].</p>
+
+    <h2>ה-init function ומנגנוני רקע</h2>
+    <p>הפונקציה <code>init()</code> מפעילה <code>AsyncTask</code> (Worker Thread) שבודק האם מישהו מאזין (<code>Debug.isDebuggerConnected()</code>) בכל 100 מילי-שניות[cite: 1]. ברגע שמישהו מבצע דיבאגינג, מתחיל <code>onPostExecute()</code>[cite: 1]. ב-Java Hook אפשר לדרוס את ה-<code>doInBackground</code> שיחזיר מיד FALSE, או לדרוס את <code>onPostExecute</code>[cite: 1].</p>
+
+    <h2>חקירת ה-Native ב-IDA Pro</h2>
+    <p>בטבלת ה-Exports ב-IDA, מצאתי את <code>Java_sg_vantagepoint_uncrackable2_CodeCheck_bar</code>[cite: 1]. לפני ה-JNI, מתבצעת בדיקה ידנית של משתנה <code>byte_400C</code> (ה-Flag) שחייב להיות שווה ל-1[cite: 1]. ראיתי ש-INIT אחראית להכניס אליו 1, מיד אחרי שהיא מבצעת <code>fork()</code>[cite: 1].</p>
+
+    <h3>מנגנון Anti-Debugging דרך Ptrace</h3>
+    <p>מבט ב-Disassembly של הפונקציה מגלה מנגנון לינוקסי מרתק[cite: 1]:</p>
+    <ul>
+        <li>ה-<code>fork</code> יוצר תהליך בן (Child Process)[cite: 1].</li>
+        <li>תהליך הבן נועל את דיבוג תהליך האב באמצעות <code>ptrace(PTRACE_ATTACH, parent_pid)</code>[cite: 1].</li>
+        <li>הבן נכנס ללולאה אינסופית ששומרת על האבא "נעול", בעוד שהאבא ממשיך בתוכנית ומשנה את הדגל ל-1[cite: 1].</li>
+    </ul>
+
+    <h2>הפתרון: Inline Hooking עם Frida</h2>
+    <p>במקום לפצ'פץ' ב-IDA או לעצור את הבן ב-Kernel, בחרתי לשתול Hook בזמן ריצה בעזרת Frida כדי לא לשנות את חתימת האפליקציה[cite: 1]. זיהיתי שהפונקציה משתמשת באופסטים של JNIEnv כדי לשלוף את הקלט (באמצעות <code>GetByteArrayElements</code>) ולהשוות אותו לסוד בעזרת <code>strncmp</code>[cite: 1].</p>
+
+<pre><code dir="ltr" class="language-javascript">var strncmpPtr = Module.findExportByName("libfoo.so", "strncmp");
+Interceptor.attach(strncmpPtr, {
+    onEnter: function(args) {
+        var arg0 = Memory.readUtf8String(args[0]); // User Input
+        var arg1 = Memory.readUtf8String(args[1]); // Secret
+        
+        if (arg1.indexOf("Thanks for all the fish") !== -1) {
+            console.log("\n[!] Bridge Intercepted!");
+            console.log("[+] User Input: " + arg0);
+            console.log("[+] Secret Key: " + arg1);
+        }
+    }
+});</code></pre>
+
+    <div class="insight-box" style="margin-top: 40px; border-color: var(--accent-purple);">
+        <strong style="color: var(--accent-purple);">[הערת מחקר:]</strong> פיצוח השלב האחרון וה-Root Validation בוצעו פיזית במעבדה. ה-Code Blocks והתיעוד המלא יושלמו בהמשך במסגרת המעבר לכתיבת סדרת המאמרים עבור Digital Whisper.
+    </div>
 </div>
 </body>
 </html>

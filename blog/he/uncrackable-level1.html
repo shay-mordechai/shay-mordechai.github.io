@@ -8,76 +8,76 @@
 </head>
 <body>
 <div id="content">
-    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים</a>
-    <h1>UnCrackable Level 1 - Mobile Security Writeup</h1>
-    <p><em>מאת שי מרדכי</em></p>
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים והפרויקטים</a>
     
-    <h2>1. Root & Debug Detection</h2>
-    <pre><code dir="ltr">@Override // android.app.Activity
-protected void onCreate(Bundle bundle) {
-    if (root_detection.a() || root_detection.b() || root_detection.c()) {
-        a("Root detected!");
-    }
-    if (debug_detection.a(getApplicationContext())) {
-        a("App is debuggable!");
-    }
-    super.onCreate(bundle);
-    setContentView(2130903040);
-}</code></pre>
+    <h1>UnCrackable Level 1 - Mobile Security Writeup</h1>
+    <p><em>מאת שי מרדכי | 22 באפריל 2026</em></p>
 
-    <p>ה-Debug בודק האם ה-debug flag = 2:</p>
-    <pre><code dir="ltr">public class debug_detection {
-    public static boolean a(Context context) {
-        return (context.getApplicationContext().getApplicationInfo().flags & 2) != 0;
-    }
+    <h2>1. Root & Debug Detection</h2>
+    <p>בתחילת האפליקציה, הפונקציה <code>onCreate</code> בודקת האם המכשיר פרוץ או מחובר לדיבאגר[cite: 2]:</p>
+<pre><code dir="ltr" class="language-java">@Override // android.app.Activity
+protected void onCreate(Bundle bundle) {
+   if (root_detection.a() || root_detection.b() || root_detection.c()) {
+       a("Root detected!");
+   }
+   if (debug_detection.a(getApplicationContext())) {
+       a("App is debuggable!");
+   }
+   super.onCreate(bundle);
+   setContentView(2130903040);
+}</code></pre>
+    <p>ה-Debug בודק האם ה-debug flag שווה ל-2[cite: 2]:</p>
+<pre><code dir="ltr" class="language-java">public class debug_detection {
+   public static boolean a(Context context) {
+       return (context.getApplicationContext().getApplicationInfo().flags & 2) != 0;
+   }
 }</code></pre>
 
     <h2>2. Root Detection Breakdown</h2>
-    <p>בדיקה דרך ה-PATH:</p>
-    <pre><code dir="ltr">public static boolean switch_user() {
-    for (String str : System.getenv("PATH").split(":")) {
-        if (new File(str, "su").exists()) {
-            return true;
-        }
-    }
-    return false;
-}</code></pre>
-    <p>בדיקה 3, דרך ה-ROOT FILES שנוספו למכשיר ROOT, מבצעת Syscall דרך ה-JNI לבדיקת קבצים קיימים כגון <code>/system/xbin/daemonsu</code>.</p>
+    <p><strong>בדיקה 1, דרך ה-PATH:</strong> <code>getenv</code> מחזיר את ה-PATH - רשימת תיקיות שבה ה-OS מחפשת פקודות[cite: 2]. הבדיקה מחזירה אמת אם ב-PATH קיים קובץ <code>su</code> (Switch User), שמאפשר העלאת הרשאות כאינדיקציה ל-root[cite: 2]. <em>שאלה למחשבה: מה אם האפליקציה תיגש ל-su שנמצא במקום לא סטנדרטי? הבדיקה הזו לא תגלה על כך[cite: 2].</em></p>
+    
+    <p><strong>בדיקה 2, דרך ה-ROM:</strong> המשתנה <code>Build.TAGS</code> שומר את סוג המפתחות ששימשו לחתימת ה-ROM[cite: 2]. במכשיר rooted לרוב יופיע <code>test-keys</code> במקום <code>release-keys</code>[cite: 2]. כיום הבדיקה פחות רלוונטית (למשל עם Magisk על ROM מקורי)[cite: 2].</p>
+    
+    <p><strong>בדיקה 3, דרך קבצי Root:</strong> השימוש ב-<code>exists()</code> מבצע syscall (כמו stat/access) דרך ה-JNI לבדיקה אם הנתיב קיים[cite: 2]. זהו מעבר מ-user mode ל-kernel mode ובדיקה מול מערכת הקבצים עצמה[cite: 2]. זו שאילתא שקטה שלא יוצרת תהליך, ולכן משאירה פחות עקבות[cite: 2].</p>
 
     <h2>3. Validation Logic (AES)</h2>
-    <p>הפונקציה מפענחת (init=2) מחרוזת בעזרת מפתח ואלגוריתם AES. לאחר מכן, משווה את התוצאה ל-Base64 מפוענח.</p>
+    <p>הפונקציה מפענחת (<code>init=2</code>) מחרוזת בעזרת מפתח ואלגוריתם <code>AES/ECB/PKCS7Padding</code>[cite: 2]. את ה-plaintext היא שולחת אח"כ לפונקציית ה-validation שמשווה אותו לקלט מהמשתמש[cite: 2].</p>
+    <!-- Placeholder for CyberChef Image -->
+    <img src="../../assets/images/cyberchef-aes.png" alt="CyberChef AES Decryption" style="max-width: 100%; border-radius: 8px; margin: 20px 0; border: 1px solid #334155;">
 
-    <h2>4. Frida Hook Script</h2>
-    <pre><code dir="ltr">/**
+    <h2>4. Bypass Strategy & Frida Hook</h2>
+    <p>כדי לעקוף את מנגנוני ההגנה, דרסתי כל אחת מפונקציות הבדיקה שיחזירו תמיד false[cite: 2]. לגבי פונקציית הולידציה, בחרתי לעטוף אותה (Spy) בפקודת הצצה למחרוזת המפוענחת <code>bArrKey_and_ciphertext</code>[cite: 2].</p>
+
+<pre><code dir="ltr" class="language-javascript">/**
 * Frida Script for UnCrackable Level 1
 * Objective: Bypassing security checks and extracting the secret key.
 */
 Java.perform(function() {
-    // Bypass Root Detection Logic
-    var root_detection = Java.use("sg.vantagepoint.a.c");
-    ['a', 'b', 'c'].forEach(function(method) {
-        root_detection[method].implementation = function() {
-            return false;
-        };
-    }); 
+   // Bypass Root Detection Logic
+   var root_detection = Java.use("sg.vantagepoint.a.c");
+   ['a', 'b', 'c'].forEach(function(method) {
+       root_detection[method].implementation = function() {
+           return false;
+       };
+   });
 
-    // Bypass Debug Detection
-    var debug_detection = Java.use("sg.vantagepoint.a.b");
-    debug_detection.a.implementation = function(Context) {
-        return false;
-    };
+   // Bypass Debug Detection
+   var debug_detection = Java.use("sg.vantagepoint.a.b");
+   debug_detection.a.implementation = function(Context) {
+       return false;
+   };
 
-    // The "Spy" Hook - Intercepting the Decryption process
-    var key_and_cypertext = Java.use("sg.vantagepoint.a.a");
-    key_and_cypertext.a.implementation = function(key, ciphertext) {
-        var plaintextBytes = this.a(key, ciphertext);
-        try {
-            var javaString = Java.use("java.lang.String");
-            var plaintext = javaString.$new(plaintextBytes);
-            console.log("Secret extracted: " + plaintext);
-        } catch (err) { console.error("Error in Spy Hook: " + err.message); }
-        return plaintextBytes;
-    };
+   // The "Spy" Hook - Intercepting the Decryption process
+   var key_and_cypertext = Java.use("sg.vantagepoint.a.a");
+   key_and_cypertext.a.implementation = function(key, ciphertext) {
+       var plaintextBytes = this.a(key, ciphertext);
+       try {
+           var javaString = Java.use("java.lang.String");
+           var plaintext = javaString.$new(plaintextBytes);
+           console.log("Secret extracted: " + plaintext);
+       } catch (err) { console.error("Error in Spy Hook: " + err.message); }
+       return plaintextBytes;
+   };
 });</code></pre>
 </div>
 </body>
