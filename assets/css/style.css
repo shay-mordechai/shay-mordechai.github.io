@@ -31,6 +31,7 @@ body {
 #sidebar h2 {
     color: var(--accent-color);
     font-size: 1.2rem;
+    text-align: right;
 }
 
 #sidebar ul {
@@ -40,12 +41,14 @@ body {
 
 #sidebar li {
     margin-bottom: 12px;
+    text-align: left; /* יישור הטקסט האנגלי לשמאל לאחידות */
 }
 
 #sidebar a {
     color: var(--text-color);
     text-decoration: none;
     transition: color 0.2s;
+    display: block;
 }
 
 #sidebar a:hover {
