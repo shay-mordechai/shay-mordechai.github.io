@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project MyLeads: Secure-by-Design SaaS Architecture</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="content" style="direction: ltr; text-align: left;">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Articles & Projects</a>
+    
+    <h1>Project MyLeads AI: Secure-by-Design SaaS Architecture</h1>
+    <p><em>By Shay Mordechai | March 9, 2026</em></p>
+
+    <p>When engineering a modern SaaS platform that handles sensitive customer inquiries and AI interactions, security cannot be an afterthought. This case study outlines the architectural decisions and DevSecOps pipelines behind <strong>MyLeads AI</strong>, a platform I designed with a strict "Secure-by-Design" philosophy.</p>
+
+    <p>The goal was to eliminate external attack surfaces while providing a high-performance User Experience (UX), heavily utilizing AI for development velocity so I could focus entirely on <strong>Infrastructure Hardening and Threat Modeling</strong>.</p>
+
+    <div style="text-align: center; margin: 40px 0;">
+        <img src="../../assets/images/image_ac7aca.png" alt="MyLeads AI Security Architecture Diagram" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155; background-color: white; padding: 10px;">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">Figure 1: The Zero Trust Production Architecture</p>
+    </div>
+
+    <h2>1. The "Dark Server" Infrastructure</h2>
+    <p>The core concept of the production environment is invisibility. The AWS EC2 server exposes <strong>zero inbound ports (0.0.0.0/0 blocked)</strong> to the public internet. All ingress traffic is strictly tunneled and inspected via Cloudflare's Edge Network.</p>
+    <ul>
+        <li><strong>Identity-Aware Proxy (IAP):</strong> SSH access is exclusively proxied via <code>cloudflared</code> and requires hardware-key authentication.</li>
+        <li><strong>Container Isolation:</strong> The application stack runs on Red Hat Enterprise Linux (RHEL 10.1) using rootless Podman managed by user-space Systemd, significantly reducing the blast radius of any container compromise.</li>
+    </ul>
+
+    <h2>2. WASM Data Loss Prevention (DLP) Firewall</h2>
+    <p>To mitigate API Over-fetching and Application-Layer Information Disclosure (CWE-209), I implemented a custom WebAssembly (WASM) filter written in Rust, running directly inside the Envoy Proxy.</p>
+    <p>This firewall uses a <strong>Fail-Closed</strong> architecture. It inspects outbound JSON payloads and redacts sensitive credentials (like internal tokens) in real-time, ensuring that data bleed is stopped at the network edge before reaching the Next.js Frontend.</p>
+
+    <h2>3. Out-of-Band Management & The "Airbag"</h2>
+    <p>Admin panels are notorious targets for web exploits. To mitigate this:</p>
+    <ul>
+        <li><strong>CLI-Only Administration:</strong> Admin actions are disabled in the web UI. They are moved to a secure, unified CLI tool accessed only via SSH.</li>
+        <li><strong>Global Exception Handler:</strong> The system intercepts 500 Internal Server Errors globally, strips stack traces to prevent leakage, renders a localized generic message, and dispatches an out-of-band HTML crash report directly to the engineering team.</li>
+    </ul>
+
+    <h2>4. Data Integrity & Concurrency</h2>
+    <p>Handling highly concurrent webhook events from platforms like Meta requires transactional safety. I configured SQLite with Write-Ahead Logging (WAL) to prevent lock errors. Furthermore, a <strong>Dead Letter Queue (DLQ)</strong> ensures that failed payloads (e.g., due to AI API timeouts) are safely routed for manual recovery, guaranteeing 0% data loss during Retry Storms.</p>
+
+    <h2>5. AI Integration: Local vs. Cloud</h2>
+    <p>The platform features a Hybrid AI Engine. Sensitive audio components (like coaching voice notes) are processed completely offline using a locally hosted <strong>Faster-Whisper</strong> model and natively compiled FFmpeg. Public-facing agentic tasks (conversational memory, lead qualification) are securely offloaded to Google Gemini 2.0 Flash with semantic Redis caching to minimize latency.</p>
+
+    <div class="insight-box" style="border-color: var(--accent-purple); text-align: left; margin-top: 30px;">
+        <strong style="color: var(--accent-purple);">Architectural Takeaway:</strong> Modern development is no longer just about writing business logic. By leveraging AI to accelerate standard code generation, I was able to dedicate my engineering resources to what truly matters: designing a robust, resilient, and enterprise-grade secure infrastructure.
+    </div>
+</div>
+</body>
+</html>
