@@ -2,122 +2,100 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <title>שי מרדכי | מאגר פרויקטים ומחקרים</title>
+    <title>מאגר המאמרים והפרויקטים של שי מרדכי</title>
+    <style>
+        .categories-container { display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .category-column { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.5rem; }
+        .article-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; text-decoration: none; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
+        .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
+        @media (max-width: 900px) { .categories-container { flex-direction: column; } }
+    </style>
 </head>
 <body>
-<div id="content">
-    <h1>שי מרדכי - מאגר פרויקטים ומחקרים</h1>
-    <p>ברוכים הבאים לפורטפוליו המחקרי שלי. כאן מרוכזים ניתוחי עומק, פרויקטי תשתית (Systems Engineering) וחקר פגיעויות.</p>
+<div id="content" style="max-width: 100%; padding:0;">
+    <h1 style="text-align: center; margin: 40px 0;">מאגר הפרויקטים והמחקרים</h1>
+    <div class="categories-container">
+<div class='category-column'><h2>Articles</h2>
+        <a href="permission-paradox.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Permission Paradox</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">לאחר שחקרנו את Anatsa במאמר הקודם וראינו בעיניים איך היא (בלי בושה) מזריקה קוד ל-Entry Poi...</div>
+        </a>
+        <a href="android-bootstrap-hijacking.html" class="article-card featured-card\">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Android Bootstrap Hijacking <span class=\"featured-badge\">Forthcoming in DW</span></div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">27 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת שי מרדכי | 27 במאי 2026
 
-    <hr>
-
-    <h2>Projects (פרויקטים ומערכות)</h2>
-    <div class="projects-list">
-        
-        <div class="featured-card">
-            <span class="featured-badge">מחקר נבחר</span>
-            <h3><a href="compiler-zero-days-research.html">Breaking the Compilation Boundary: Semantic Fuzzing and Static Analysis of the SBCL Runtime</a></h3>
-            <p><strong>31 ביולי 2025</strong></p>
-            <p>במאמר זה אציג ניתוח עומק של מנגנוני הקומפיילר, בעקבות מחקר שבו התגלו 3 חולשות Zero-Day לוגיות במנגנון ניהול המשתנים של SBCL המאפשרות עקיפת בידוד לקסיקלי בזמן הידור.</p>
-        </div>
-
-        <div>
-            <h3><a href="rust-envoy-tunnel.html">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</a></h3>
-            <p>15 במאי 2026</p>
-            <p>הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי, המדגים סינון תעבורה מתקדמת ברמת ה-Proxy.</p>
-        </div>
-
-        <div>
-            <h3><a href="pt-dns-rebinding-mitigation.html">DNS Rebinding & LANjack: Architectural Mitigation</a></h3>
-            <p>26 באפריל 2026</p>
-            <p>בעקבות חשיפת קמפיין LANjack, פיתוח מערך הגנה דטרמיניסטי מבוסס שינוי ארכיטקטורת רשת ו-TTL Enforcement להגנת נקודות קצה.</p>
-        </div>
-
-        <div>
-            <h3><a href="pt-web-registration-diagnostic.html">Web API Diagnostics: Looking Behind the UI Freeze</a></h3>
-            <p>16 באפריל 2026</p>
-            <p>ניתוח ביצועים ודיאגנוסטיקה בזמן אמת של עומסי קצה ומנגנוני חסימה אל מול שרתי רישום ממשלתיים.</p>
-        </div>
-
-        <div>
-            <h3><a href="myleads-saas-architecture.html">Project MyLeads AI: Secure-by-Design SaaS Architecture</a></h3>
-            <p>9 במרץ 2026</p>
-            <p>ארכיטקטורת ייצור מאובטחת עבור פלטפורמת SaaS מבוססת ענן המשלבת הגנות תשתיתיות ובידוד מנועי AI.</p>
-        </div>
-    </div>
-
-    <hr>
-
-    <h2>Articles (מאמרי מחקר)</h2>
-    <div class="articles-list">
-
-        <div class="featured-card">
-            <span class="featured-badge">פרסום קרוב</span>
-            <h3><a href="android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></h3>
-            <p><strong>27 במאי 2026</strong> | <em>[Forthcoming in Digital Whisper Issue]</em></p>
-            <p>הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מודעים למנגנוני ה-Hijacking האפשריים בשלבי ה-Bootstrap הראשוניים של התהליך במערכת ההפעלה.</p>
-        </div>
-
-        <div>
-            <h3><a href="permission-paradox.html">The Permission Paradox</a></h3>
-            <p>28 במאי 2026</p>
-            <p>חקר מנגנון ה-Binder IPC באנדרואיד: ניתוח המפגש בין אכיפת ה-Sandbox של הקרנל לבין ניהול ה-Tokens של ה-User Space Framework.</p>
-        </div>
-
-        <div>
-            <h3><a href="browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a></h3>
-            <p>19 במאי 2026</p>
-            <p>ניתוח גבולות ההרשאה והבידוד בדפדפנים מודרניים כאשר מנועי אטומיזציה וסוכני AI פועלים בתוך ה-DOM.</p>
-        </div>
-
-        <div>
-            <h3><a href="flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></h3>
-            <p>29 במרץ 2026</p>
-            <p>דיון מעמיק על בידוד ברמת ריצת ה-Process בלינוקס, שימוש במנגנוני Namespaces ו-Cgroups לצורך הקשחת מעבדות מחקר.</p>
-        </div>
-
-        <div>
-            <h3><a href="jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></h3>
-            <p>26 במרץ 2026</p>
-            <p>חקר הממשק שבין ה-Java Virtual Machine לבין ספריות Native C/C++ דרך משקפיים של Memory Corruption ואבטחה.</p>
-        </div>
-
-        <div>
-            <h3><a href="malware-lab-kinoite.html">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></h3>
-            <p>30 בדצמבר 2025</p>
-            <p>ארכיטקטורת תחנת עבודה חסינה המבוססת על מערכת הפעלה אימוטבלית (Immutable OS) לצורך ניתוח דינמי של נוזקות.</p>
-        </div>
-
-        <div>
-            <h3><a href="v8-engine-security.html">V8 Engine's (Dis-)Security</a></h3>
-            <p>24 בדצמבר 2025</p>
-            <p>ניתוח מנגנוני בידוד הזיכרון ואופטימיזציית ה-JIT בתוך מנוע ה-JavaScript המרכזי של דפדפני Chromium.</p>
-        </div>
-
-        <div>
-            <h3><a href="life-of-a-packet-routing.html">The Life of a Packet: From Application to Routing</a></h3>
-            <p>18 בדצמבר 2025</p>
-            <p>מעקב וניתוח של מעבר חבילת מידע מהשכבה האפליקטיבית בלינוקס ועד לניתוב החומרה ברשת הפיזית.</p>
-        </div>
-    </div>
-
-    <hr>
-
-    <h2>Writeups (פתרון אתגרים)</h2>
-    <div class="writeups-list">
-        <div>
-            <h3><a href="uncrackable-level2.html">UnCrackable Level 2 - Mobile Security Writeup</a></h3>
-            <p>30 באפריל 2026</p>
-            <p>פיצוח והנדסה לאחור של הגנות Native קשוחות ומנגנוני איתור דיבאגרים בשכבת ה-C.</p>
-        </div>
-        <div>
-            <h3><a href="uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></h3>
-            <p>22 באפריל 2026</p>
-            <p>מעקף הגנות Root Detection וחילוץ מפתחות הצפנה מתוך ה-Java Layer באמצעות Frida.</p>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+    הקדמה
+    הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מו...</div>
+        </a>
+        <a href="browser-privilege-boundary.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעבר, כל דפדפן היה תהליך אחד גדול. אם אתר אחד קרס, ה-OS היה מבצע killall וכל ה-Tabs היו נס...</div>
+        </a>
+        <a href="flatpak-sandbox-isolation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak - Linux Sandbox Isolation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום...</div>
+        </a>
+        <a href="jni-unsafe-bridge.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גישה כמעט ישי...</div>
+        </a>
+        <a href="malware-lab-kinoite.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. כשהתחלתי לבנות מעבדת Malware Analysis מקומית, נתקלת...</div>
+        </a>
+        <a href="v8-engine-security.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine's (Dis-)Security</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ה-WEB, "Fr...</div>
+        </a>
+        <a href="life-of-a-packet-routing.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Life of a Packet: From Application to Routing</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">18 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כשמנסים לגשת לאתר (למשל פאלו אלטו) מהטרמינל בלינוקס, קל לחשוב על התהליך כמושג אבסטרקטי. בת...</div>
+        </a>
+        <a href="compiler-zero-days-research.html" class="article-card featured-card\">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Breaking the Compilation Boundary: Semantic Fuzzing and Static Analysis of the SBCL Runtime <span class=\"featured-badge\">מחקר נבחר</span></div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">31 ביולי 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת: שי מרדכי | 31 ביולי 2025 | | מחקר חולשות לוגיות (Vulnerability Research) | הנדסת מערכ...</div>
+        </a></div><div class='category-column'><h2>Projects</h2>
+        <a href="rust-envoy-tunnel.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">15 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את ת...</div>
+        </a>
+        <a href="pt-dns-rebinding-mitigation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding & LANjack: Architectural Mitigation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעקבות חשיפת קמפיין LANjack... (הטקסט המאוחד כאן)</div>
+        </a>
+        <a href="pt-web-registration-diagnostic.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web API Diagnostics: Looking Behind the UI Freeze</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">16 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השיכון. עבורי...</div>
+        </a>
+        <a href="myleads-saas-architecture.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Project MyLeads AI: Secure-by-Design SaaS Architecture</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">9 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">When engineering a modern SaaS platform that handles sensitive customer inquiries and AI i...</div>
+        </a></div><div class='category-column'><h2>Writeups</h2>
+        <a href="uncrackable-level2.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 2 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת שי מרדכי | 30 באפריל 2026
+    
+    איתור מכשולים ב-Java
+    קובץ ה-Manifest מראה שה-La...</div>
+        </a>
+        <a href="uncrackable-level1.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 1 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">22 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בתחילת האפליקציה, הפונקציה onCreate בודקת האם המכשיר פרוץ או מחובר לדיבאגר[cite: 2]:</div>
+        </a></div></div></div></body></html>
