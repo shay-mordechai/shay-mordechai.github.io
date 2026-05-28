@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Permission Paradox: כשבידוד הופך למכשול</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="content">
+    <h1>The Permission Paradox</h1>
+    <p><em>מאת שי מרדכי | 28 במאי 2026 (טיוטה בתהליך)</em></p>
+
+    <h2>הקדמה</h2>
+    <p>לאחר שחקרנו את Anatsa במאמר הקודם וראינו בעיניים איך היא (בלי בושה) מזריקה קוד ל-Entry Point של שלב ה-Process - זה עורר בי שאלה: האם ניתן להריץ UI בשלב הזה, כשעדיין ה-UI לא עלה? כדי לגשת לשאלה, אנחנו צריכים להבין טוב יותר מה גורם ל-UI לעלות.</p>
+
+    <h2>פרק א - מושגים</h2>
+    <h3>Sandbox</h3>
+    <p>סביבה וירטואלית שמסתכלת על ה-UID של התהליך ובודקת האם יש לו הרשאות לבצע פעולות. הקושי מתעורר כששתי אפליקציות רוצות לתקשר ביניהן. אנחנו מאפשרים לאפליקציה אחת "לכתוב על קיר", ולשנייה "לקרוא מהקיר", וכך לא שוברים את הבידוד הלוגי - ה-Sandbox.</p>
+
+    <h3>Binder IPC</h3>
+    <p>הקיר הוא דרייבר חומרה שנקרא <code>/dev/binder</code>. מכיוון ש-User Space לא יכול לגשת ישירות לחומרה, אנחנו משתמשים בתבנית עיצוב Proxy-Stub ובגישת שרת-לקוח כדי לתקשר דרכו.</p>
+</div>
+</body>
+</html>
