@@ -5,7 +5,19 @@
 <div id="content">
     <h1>DNS Rebinding & LANjack: Architectural Mitigation</h1>
     <p><em>מאת שי מרדכי | 26 באפריל 2026</em></p>
-    <!-- כאן יבוא הטקסט המאוחד שכתבנו למעלה -->
+    
+    <!-- כאן נכנס תוכן המאמר שאיחדנו קודם -->
+    <p>בעקבות חשיפת קמפיין LANjack... (הטקסט המאוחד כאן)</p>
+
+    <h3>Supporting Evidence (PCAP Files)</h3>
+    <p>הפקתי שלושה קבצי PCAP שהועברו ליצרנים להוכחת ההיתכנות (PoC):</p>
+    <ul>
+        <li><a href="../../assets/baseline_vulnerable.pcap">baseline_vulnerable.pcap</a> - מוכיח שעם TTL=64, המידע זולג החוצה.</li>
+        <li><a href="../../assets/mitigation_ttl1.pcap">mitigation_ttl1.pcap</a> - הוכחת גישה מקומית (L2-adjacent) תקינה.</li>
+        <li><a href="../../assets/dns_rebinding_mitigation_chain.pcap">dns_rebinding_mitigation_chain.pcap</a> - בלימת התקיפה (ICMP Time Exceeded).</li>
+    </ul>
+    
+    <!-- סיכום המאמר -->
 </div>
 </body>
 </html>
