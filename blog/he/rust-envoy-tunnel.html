@@ -2,16 +2,56 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Rust Envoy Data Tunnel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Hop Firewall: Zero Trust & DLP in Rust for Envoy Proxy</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 <div id="content">
-    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים</a>
-    <h1>בניית Data Hop Firewall ב-Rust (In Process)</h1>
-    <p><em>מאת שי מרדכי</em></p>
-    <p><strong style="color: var(--accent-color);">סטטוס: פיתוח פעיל ⏳</strong></p>
-    <p>פתרון שבו בניתי עם Rust רכיב Tunnel/Firewall עבור Envoy Proxy, שמסנן קלט בין ה-Backend ל-Frontend ב-React. הפרויקט הזה נולד מתוך צורך פרקטי ב-Sanitization של מידע רגיש בשכבת האפליקציה (Layer 7). אני מתכנן להרחיב כאן על התובנות מביצועי ה-Rust מול ה-Proxy.</p>
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים והפרויקטים</a>
+    
+    <h1>Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</h1>
+    <p><em>מאת שי מרדכי | 15 במאי 2026</em></p>
+
+    <p>הפרויקט הזה (<code>wasm-dlp-firewall</code>) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את תשתית ה-EC2 ב-AWS, שמתי לב מהר מאוד שבוטים מכל רחבי העולם מתחילים לסרוק את השרתים ולחפש חולשות. זה הוביל אותי לתכנן מחדש את רמת האבטחה של התשתית, ולהטמיע מודל <strong>Zero Trust</strong> מחמיר.</p>
+
+    <h2>1. הקשחת התשתית (Infrastructure Hardening)</h2>
+    <p>הצעד הראשון היה למנוע גישה ישירה לשרת. סגרתי לחלוטין את כל הפורטים הנכנסים (Inbound Ports) ל-EC2. במקומם, הקמתי <strong>Cloudflare Tunnel</strong> – כך שהתעבורה נכנסת אך ורק דרך תווך מאובטח. את הגישה האישית שלי למערכת אבטחתי באמצעות תיבת Proton Mail עסקית שמוגנת באימות חומרתי מבוסס מפתח USB (Security Key). ברמת ה-Runtime, שירותי האפליקציה בודדו בתוך Containers שרצו יחד ב-Pod של <strong>Podman</strong>.</p>
+
+    <h2>2. הגנה בשכבת האפליקציה (Layer 7 DLP)</h2>
+    <p>אחרי שקראתי על וקטורי תקיפה מודרניים כמו React2Shell, ולאור המחקרים הקודמים שלי על V8 ועל חולשת Log4j (מ-2022), הבנתי שההקשחה הרשתית אינה מספיקה. האיום המרכזי בארכיטקטורת Microservices הוא <strong>API Over-fetching (CWE-201/CWE-209)</strong> – מצב שבו ה-Backend מחזיר אובייקטים מלאים מהמסד נתונים, וסומך על ה-Frontend (למשל React) שיסנן מידע רגיש. מצב זה עלול להוביל לזליגת PII, טוקנים פנימיים, או Stack Traces.</p>
+
+    <p>החלטתי להעביר את האחריות על ניקוי המידע (Sanitization) משכבת האפליקציה אל שכבת התשתית.</p>
+
+    <h2>3. הארכיטקטורה של Wasm DLP Firewall</h2>
+    <p>בניתי רכיב סינון חכם (Filter) עבור <strong>Envoy Proxy</strong>. בחרתי לכתוב אותו ב-<strong>Rust</strong> ולקמפל אותו ל-WebAssembly (<code>wasm32-wasi</code>). הבחירה ב-Rust הבטיחה Memory Safety וביצועים גבוהים ללא עלות נוספת (Zero-cost abstractions), בעוד ה-Wasm סיפק ארגז חול (Sandbox) מבודד בתוך ה-Proxy שאפשר לי לבצע Hot-reloading ללא השבתת הראוטר.</p>
+
+    <h3>יכולות מרכזיות:</h3>
+    <ul>
+        <li><strong>Recursive JSON Redaction:</strong> סריקה עמוקה של תוכן ה-Response ומיסוך מפתחות רגישים (כמו Passwords או Secrets) על בסיס חוקים לוגיים.</li>
+        <li><strong>Logical Data TTL:</strong> תמיכה בהאדרים מותאמים אישית (כגון <code>X-Data-TTL</code>) כדי להפעיל סניטיזציה.</li>
+        <li><strong>Fail-Closed Security:</strong> אם לא ניתן לפענח או לבדוק את ה-Payload בבטחה, הבקשה פשוט נשמטת (Dropped).</li>
+    </ul>
+
+    <h2>4. מקרה בוחן מהשטח: Error Shielding ו-Information Disclosure</h2>
+    <p>כדי לבחון את המערכת, התבססתי על תרחיש תקיפה אמיתי מסביבות פיננסיות (CWE-209). בתרחיש זה, Session שהושאר פתוח במשך למעלה מ-60 דקות יחד עם רענון אגרסיבי (Ctrl+F5) גרמו למערכת ה-ASP.NET ב-Backend לקרוס. במקום שגיאה גנרית, השרת החזיר שגיאת <strong>500 Internal Server Error</strong> שכללה עמודי HTML עם:</p>
+    <ul>
+        <li>נתיבים פיזיים בשרת (Directory structures).</li>
+        <li>גרסאות מדויקות של IIS ו-.NET.</li>
+        <li>הצעות קונפיגורציה ישירות ל-<code>web.config</code>.</li>
+    </ul>
+    
+    <p>ה-Data Hop Firewall מזהה אוטומטית שגיאות 5xx לפני שהן עוזבות את הרשת הפנימית, מאתר מחרוזות מערכת (כמו "Stack Trace" או "System.Web"), ומחליף את ה-Payload הרגיש בתגובת JSON נקייה וסטנדרטית:</p>
+
+<pre><code dir="ltr" class="language-json">{
+  "status": "error",
+  "message": "Internal Security Proxy Intervention",
+  "code": 500
+}</code></pre>
+
+    <p>כך, גם אם המפתח שכח להגדיר <code>customErrors="On"</code> באפליקציה, מנגנון ה-Zero-Trust מבטיח שמידע על תצורת השרת לעולם לא ידלוף לאינטרנט.</p>
+
+    <p><a href="https://github.com/shay-mordechai/wasm-dlp-firewall" target="_blank" style="color: var(--accent-blue); font-weight: bold;">[🔗 צפו בקוד המלא (Rust / Envoy Wasm) ב-GitHub]</a></p>
 </div>
 </body>
 </html>
