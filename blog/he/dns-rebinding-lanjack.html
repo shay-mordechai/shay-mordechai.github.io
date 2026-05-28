@@ -2,28 +2,62 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>DNS Rebinding & LANjack: Router-Level Mitigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Rebinding & LANjack: Router-Level Mitigation & Vendor Dialogue</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
-<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a></li><li><a href="/blog/he/compiler-zero-days-research.html">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</a></li><li><a href="/blog/he/dns-rebinding-lanjack.html">DNS Rebinding <body> LANjack: ניתוח והצעה לתיקון בראוטר הביתי</a></li><li><a href="/blog/he/fedora-kinoite-isolation.html">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/life-of-a-packet-routing.html">The Life of a Packet: From Application to Routing</a></li><li><a href="/blog/he/pt-web-registration-diagnostic.html">Web API Diagnostics: Looking Behind the UI Freeze</a></li><li><a href="/blog/he/rust-envoy-tunnel.html">בניית Data Hop Firewall ב-Rust (In Process)</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/trading-bot-project.html">בוט מסחר אלגוריתמי (In Process)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
+<div id="sidebar"><h2>המאמרים שלי</h2><ul><li><a href="/blog/he/android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a></li><li><a href="/blog/he/browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a></li><li><a href="/blog/he/compiler-zero-days-research.html">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</a></li><li><a href="/blog/he/dns-rebinding-lanjack.html">DNS Rebinding <body> LANjack: הצעת Mitigation והשיח מול PAN ו-TP-Link</a></li><li><a href="/blog/he/fedora-kinoite-isolation.html">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</a></li><li><a href="/blog/he/flatpak-sandbox-isolation.html">Flatpak - Linux Sandbox Isolation</a></li><li><a href="/blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a></li><li><a href="/blog/he/life-of-a-packet-routing.html">The Life of a Packet: From Application to Routing</a></li><li><a href="/blog/he/pt-web-registration-diagnostic.html">Web API Diagnostics: Looking Behind the UI Freeze</a></li><li><a href="/blog/he/rust-envoy-tunnel.html">בניית Data Hop Firewall ב-Rust (In Process)</a></li><li><a href="/blog/he/tp-link-dns-rebinding.html">LANjack: פתרון ארכיטקטוני בראוטר (TTL=1)</a></li><li><a href="/blog/he/trading-bot-project.html">בוט מסחר אלגוריתמי (In Process)</a></li><li><a href="/blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a></li><li><a href="/blog/he/v8-engine-security.html">V8 Engine's (Dis-)Security</a></li></ul></div>
 <div id="content">
-    <h1>DNS Rebinding & LANjack: ניתוח והצעה לתיקון בראוטר הביתי</h1>
+    <h1>DNS Rebinding & LANjack: הצעת Mitigation והשיח מול PAN ו-TP-Link</h1>
     <p><em>מאת שי מרדכי | 26 באפריל 2026</em></p>
 
-    <p>בעקבות חשיפת צוות המחקר של GeoEdge על הקמפיין <strong>LANjack</strong>, שבה התוקף מנצל שרתי DNS לא מאובטחים שבשימוש בעיקר ב-Mobile ו-IoT כדי להפוך את הדפדפנים ל-Proxy, עלתה שאלה ארכיטקטונית מעניינת: האם ניתן לחסום זאת ברמת הראוטר?</p>
+    <p>בעקבות חשיפת צוות המחקר של GeoEdge על הקמפיין <strong>LANjack</strong>, שבה התוקף מנצל שרתי DNS לא מאובטחים (בעיקר ב-Mobile ו-IoT) כדי להפוך דפדפנים ל-Proxy, עלתה אצלי שאלה ארכיטקטונית: האם ניתן לחסום את וקטור התקיפה הזה לחלוטין ברמת ה-Edge Device (הראוטר הביתי או ה-Firewall הארגוני)?</p>
 
-    <h2>האנלוגיה ל-AWS</h2>
-    <p>ב-AWS, התמודדו עם אתגר דומה של גישה ל-Secrets (מתקפות SSRF) באמצעות מעבר ל-<strong>IMDSv2</strong>, ששם ה-Service דורש טוקן וגם מגביל את החבילות שמגיעות אליו ל-TTL=1. עולה השאלה, למה לא ליישם מנגנון אבטחה דומה בראוטר הביתי?</p>
-    <p>אם יצרנים כמו TP-Link יגדירו בממשק הראוטר TTL=1 במקום TTL=64, מידע חסוי יוכל להגיע רק למכשירי ה-LAN, אך לא לצאת החוצה. כך המידע הפנימי על הראוטר יהיה זמין רק במרחק של hop 1 מהראוטר - למשל ב-IoT או ב-Mobile devices. בצורה זו אנחנו חוסמים את זליגת המידע החוצה, גם אם הדפדפן פרוץ.</p>
-    <p><em>הערה: החסרון הוא רק כשמתחברים ל-VPN, ואז צריך לעבור לפרוטוקול Bridge כדי ש-TTL=1 לא יגרום לבעיות ניתוב.</em></p>
+    <h2>האנלוגיה ל-AWS וההצעה (Deterministic TTL Enforcement)</h2>
+    <p>ב-AWS התמודדו עם אתגר דומה של גישה ל-Secrets (מתקפות SSRF) באמצעות מעבר ל-IMDSv2, שדורש טוקן ומגביל חבילות ל-TTL=1. על בסיס זה, הצעתי מנגנון "Defense in Depth":</p>
+    <p>אם יצרנים יגדירו בממשק הניהול (Web Management Interface) הגבלת TTL=1 (במקום ה-64 הדיפולטיבי של Linux), המידע החסוי של הראוטר או ה-Firewall יוכל להגיע רק למכשירים הנמצאים במרחק של Hop אחד (מכשירי ה-LAN המקומיים). ברגע שדפדפן נגוע ינסה להוציא את המידע הזה החוצה אל ה-WAN, החבילה פשוט תישמט (Drop) בראוטר הבא. כך נחסמת זליגת המידע החוצה, גם אם הדפדפן עצמו כבר פרוץ.</p>
 
-    <h2>התגובה מ-TP-Link</h2>
-    <p>הצגתי את הניתוח הטכני לצוות האבטחה של TP-Link. הם אישרו שהצעת ה-TTL=1 אכן יעילה וחוסמת את זליגת המידע. עם זאת, הם הצביעו על אתגר משמעותי: <strong>Usability</strong>. הקשחה גבוהה תפריע לשימושיות ברשתות מורכבות. הקושי המרכזי הוא בחיבור ל-VPN: בשימוש בממשק TUN (ניתוב), הראוטר מנסה לנתב חבילות בין Subnets שונים וה-TTL יורד בכל Hop. הפתרון של מצב TAP (Bridge) הוא יעיל, אך לרוב אינו נתמך בפלאפונים משיקולי אבטחה של מערכות ההפעלה.</p>
+    <h2>הוכחת היתכנות (PoC) עם Scapy</h2>
+    <p>כדי להדגים את המנגנון לצוותי ה-PSIRT (Product Security Incident Response Team), יצרתי סביבת סימולציה. באמצעות <strong>Scapy</strong>, ייצרתי חבילות עם TTL מוגדר, כדי להמחיש את ההבדל בין התנהגות ברירת המחדל לבין מצב מוקשח.</p>
+    
+<pre><code dir="ltr" class="language-python"># PoC Simulation: Outbound Exfiltration Attempt
+from scapy.all import IP, ICMP, sr1
 
-    <h2>ניהול סיכונים: אבטחה מול שימושיות</h2>
-    <p>המסקנה של TP-Link הייתה שהם בוחרים ב-Usability, אך ציינו שהם שוקלים את ההצעה שלי כפיצ'ר "Opt-in" עתידי למשתמשים מתקדמים.</p>
-    <p>זה הזכיר לי שוב את התובנה הכי חשובה ב-DevSecOps: אבטחה היא לא רק "לסגור את הדלת". אבטחה טובה היא ניהול סיכונים תוך כדי שהמוצר ממשיך לעבוד עבור המשתמשים. שמחתי לתרום את חלקי לדיון הארכיטקטוני הזה.</p>
+def simulate_exfiltration(target_ip, ttl_value):
+    print(f"[*] Sending probe to {target_ip} with TTL={ttl_value}")
+    packet = IP(dst=target_ip, ttl=ttl_value) / ICMP()
+    reply = sr1(packet, timeout=2, verbose=0)
+    
+    if reply is None:
+        print("[!] No response. Packet dropped.")
+    elif reply.type == 11: # Time Exceeded
+        print("[+] SUCCESS (Defense): Packet killed by gateway hop (Time Exceeded).")
+    else:
+        print("[-] VULNERABLE: Packet successfully routed outside the subnet.")
+
+# Test 1: Standard routing (Current default)
+simulate_exfiltration("8.8.8.8", 64)
+
+# Test 2: Proposed Mitigation
+simulate_exfiltration("8.8.8.8", 1)</code></pre>
+
+    <p>בסביבת המעבדה, הופקו שלושה קבצי PCAP שהועברו ליצרנים:</p>
+    <ul>
+        <li><code>baseline_vulnerable.pcap</code>: מוכיח שעם TTL=64, המידע זולג החוצה באין מפריע.</li>
+        <li><code>mitigation_ttl1.pcap</code>: מראה שגישה מקומית (L2-adjacent) נשארת תקינה.</li>
+        <li><code>dns_rebinding_mitigation_chain.pcap</code>: ממחיש את בלימת התקיפה – חבילת ה-Exfiltration נשמטת מיד ומחזירה שגיאת ICMP Time Exceeded.</li>
+    </ul>
+
+    <h2>השיח מול התעשייה: Palo Alto Networks & TP-Link</h2>
+    <p>שלחתי את ההצעה וה-PCAPs לצוותי האבטחה של Palo Alto Networks ו-TP-Link. שתי החברות נתנו מענה מקצועי ושקוף, והעלו את אותה סוגיה ארכיטקטונית: <strong>Usability vs. Security</strong>.</p>
+    
+    <p>הם אישרו שהניתוח הטכני שלי מדויק והגבלת ה-TTL אכן חוסמת את התקיפה. עם זאת, יישום גורף של TTL=1 ישבור תרחישי רשת מורכבים (כמו Mesh Topologies או L3 VPNs). כאשר משתמש מתחבר מרחוק הביתה או לארגון דרך VPN (במצב TUN), הראוטר מנתב את החבילה בין Subnets, מה שמוריד את ה-TTL ומפיל את החבילה. מעבר למצב TAP (Bridge) יכול היה לפתור זאת, אך הוא לרוב אינו נתמך במכשירים ניידים משיקולי אבטחה.</p>
+
+    <p>צוות ה-PSIRT של Palo Alto הבהיר ששימוש ב-TTL סטנדרטי אינו נחשב לחולשת אבטחה, אלא לבקשת תצורה, וצוות TP-Link ציין כי הם שוקלים את ההצעה כפיצ'ר "Opt-in" (מצב מוקשח) בעדכוני Firmware עתידיים.</p>
+
+    <h2>סיכום</h2>
+    <p>המחקר והאינטראקציה מול צוותי PSIRT בתעשייה חידדו עבורי את המהות של <strong>Security Architecture</strong>. אבטחה היא לעולם לא רק כתיבת חוקי חסימה; היא ניהול סיכונים מתמיד. הרעיון הטכני המאובטח ביותר עלול להיפסל אם הוא פוגע בפעילות העסקית או העיקרית של המשתמש. שילוב פתרונות כאלו כ-Opt-in למשתמשים מתקדמים מהווה את עמק השווה (Trade-off) הנכון.</p>
 </div>
 </body>
 </html>
