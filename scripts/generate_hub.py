@@ -34,7 +34,7 @@ for filename in os.listdir(DIR):
         # זיהוי קטגוריה
         cat = "Research"
         if "UnCrackable" in title or "Writeup" in title: cat = "Writeup"
-        elif "Project" in title or "בוט מסחר" in title or "Firewall" in title or "MyLeads" in title: cat = "Project"
+        elif "Project" in title or "בוט מסחר" in title or "Firewall" in title or "MyLeads" in title or "Diagnostics" in title: cat = "Project"
         
         # תקציר נקי
         excerpt = re.search(r'<p>(.*?)</p>', content, re.DOTALL)
