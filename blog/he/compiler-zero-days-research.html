@@ -2,22 +2,74 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compiler Zero-Days Research</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Breaking the Compilation Boundary: Semantic Fuzzing and Static Analysis</title>
 </head>
 <body>
 <div id="content">
-    <h1>מחקר קומפיילר וגילוי 3 חולשות Zero-Day</h1>
-    <p><em>מאת שי מרדכי | תאריך פרסום: בקרוב... (גילוי מקורי: 31 ביולי 2025)</em></p>
+    <h1>Breaking the Compilation Boundary: Semantic Fuzzing and Static Analysis of the SBCL Runtime</h1>
+    <p><em>מאת: שי מרדכי | מחקר חולשות לוגיות (Vulnerability Research) | הנדסת מערכות (Systems Engineering)</em><br>
+    <strong>סטטוס דיווח:</strong> responsible disclosure מלא מול CERT-IL #11265 ו-MITRE CVE-Req #1977672</p>
+
+    <hr>
+
+    <h2>תקציר מנהלים (Executive Summary)</h2>
+    <p>במהלך מחקר ממוקד שביצעתי על ארכיטקטורת המהדר של שפת Common Lisp, וספציפית על סביבת הריצה הפופולרית SBCL (Steel Bank Common Lisp), זיהיתי כשל לוגי מבני (Architectural Logic Flaw) עמוק במנגנון ניהול המשתנים של ה-Compiler.</p>
+    <p>החולשה מאפשרת לתוקף לעקוף לחלוטין את ערבויות הבידוד הלקסיקלי (Lexical Isolation guarantees) של השפה, ולהזריק משתנים דינמיים (Dynamic Bindings) מחוץ ל-Scope המוגן ישירות אל תוך שלב פריסת המאקרו (Macro Expansion-time).</p>
+    <p>המחקר הניב 3 פרימיטיבים שונים של כשל לוגי (Vulnerability Primitives) בעלי אחוזי הצלחה עקביים של 6% בסריקות אוטומטיות. פוסט זה מפרט את הנדסת הניסוי, את בניית ה-Grammar-Aware Semantic Fuzzer האוטונומי שהוביל לגילוי בשעתיים, ואת ניתוח הזיכרון הסטטי שביצעתי באמצעות IDA Pro כדי למפות את ה-Root Cause בבינארי המהדר.</p>
+
+    <h2>1. ההיפותזה הארכיטקטונית (The Architectural Hypothesis)</h2>
+    <p>הבסיס למחקר זה נולד במהלך הלימודים האקדמיים שלי במחלקה למדעי המחשב במרכז האקדמי לב. במסגרת הקורס "עקרונות שפות תוכנה" (150060), נדרשנו לבנות מהדר מבוסס ארכיטקטורת שתי שכבות (Nand2Tetris). בעוד שאת פיתוח התשתיות הסיזיפי והמרת הקוד לשפת Raku ניהלתי באמצעות סוכני AI, פיניתי את המשאבים המחשבתיים שלי לחקר המנגנונים התיאורטיים של ה-Pipeline: כיצד ה-Symbol Table מנהל את ה-Scopes והקצאות הזיכרון.</p>
+    <p>במקביל, במסגרת הרצאה ומצגת שהכנתי עבור סגל הקורס על יכולות ה-Meta-programming וה-Macros של Raku, עליתי על פער תיאורטי מרתק:<br>
+    <strong>במידה ומאקרואים (Macros) משנים ומזריקים קוד בזמן קומפילציה (Compile-time) – עוד לפני שנוצר Runtime Stack Frame מסורתי – איזה מנגנון פנימי בקומפיילר מוודא שמשתנים מקומיים (Lexical Variables) נשארים מבודדים לחלוטין ואינם מזוהמים על ידי קוד חיצוני?</strong></p>
+    <p>כדי לבחון את החסינות של ה-Static Scoping, החלטתי לקחת את שאלת המחקר הזו ולתקוף איתה קומפיילר מסחרי, ותיק ומאובטח: SBCL (v2.3.2).</p>
+
+    <h2>2. הנדסת הצינור המחקרי: Grammar-Aware Semantic Fuzzing</h2>
+    <p>קומפיילרים הם מערכות קשיחות במיוחד; אם תזרים אליהם קלט אקראי (Mutational Fuzzing רגיל), ה-Lexer או ה-Parser יפלטו שגיאת תחביר (Syntax Error) בשורה הראשונה והבדיקה תיעצר. כדי לעקוף את המחסום הזה, הקמתי יחד עם AI Agent מערך ניסוי אוטונומי חכם (Autonomous Test Harness) מבוסס פייתון, שפעל בשלושה שלבים תוך שעתיים:</p>
     
-    <p><strong style="color: var(--accent-color);">סטטוס: כתיבת הדוח הטכני (Writeup) בעיצומה ⏳</strong></p>
+    <h3>א. מנוע מוטציות מבוסס דקדוק (Grammar-Aware Mutation Engine)</h3>
+    <p>הסוכן האוטומטי תוכנת לייצר קוד LISP חוקי לחלוטין מבחינה מבנית (Syntactically Valid AST). המנוע בנה סביבות לקסיקליות מקוננות (Nested Environments) ודחף לתוכן בכוונה פקודות המשפיעות על טבלת הסמלים (Symbol Table) הגלובלית בזמן ההידור, כגון הצהרות סטטיות ומניפולציות של מרחבי שמות.</p>
     
-    <p>במאמר זה אציג ניתוח עומק של מנגנוני הקומפיילר, בעקבות מחקר שערכתי ביולי 2025 ובו התגלו 3 חולשות Zero-Day.</p>
+    <h3>ב. לולאת משוב דינמית (Automated Feedback Loop)</h3>
+    <p>העמדנו תהליך פינג-פונג מהיר בין ה-Agent לקומפיילר. בכל ריצה, הסקריפט (harness.py) הריץ את ה-SBCL Compiler, קרא את ה-stdout וה-stderr של המערכת, והזין את השגיאות חזרה לסוכן ה-AI. הסוכן תיקן את וקטור התקיפה בזמן אמת והתכנס באופן ממוקד אל פונקציות הליבה המשפיעות על הדגלים (Flags) הפנימיים של המהדר.</p>
     
-    <p>המיקוד של הדוח לא יהיה רק על עצם המציאה (שהתאפשרה בסיוע AI וסקרנות), אלא על ה-<strong>Root Cause Analysis</strong>: הבנה Low-Level של מנגנוני הקומפילציה, אופן עיבוד הקוד, וניתוח הכשלים הארכיטקטוניים שאפשרו את החולשות.</p>
+    <h3>ג. אורקל סמנטי (Semantic Oracle)</h3>
+    <p>מכיוון שהכשל המבוקש הוא כשל לוגי (Logic Flaw) ולא קריסת זיכרון פיזית (כמו Segmentation Fault), המערכת השתמשה באורקל סמנטי. ה-Harness השווה בין מה שהמשתנה המבודד היה צריך להכיל על פי חוקי השפה, לבין מה שהוא הכיל בפועל לאחר פעולת המאקרו. ברגע שמשתנה "חסום" שינה את ערכו ללא התרעה מצד המהדר, המערכת סימנה זאת כפריצה מושגת.</p>
+
+    <h2>3. מיפוי שלושת הכשלים הלוגיים (Vulnerability Primitives)</h2>
+    <p>האוטומציה המשותפת הניבה 3 וקטורים נפרדים שבהם המהדר נכשל בביצוע אימות מצב (State Validation) של ה-LEXENV (הסביבה הלקסיקלית האקטיבית):</p>
     
-    <p><em>(המאמר המלא יעלה לכאן בקרוב)</em></p>
+    <p><strong>פרימיטיב 1: הזרקת קישור דינמי (Dynamic Binding Injection)</strong><br>
+    <em>קובץ הבדיקה: fuzzer/corpus/dynamic_binding_attack.lisp</em><br>
+    <strong>מנגנון הכשל:</strong> המערכת גילתה כי שימוש בפונקציה הגלובלית <code>(proclaim '(special ...))</code> או מקבילתה <code>declaim</code> מתוך שלב ה-Macro Expansion, מעדכן באופן גלובלי את הדגלים של הסמל. אם הסמל נמצא באותו רגע בתוך Scope לקסיקלי מוגן (let block), המהדר מאבד את ההפרדה, מעביר את מסלול הרזולוציה לסביבה הדינמית, ומאפשר לקוד חיצוני לדרוס את הזיכרון המוגן בשקט מוחלט.</p>
+
+    <p><strong>פרימיטיב 2: זיהום טבלת הסמלים (Global Symbol Table Pollution)</strong><br>
+    <em>קובץ הבדיקה: research/explorations/symbol_interning_attack.lisp</em><br>
+    <strong>מנגנון הכשל:</strong> ניסיון ליצירת מצביעים כפולים באמצעות פונקציית <code>intern</code> בזמן פריסת המאקרו. המהדר כשל בביצוע ה-Isolation, ונוצר Reference שגוי (קישור פנימי דרוס) בין ה-Global Object Storage לבין ה-Lexical Pointer, מה שאפשר להדליף ערכים מוגנים החוצה.</p>
+
+    <p><strong>פרימיטיב 3: בלבול מרחבי שמות בין חבילות (Cross-Package Namespace Confusion)</strong><br>
+    <em>קובץ הבדיקה: research/explorations/package_hijack_attack.lisp</em><br>
+    <strong>מנגנון הכשל:</strong> שימוש בטכניקת <code>(:shadow)</code> בתוך חבילה (Package) דינמית שנוצרה בזמן הידור. המהדר איבד את ה-Trace של ה-Scope המקורי וניתב את המשתנה הלקסיקלי המוגן אל המרחב הציבורי הכללי (cl-user).</p>
+
+    <h2>4. ניתוח סטטי (Static Analysis) באסמבלי באמצעות IDA Pro</h2>
+    <p>כדי לבצע אימות מלא (Binary Verification) של סיבת השורש (Root Cause) בתוך הבינארי של sbcl.exe, פיתחתי צינור אוטומציה מבוסס IDAPython (<code>src/sbcl_ida_analysis.py</code>).</p>
+    <p>מכיוון שהבינארי עבר אופטימיזציה מלאה והיה Stripped (ללא סמלי דיבאג מלאים), הסקריפט ביצע את הפעולות הבאות:</p>
+    <ul>
+        <li>מיפה את כל ה-Cross-References (Xrefs) לפונקציות הניהול של ה-Namespace וה-Internal Flags.</li>
+        <li>איתר את פונקציות הליבה של מנגנון ה-proclaim.</li>
+        <li>עקב אחר מניפולציות סיביות (Bitwise mutations) כגון פקודות האסמבלי AND, OR ו-TEST המבוצעות על מבנה הנתונים של ה-Symbol.</li>
+    </ul>
+    <p>הניתוח הסטטי הראה כי בתרחיש של הרחבת מאקרו, הקומפיילר מבצע עדכון בינארי ישיר של ה-SPECIAL_FLAG של הסמל, ללא קריאה או בדיקה של ה-lexenv האקטיבי הנוכחי. הדבר מאשש את ההיפותזה הארכיטקטונית: המהדר מניח באופן שגוי (Flawed Assumption) שעדכון דגל בזמן הידור הוא תמיד בטוח, ומאבד את גבולות ההכרה הסטטיים.</p>
+
+    <h2>5. הערכת סיכונים (Supply Chain Threat Model)</h2>
+    <p>למה באג לוגי בקומפיילר בזמן הידור הוא מסוכן? הסיכון המרכזי פוגע ישירות ב-CI/CD Pipelines וב-Supply Chain Attacks.</p>
+    <p>תוקף יכול לפרסם חבילת קוד (Lisp Package) צד-שלישי תמימה למראה, המכילה מאקרו מורעל (Poisoned Macro). כאשר מפתח או שרת בנייה אוטומטי (Build Server) מהדרים את האפליקציה, המאקרו הזדוני מופעל בזמן הבנייה. בעזרת החולשות שמצאנו, המאקרו יכול לגלוש מה-Scope המבודד שלו, לשלוף או לשכתב משתנים לקסיקליים מוגנים של מפתחים אחרים באותו פרויקט (כגון מפתחות הצפנה, קבועים, או קוד פנימי) – כל זאת מבלי לעורר אף התרעה או קריסה בזמן הריצה (Runtime).</p>
+
+    <h2>סיכום ומבט קדימה</h2>
+    <p>המחקר הזה מדגים כיצד שילוב של אינטואיציה ארכיטקטונית אנושית יחד עם הנדסת ניסוי מבוססת סוכני AI יכול להוביל לגילוי של חולשות מורכבות בזמן אפסי. ה-AI Agent שימש ככוח עבודה מטורף שתרגם את השאלות המערכתיות שלי לקוד ולוריאציות, בעוד שניהול ה-Feedback Loop וניתוח ה-Root Cause נשארו באחריותי המלאה.</p>
+    
+    <p>קוד המקור המלא של ה-Fuzzer, סקריפטים האוטומציה של IDA וה-PoCs הרשמיים פתוחים לסקירה ב-Repository שלי בגיטהאב.</p>
+    <p><strong>לסקירת ה-Repository המלא והורדת ה-PoCs, בקרו בגיטהאב שלי: <a href="https://github.com/shay-mordechai/AI-Augmented-SBCL-Vulnerability-Research" target="_blank">AI-Augmented-SBCL-Vulnerability-Research</a></strong></p>
 </div>
 </body>
 </html>
