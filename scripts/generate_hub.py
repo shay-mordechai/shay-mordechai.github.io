@@ -112,7 +112,7 @@ html = """<!DOCTYPE html>
     <div class="categories-container">
 """
 
-for cat in ["Projects", "Articles", "Writeups"]:
+for cat in ["Articles", "Projects", "Writeups"]:
     if not data[cat]: continue
     html += f"<div class='category-column'><h2>{cat}</h2>"
     for item in data[cat]:
