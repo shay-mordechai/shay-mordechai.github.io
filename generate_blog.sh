@@ -1,15 +1,15 @@
 #!/bin/bash
 
-echo "Starting Blog Refactoring with Excerpts..."
+echo "Starting Blog Refactoring with Writeup Categorization..."
 
-# Remove old sidebar from all articles
+# ניקוי הסרגל הצידי הישן מהמאמרים
 for file in blog/he/*.html; do
     if [ -f "$file" ]; then
         sed -i '/id="sidebar"/d' "$file"
     fi
 done
 
-# Build the base HTML for the Central Hub
+# בניית שלד ה-HTML לעמוד הבלוג המרכזי
 HUB_HTML="<!DOCTYPE html>
 <html lang=\"he\" dir=\"rtl\">
 <head>
@@ -36,36 +36,41 @@ HUB_HTML="<!DOCTYPE html>
     <h1 style=\"border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 30px;\">מחקרים, מאמרים ופרויקטים</h1>
     <div style=\"display: flex; flex-direction: column; gap: 15px;\">"
 
-# Scan articles and generate cards (Sorted newest to oldest)
+# סריקת המאמרים וקטגוריזציה דינמית
 for file in $(ls -t blog/he/*.html); do
     filename=$(basename "$file")
     if [ "$filename" == "index.html" ]; then continue; fi
     
-    # Extract Title
+    # חילוץ כותרת
     title=$(grep -oP '(?<=<h1>).*?(?=</h1>)' "$file" | head -n 1)
     if [ -z "$title" ]; then title=$filename; fi
     
-    # Extract Date
+    # חילוץ תאריך
     date_line=$(grep -oP '(?<=<em>).*?(?=</em>)' "$file" | head -n 1)
     if [ -z "$date_line" ]; then date_line="תאריך פרסום יתווסף בקרוב"; fi
     
-    # Extract Excerpt (First paragraph without the author name)
+    # חילוץ תקציר
     excerpt=$(grep -oP '(?<=<p>).*?(?=</p>)' "$file" | grep -v 'מאת שי מרדכי' | head -n 1 | sed 's/<[^>]*>//g')
     excerpt="${excerpt:0:160}..."
     
-    # Dynamic Badge Logic (Project vs Research)
+    # לוגיקת תיוג (Default = Research)
     badge_text="Research"
-    badge_bg="rgba(88, 166, 255, 0.1)" # Blue background
+    badge_bg="rgba(88, 166, 255, 0.1)"
     badge_color="var(--accent-blue)"
     
-    # Classify as Project if title matches specific keywords
-    if [[ "$title" == *"In Process"* || "$title" == *"בוט מסחר"* || "$title" == *"Firewall"* ]]; then
+    # אם מדובר ב-WriteUp
+    if [[ "$title" == *"UnCrackable"* || "$title" == *"Writeup"* || "$filename" == *"uncrackable"* ]]; then
+        badge_text="Writeup"
+        badge_bg="rgba(63, 185, 80, 0.1)" # רקע ירוק
+        badge_color="var(--accent-green)"
+    # אם מדובר בפרויקט מעשי
+    elif [[ "$title" == *"In Process"* || "$title" == *"בוט מסחר"* || "$title" == *"Firewall"* ]]; then
         badge_text="Project"
-        badge_bg="rgba(188, 140, 255, 0.1)" # Purple background
+        badge_bg="rgba(188, 140, 255, 0.1)" # רקע סגול
         badge_color="var(--accent-purple)"
     fi
     
-    # Append card to Hub HTML
+    # הזרקה ל-Hub
     HUB_HTML+="<a href=\"${filename}\" class=\"article-card\">"
     HUB_HTML+="<div class=\"badge\" style=\"background: ${badge_bg}; color: ${badge_color};\">${badge_text}</div>"
     HUB_HTML+="<span class=\"article-title\">${title}</span>"
@@ -73,7 +78,7 @@ for file in $(ls -t blog/he/*.html); do
     HUB_HTML+="<span class=\"article-excerpt\">${excerpt}</span>"
     HUB_HTML+="</a>"
     
-    # Inject 'Back' button inside the article if it does not exist
+    # הזרקת כפתור חזרה בתוך המאמר עצמו
     BACK_LINK='<a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים והפרויקטים</a>'
     if ! grep -q "חזרה לרשימת המאמרים" "$file"; then
         sed -i "s|<div id=\"content\">|<div id=\"content\">\n    ${BACK_LINK}|" "$file"
@@ -82,6 +87,5 @@ done
 
 HUB_HTML+="</div></div></body></html>"
 
-# Save the Hub page
 echo "$HUB_HTML" > blog/he/index.html
-echo "Blog generation successfully completed!"
+echo "Blog generation with 3 categories successfully completed!"
