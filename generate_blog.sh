@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "Starting Blog Refactoring with Chronological Sorting..."
+echo "Starting Blog Refactoring: Categorized & Sorted Sections..."
 
-# פונקציית עזר להמרת חודש עברי למספר לטובת מיון
+# Helper function to convert Hebrew months to numbers for sorting
 get_month_num() {
     case "$1" in
         *"ינואר"*) echo "01" ;;
@@ -21,13 +21,14 @@ get_month_num() {
     esac
 }
 
-# הסרת סרגל צדדי ישן
+# Remove old sidebar from all articles
 for file in blog/he/*.html; do
     if [ -f "$file" ]; then
         sed -i '/id="sidebar"/d' "$file"
     fi
 done
 
+# Initialize Hub HTML
 HUB_HTML="<!DOCTYPE html>
 <html lang=\"he\" dir=\"rtl\">
 <head>
@@ -46,17 +47,19 @@ HUB_HTML="<!DOCTYPE html>
         .badge { position: absolute; top: 20px; right: 25px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
         .back-btn { color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 30px; font-size: 1.1rem; }
         .back-btn:hover { text-decoration: underline; }
+        .section-header { border-bottom: 2px solid #334155; padding-bottom: 10px; margin-top: 50px; margin-bottom: 20px; color: #ffffff; }
     </style>
 </head>
 <body>
 <div id=\"content\">
     <a href=\"../../index.html\" class=\"back-btn\">← חזרה לתיק העבודות (Home)</a>
-    <h1 style=\"border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 30px;\">מחקרים, מאמרים ופרויקטים</h1>
-    <div style=\"display: flex; flex-direction: column; gap: 15px;\">"
+    <h1 style=\"margin-bottom: 10px;\">מאגר ידע (Knowledge Vault)</h1>
+    <p style=\"color: var(--text-muted); margin-bottom: 30px;\">מחקרים, פרויקטים ופתרונות אבטחה ממוינים לפי קטגוריות.</p>"
 
-# קובץ זמני לאחסון המידע לשם מיון
+# Temporary file to store parsed data
 > tmp_sort.txt
 
+# Extract and classify all articles
 for file in blog/he/*.html; do
     filename=$(basename "$file")
     if [ "$filename" == "index.html" ]; then continue; fi
@@ -70,7 +73,7 @@ for file in blog/he/*.html; do
     excerpt=$(grep -oP '(?<=<p>).*?(?=</p>)' "$file" | grep -v 'מאת שי מרדכי' | head -n 1 | sed 's/<[^>]*>//g')
     excerpt="${excerpt:0:160}..."
     
-    # חילוץ תאריך ליצירת מפתח מיון (Sort Key) מפורמט YYYY-MM-DD
+    # Generate chronological sort key
     day=$(echo "$date_line" | grep -oP '\b\d{1,2}\b' | head -n 1)
     month_word=$(echo "$date_line" | grep -oP '\bב?[א-ת]+\b' | grep -E 'ינואר|פברואר|מרץ|אפריל|מאי|יוני|יולי|אוגוסט|ספטמבר|אוקטובר|נובמבר|דצמבר' | head -n 1)
     year=$(echo "$date_line" | grep -oP '\b20\d{2}\b' | head -n 1)
@@ -80,16 +83,10 @@ for file in blog/he/*.html; do
         day=$(printf "%02d" "$day")
         sort_key="${year}-${month}-${day}"
     else
-        sort_key="1970-01-01" # אם אין תאריך תקין, ייזרק לתחתית הרשימה
+        sort_key="1970-01-01"
     fi
 
-    # שמירת המידע בקובץ זמני עם מפתח המיון בראש השורה
-    echo "${sort_key}|${filename}|${title}|${date_line}|${excerpt}" >> tmp_sort.txt
-done
-
-# קריאת הקובץ הזמני כשהוא ממוין בסדר יורד (r-) לפי התאריך
-while IFS='|' read -r sort_key filename title date_line excerpt; do
-    
+    # Classify the article
     badge_text="Research"
     badge_bg="rgba(88, 166, 255, 0.1)"
     badge_color="var(--accent-blue)"
@@ -98,23 +95,47 @@ while IFS='|' read -r sort_key filename title date_line excerpt; do
         badge_text="Writeup"
         badge_bg="rgba(63, 185, 80, 0.1)"
         badge_color="var(--accent-green)"
-    elif [[ "$title" == *"In Process"* || "$title" == *"בוט מסחר"* || "$title" == *"Project"* || "$title" == *"Firewall"* ]]; then
+    elif [[ "$title" == *"In Process"* || "$title" == *"בוט מסחר"* || "$title" == *"Project"* || "$title" == *"Firewall"* || "$title" == *"MyLeads"* || "$filename" == *"myleads"* ]]; then
         badge_text="Project"
         badge_bg="rgba(188, 140, 255, 0.1)"
         badge_color="var(--accent-purple)"
     fi
+
+    # Write mapped data to temp file
+    echo "${sort_key}|${filename}|${title}|${date_line}|${excerpt}|${badge_text}|${badge_bg}|${badge_color}" >> tmp_sort.txt
+done
+
+# Function to render a specific section
+render_section() {
+    local section_title="$1"
+    local target_badge="$2"
     
-    HUB_HTML+="<a href=\"${filename}\" class=\"article-card\">"
-    HUB_HTML+="<div class=\"badge\" style=\"background: ${badge_bg}; color: ${badge_color};\">${badge_text}</div>"
-    HUB_HTML+="<span class=\"article-title\">${title}</span>"
-    HUB_HTML+="<span class=\"article-date\">${date_line}</span>"
-    HUB_HTML+="<span class=\"article-excerpt\">${excerpt}</span>"
-    HUB_HTML+="</a>"
-    
-done < <(sort -r tmp_sort.txt)
+    # If category exists in the temp file, render the section
+    if grep -q "\|${target_badge}\|" tmp_sort.txt; then
+        HUB_HTML+="<h2 class=\"section-header\">${section_title}</h2>"
+        HUB_HTML+="<div style=\"display: flex; flex-direction: column; gap: 15px;\">"
+        
+        # Read from sorted filtered output (Descending)
+        while IFS='|' read -r sort_key filename title date_line excerpt badge_text badge_bg badge_color; do
+            HUB_HTML+="<a href=\"${filename}\" class=\"article-card\">"
+            HUB_HTML+="<div class=\"badge\" style=\"background: ${badge_bg}; color: ${badge_color};\">${badge_text}</div>"
+            HUB_HTML+="<span class=\"article-title\">${title}</span>"
+            HUB_HTML+="<span class=\"article-date\">${date_line}</span>"
+            HUB_HTML+="<span class=\"article-excerpt\">${excerpt}</span>"
+            HUB_HTML+="</a>"
+        done < <(grep "\|${target_badge}\|" tmp_sort.txt | sort -r)
+        
+        HUB_HTML+="</div>"
+    fi
+}
+
+# Render Sections in specific order
+render_section "מחקרים ומאמרים (Research)" "Research"
+render_section "פרויקטים וארכיטקטורה (Projects)" "Project"
+render_section "אתגרי אבטחה (Writeups)" "Writeup"
 
 rm tmp_sort.txt
-HUB_HTML+="</div></div></body></html>"
+HUB_HTML+="</div></body></html>"
 
 echo "$HUB_HTML" > blog/he/index.html
-echo "Blog generation with pure chronological sorting completed!"
+echo "Blog generation successfully completed! Categorized & Sorted."
