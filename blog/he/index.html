@@ -5,115 +5,138 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <title>מאגר המאמרים והפרויקטים של שי מרדכי</title>
     <style>
-        .articles-grid {
+        /* מבנה של עמודות במקביל */
+        .categories-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 40px;
+            gap: 25px;
+            align-items: flex-start;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        /* מחלקת העיצוב המקורית שהייתה לך */
+        .category-column {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .category-column h2 {
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 10px;
+            color: #c9d1d9;
+            font-size: 1.5rem;
+        }
         .article-card {
             background-color: #161b22;
             border: 1px solid #30363d;
             border-radius: 6px;
             padding: 16px;
             text-decoration: none;
-            width: calc(50% - 10px);
+            width: 100%;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, transform 0.2s;
         }
-        .article-card:hover { border-color: #8b949e; }
-        @media (max-width: 768px) { .article-card { width: 100%; } }
+        .article-card:hover { 
+            border-color: #8b949e; 
+            transform: translateY(-2px);
+        }
+        /* תאימות למובייל - העמודות ירדו אחת מתחת לשניה במסכים קטנים */
+        @media (max-width: 900px) {
+            .categories-container { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
-<div id="content">
-    <h1>מאגר המאמרים והפרויקטים של שי מרדכי</h1>
-<h2>Projects</h2><div class='articles-grid'>
-        <a href="compiler-zero-days-research.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">תאריך פרסום: בקרוב... (גילוי מקורי: 31 ביולי 2025)</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">סטטוס: כתיבת הדוח הטכני (Writeup) בעיצומה ⏳</div>
-        </a>
-        <a href="myleads-saas-architecture.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Project MyLeads AI: Secure-by-Design SaaS Architecture</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">March 9, 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">By Shay Mordechai | March 9, 2026</div>
-        </a>
-        <a href="pt-web-registration-diagnostic.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Web API Diagnostics: Looking Behind the UI Freeze</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">16 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השיכון. עבורי...</div>
-        </a>
+<div id="content" style="max-width: 100%; padding:0;">
+    <h1 style="text-align: center; margin: 40px 0;">מאגר הפרויקטים והמחקרים</h1>
+    <div class="categories-container">
+<div class='category-column'><h2>Projects</h2>
         <a href="rust-envoy-tunnel.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">15 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את ת...</div>
-        </a>
-        <a href="trading-bot-project.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Project Sniper: איך מספרים סיפור בעולמות הסייבר ושוק ההון?</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בימים האחרונים, תוך כדי הכנה למיוני Security Researcher בפאלו אלטו, חקרתי לעומק את מנגנוני...</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">15 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשה...</div>
         </a>
         <a href="pt-dns-rebinding-mitigation.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">DNS Rebinding & LANjack: Architectural Mitigation</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">26 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בעקבות חשיפת קמפיין LANjack... (הטקסט המאוחד כאן)</div>
-        </a></div><h2>Research</h2><div class='articles-grid'>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding & LANjack: Architectural Mitigation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעקבות חשיפת קמפיין LANjack... (הטקסט המאוחד כאן)</div>
+        </a>
+        <a href="pt-web-registration-diagnostic.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web API Diagnostics: Looking Behind the UI Freeze</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">16 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השי...</div>
+        </a>
+        <a href="trading-bot-project.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Project Sniper: איך מספרים סיפור בעולמות הסייבר ושוק ההון?</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בימים האחרונים, תוך כדי הכנה למיוני Security Researcher בפאלו אלטו, חקרתי לעומק ...</div>
+        </a>
+        <a href="compiler-zero-days-research.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">מחקר קומפיילר וגילוי 3 חולשות Zero-Day</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">תאריך פרסום: בקרוב... (גילוי מקורי: 31 ביולי 2025)</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">סטטוס: כתיבת הדוח הטכני (Writeup) בעיצומה ⏳</div>
+        </a>
+        <a href="myleads-saas-architecture.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Project MyLeads AI: Secure-by-Design SaaS Architecture</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">March 9, 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">By Shay Mordechai | March 9, 2026</div>
+        </a></div><div class='category-column'><h2>Research</h2>
+        <a href="permission-paradox.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Permission Paradox</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026 (טיוטה בתהליך)</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">לאחר שחקרנו את Anatsa במאמר הקודם וראינו בעיניים איך היא (בלי בושה) מזריקה קוד ל...</div>
+        </a>
         <a href="android-bootstrap-hijacking.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Android Bootstrap Hijacking</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">27 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">המאמר מתמקד בשבריר השניה לאחר ריצת האפליקציה על מכשיר האנדרואיד, וכיצד נוזקות מתקדמות מנסו...</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Android Bootstrap Hijacking</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">27 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">המאמר מתמקד בשבריר השניה לאחר ריצת האפליקציה על מכשיר האנדרואיד, וכיצד נוזקות מת...</div>
         </a>
         <a href="browser-privilege-boundary.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">עודכן ב-19 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בעבר, כל דפדפן היה תהליך אחד גדול. אם אתר אחד קרס, ה-OS היה מבצע killall וכל ה-Tabs היו נס...</div>
-        </a>
-        <a href="fedora-kinoite-isolation.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. הצורך להריץ כמה VMs במקביל לניתוח נוזקות וללימוד עצ...</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">עודכן ב-19 במאי 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעבר, כל דפדפן היה תהליך אחד גדול. אם אתר אחד קרס, ה-OS היה מבצע killall וכל ה-T...</div>
         </a>
         <a href="flatpak-sandbox-isolation.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">Flatpak - Linux Sandbox Isolation</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">29 במרץ 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום...</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak - Linux Sandbox Isolation</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (...</div>
         </a>
         <a href="jni-unsafe-bridge.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">JNI as (Un-)Safe Bridge</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">26 במרץ 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גישה כמעט ישי...</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גיש...</div>
         </a>
-        <a href="life-of-a-packet-routing.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">The Life of a Packet: From Application to Routing</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">18 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כשמנסים לגשת לאתר (למשל פאלו אלטו) מהטרמינל בלינוקס, קל לחשוב על התהליך כמושג אבסטרקטי. בת...</div>
-        </a>
-        <a href="permission-paradox.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">The Permission Paradox</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">28 במאי 2026 (טיוטה בתהליך)</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">לאחר שחקרנו את Anatsa במאמר הקודם וראינו בעיניים איך היא (בלי בושה) מזריקה קוד ל-Entry Poi...</div>
-        </a>
-        <a href="v8-engine-security.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">V8 Engine's (Dis-)Security</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">24 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ה-WEB, "Fr...</div>
+        <a href="fedora-kinoite-isolation.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. הצורך להריץ כמה VMs במקביל לניתוח נוזקות ...</div>
         </a>
         <a href="malware-lab-kinoite.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. כשהתחלתי לבנות מעבדת Malware Analysis מקומית, נתקלת...</div>
-        </a></div><h2>Writeups</h2><div class='articles-grid'>
-        <a href="uncrackable-level1.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">UnCrackable Level 1 - Mobile Security Writeup</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">22 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">בתחילת האפליקציה, הפונקציה onCreate בודקת האם המכשיר פרוץ או מחובר לדיבאגר[cite: 2]:</div>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. כשהתחלתי לבנות מעבדת Malware Analysis מקו...</div>
         </a>
+        <a href="v8-engine-security.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine's (Dis-)Security</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ...</div>
+        </a>
+        <a href="life-of-a-packet-routing.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Life of a Packet: From Application to Routing</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">18 בדצמבר 2025</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כשמנסים לגשת לאתר (למשל פאלו אלטו) מהטרמינל בלינוקס, קל לחשוב על התהליך כמושג אב...</div>
+        </a></div><div class='category-column'><h2>Writeups</h2>
         <a href="uncrackable-level2.html" class="article-card">
-            <div style="font-weight:bold; color:#fff;">UnCrackable Level 2 - Mobile Security Writeup</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px;">30 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#c9d1d9; line-height:1.4;">שאלה: מדוע פונקציות NATIVE תמיד ישלחו BYTES לקוד ב-JAVA, ולא STRING או INT? בגלל הדרך בה ע...</div>
-        </a></div></div></body></html>
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 2 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">שאלה: מדוע פונקציות NATIVE תמיד ישלחו BYTES לקוד ב-JAVA, ולא STRING או INT? בגלל...</div>
+        </a>
+        <a href="uncrackable-level1.html" class="article-card">
+            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 1 - Mobile Security Writeup</div>
+            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">22 באפריל 2026</div>
+            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בתחילת האפליקציה, הפונקציה onCreate בודקת האם המכשיר פרוץ או מחובר לדיבאגר[cite:...</div>
+        </a></div></div></div></body></html>
