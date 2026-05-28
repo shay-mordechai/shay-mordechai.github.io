@@ -56,7 +56,7 @@ body {
 }
 
 #content {
-    margin-right: 300px; /* פינוי מקום לסרגל הימני */
+    margin: 0 auto;
     padding: 40px;
     max-width: 800px;
     width: 100%;
