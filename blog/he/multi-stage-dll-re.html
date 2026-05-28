@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Multi-Stage Malware RE: DLL Decryption & Static Bypasses</title>
+</head>
+<body>
+<div id="content">
+    <h1>Multi-Stage Malware RE: Dynamic DLL Decryption & Static Bypasses</h1>
+    <p><em>מאת שי מרדכי | 19 באפריל 2024</em></p>
+
+    <h2>1. ניתוח סטטי (Static Analysis)</h2>
+    <p>התוכנית טוענת בזמן ריצה את <code>crack.dll</code> אשר קורא לפונקציה <code>BrainDamage</code>, וטוענת DLL נוסף שקורא לפונקציה <code>XorForever</code>. בבחינת הייבוא (Imports), נצפו קריאות מחשידות ל-<code>IsDebuggerPresent</code> ו-<code>RegOpenKeyExW</code>. מאחר שפעולות מסוימות התרחשו עוד לפני ה-<code>main</code>, זה העלה חשד חזק לשימוש ב-TLS Callbacks כדי להקשות על הדיבוג.</p>
+
+    <h2>2. חקירת הפונקציה TsCallBack וניתוב קוד (Control Flow Hijacking)</h2>
+    <p>בתוך ה-Callback מתבצעת קריאה ל-<code>StartAddress</code>, העושה שימוש במחרוזת מוצפנת. מאנליזה דינמית, התוכנית תמיד נטתה לרוץ לענף הימני (Right Branch) ולפענח את המחרוזת ל-<code>ava.dll</code> או <code>Java.dll</code>. כדי לחשוף את ההתנהגות המלאה ולעקוף בדיקות מונעות דיבוג, ביצעתי Patching לפונקציה כך שתמיד תרוץ דרך הענף השמאלי (Left Branch) ותשחרר את הפיילוד (Payload).</p>
+
+    <h2>3. שחזור ספרייה מתוך הזיכרון (DLL Reconstruction)</h2>
+    <p>בסיום <code>StartAddress</code>, קריאות ל-<code>fopen_s</code> ו-<code>fwrite</code> יצרו קובץ בשם <code>Java.dll</code>. עם זאת, הקובץ שנוצר לא קיים את חוקי פורמט PE (ה-Headers שלו היו מוצפנים) ולא יכול היה להיטען לזיכרון.</p>
+    <p>מכיוון שאנו יודעים שקובץ PE חייב להתחיל בערכים מוגדרים היטב (כמו <code>MZ</code> ב-DOS Header), השתמשתי בטכניקת Known-Plaintext כדי לחשב את מפתחות ההצפנה ששימשו ב-Buffer המקורי (נמצא ששימשו המפתחות <code>0x81</code> ו-<code>0x53</code> ברוטציה). כתבתי קוד C++ אוטומטי המבצע <code>xorEncryptAndWrite</code> על המערך המוצפן ושומר קובץ <code>Java.dll</code> תקין ובר-ריצה לדיסק.</p>
+
+    <h2>4. פיענוח אלגוריתם XorForever והפקת ה-Flag</h2>
+    <p>בטעינת <code>Java.dll</code> ל-IDA וניתוח באמצעות Hex-Rays Decompiler (המרת Assembly ל-C Pseudocode), חקרתי את הפונקציה <code>XorForever</code>. היא כללה לולאה שמחשבת סכום ASCII של קלט המשתמש, עם תנאי <code>if (sum == 1337)</code>.</p>
+    <p>במקום לבצע Brute-force או לפצ'פץ' את התנאי בזיכרון, ניתחתי אנליטית את מערך המטרה (<code>ArgList</code>). גיליתי כי בהינתן שהבדיקה עוברת, הפונקציה מחליפה אינדקסים ספציפיים (0, 1, 2, 3, 6) מתוך מחרוזת קבועה <code>"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"</code>.</p>
+    <p>הערכים הובילו ישירות למחרוזת <code>3TwB99f</code>. יחד עם התחילית שהייתה בקוד, הופק ה-URL המלא של דגל הסיום: <code>bit.ly/3TwB99f</code>.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>PE Extraction & Binary Patching (Intro to RE)</title>
+</head>
+<body>
+<div id="content">
+    <h1>PE Extraction & Binary Patching (Intro to RE)</h1>
+    <p><em>מאת שי מרדכי | 29 בפברואר 2024</em></p>
+    
+    <h2>1. חילוץ קובץ ההרצה (PE Carving)</h2>
+    <p>במבט ראשוני על קובץ ה-PDF שסופק באתגר, התגלה תוכן חריג. באמצעות עורך הקסדצימלי (Hex Editor), זיהיתי חתימת התחלה מוכרת של פורמט PE (ערך הקסדצימלי <code>4D 5A</code> או <code>MZ</code>). מנקודה זו ועד סוף הקובץ, היה מונח קובץ הרצה שהוסתר בתוך ה-PDF. חילצתי את הבלוק כולו ושמרתי אותו כקובץ עצמאי (<code>new-flag.exe</code>).</p>
+
+    <h2>2. אנליזה סטטית ו-Binary Patching ב-IDA</h2>
+    <p>בטעינת הקובץ ל-IDA Pro, איתרתי את פונקציית הבדיקה המרכזית האחראית על אימות הסיסמה. הלוגיקה דרשה שסכום ערכי ה-ASCII של הסיסמה שהוזנה, לאחר פעולת <code>AND 0xFF</code>, יהיה שווה ל-10 (<code>0Ah</code>).</p>
+    <pre><code>.text:00291C12    and     eax, 0FFh
+.text:00291C17    mov     [ebp+var_20], eax
+.text:00291C1A    cmp     [ebp+var_20], 0Ah
+.text:00291C1E    jnz     short loc_291C95</code></pre>
+    
+    <p>במקום לנחש או לכתוב סקריפט ליצירת סיסמה תואמת, בחרתי לעקוף את המנעול לחלוטין (Binary Patching). דרסתי את הפקודה <code>and eax, 0FFh</code> לפקודת <code>mov eax, 0Ah</code>, מה שמבטיח שהבדיקה תעבור בהצלחה עבור כל קלט שיוזן. לאחר מכן השתמשתי ב-Apply patches to input file כדי לייצר את הקובץ הפרוץ.</p>
+    
+    <h2>3. שחזור אלגוריתם ה-XOR (Decompilation)</h2>
+    <p>הקוד כלל גם לולאת הצפנה פנימית שמבוססת על XOR. המערך המוצפן פוענח כך שאלמנטים באינדקסים זוגיים עברו XOR עם <code>0xA</code> ואלמנטים אי-זוגיים עברו XOR עם <code>0xB</code>. שחזרתי את האלגוריתם לקוד C++ נקי כדי לאמת את ה-Control Flow הסופי.</p>
+</div>
+</body>
+</html>
