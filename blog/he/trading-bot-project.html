@@ -2,16 +2,65 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>בוט מסחר אלגוריתמי</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Sniper: מבוט מסחר ועד אנומליות סייבר</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 <div id="content">
-    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים</a>
-    <h1>בוט מסחר אלגוריתמי (In Process)</h1>
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים והפרויקטים</a>
+    
+    <h1>Project Sniper: איך מספרים סיפור בעולמות הסייבר ושוק ההון?</h1>
     <p><em>מאת שי מרדכי | 30 בדצמבר 2025</em></p>
-    <p><strong style="color: var(--accent-color);">סטטוס: מחקר בארכיון ⏳</strong></p>
-    <p>פרויקט פיתוח בוט למסחר אלגוריתמי. למדתי כאן המון על אוטומציה, ניתוח נתונים בזמן אמת וקבלת החלטות תחת עומס. העליתי את הפרויקט על הכתב כדי לשתף בתובנות הטכניות והכלכליות שהובילו אותי לתכנון הארכיטקטורה.</p>
+
+    <p>בימים האחרונים, תוך כדי הכנה למיוני Security Researcher בפאלו אלטו, חקרתי לעומק את מנגנוני ה-SmartGrouping במוצרי ה-Cortex. ראיתי שבתחום ה-Posture Research, היכולת לקחת אירועים מפוזרים, לזהות אנומליות ולבנות מהם Context - היא בדיוק מה שחסר היום בניתוח שוק ההון, ומה שמבדיל בין סוחר עצמאי לגוף מוסדי.</p>
+    
+    <p>בתור סוחר עצמאי כבר 6 שנים, תמיד חיפשתי את ה"סיפור" מאחורי הגרפים. בזכות טכנולוגיית ה-SmartGrouping, החלטתי לקחת את זה צעד קדימה: בניתי בעזרת AI פלטפורמה של 'צייד מניות' (Project Sniper) שמתייחסת לכל תנועת מחיר כאל Log Event, ו"מחליטה" על קנייה ומכירה על פי הדפוסים שמזוהים בשוק ב-RunTime.</p>
+
+    <!-- מקום לתמונה ראשונה: לדוגמה, לוגים או פלט הארכיטקטורה -->
+    <div style="text-align: center; margin: 30px 0;">
+        <img src="../../assets/images/sniper-architecture.png" alt="Project Sniper Architecture" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155;">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">תמונה 1: ארכיטקטורת זיהוי האנומליות</p>
+    </div>
+
+    <h2>המטרה: לקחת לוגים מרובים ולספר דרכם סיפור</h2>
+    <p>בלוגים שמתעדים מתקפות סייבר, החוקר צריך לזהות תוקף דרך חיבור בין עקבות ופרמטרים שונים. רציתי לעשות את אותו הדבר גם בעולם ההשקעות - לזהות "מוסדיים" דרך הלוגים, קונים חזקים כדי לאותת על שוק שורי, ומוכרים חלשים של מניות בודדות. לספר את הסיפור של יום המסחר דרך הדאטה.</p>
+
+    <h2>המתודולוגיה: מעבדה (Sandbox) מול המציאות</h2>
+    <p>בדיוק כמו שבוחנים חתימה או דטקציה בסביבה מבודדת ב-Posture Research בפאלו אלטו, כל אסטרטגיה לבוט עברה קודם Statistical Backtesting על נתונים היסטוריים. המטרה הייתה ללמוד את ה-Behavioral Patterns ולראות אילו אינדיקטורים קופצים בלוגים ברגע האמת. רק אחרי שווידאתי שהלוגיקה מייצרת Alerts מדויקים, העברתי אותה לזיהוי בזמן אמת.</p>
+
+    <h2>המספרים מהשטח (מבחן V1)</h2>
+    <p>הרצתי את גרסת ה-Alpha של ה-Sniper Bot במטרה לקחת אסטרטגיית מומנטום ידנית ולהפוך אותה לאוטומטית.</p>
+    <ul>
+        <li>✅ <strong>שיא רווח יומי:</strong> $510.69 מתוך תיק וירטואלי של $100,000.</li>
+        <li>✅ <strong>הגיבורה של היום:</strong> מניית NVDA עם רווח של כ-$400.</li>
+        <li>❌ <strong>הלקח הכואב:</strong> מניית PLTR ש"שרפה" את רוב הרווח בשעה האחרונה. הבוט לא לקח בחשבון שבשעת המסחר האחרונה הגלים מתחזקים, בשילוב באג ב-API וניהול זמן לקוי.</li>
+    </ul>
+    <p><strong>התוצאה:</strong> רכבת הרים של 500$ רווח שהפכו ל-79$ בתוך דקות. 🦁📈</p>
+
+    <!-- מקום לתמונה שנייה: גרף הרווחים/הפסדים (PLTR/NVDA) -->
+    <div style="text-align: center; margin: 30px 0;">
+        <img src="../../assets/images/sniper-profits.png" alt="Sniper Bot PnL Results" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155;">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">תמונה 2: תוצאות המסחר - גרסת Alpha</p>
+    </div>
+
+    <h2>Blind Spot Analysis</h2>
+    <p>היום הראשון סיפק שיעור חשוב: הסתכלות על גרף ה-RSI הראתה שהכל נראה יציב - לכאורה 'עסקים כרגיל'. אבל גרף ה-Equity סיפר סיפור של צניחה חופשית.</p>
+    
+    <div class="insight-box" style="border-color: var(--accent-purple);">
+        <strong style="color: var(--accent-purple);">הלקח המחקרי:</strong> מערכות זיהוי אנומליות לא יכולות להסתמך על מקור בודד. ללא הצלבת נתונים בין שכבות מידע שונות (מחיר, נפח מסחר וזמן) – אנחנו חשופים ל-False Negatives מסוכנים. בלי "חוקי השטח" של סוחר אנושי, ה-AI עיוור לשעות שבהן המוסדיים מנקים פוזיציות.
+    </div>
+
+    <!-- מקום לתמונה שלישית: גרף RSI מול Equity -->
+    <div style="text-align: center; margin: 30px 0;">
+        <img src="../../assets/images/sniper-rsi-equity.png" alt="RSI vs Equity Analysis" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155;">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">תמונה 3: ניתוח עיוורון - RSI מול Equity</p>
+    </div>
+
+    <h2>מה הלאה?</h2>
+    <p>היום אני חוזר למעבדה לבנות את V2. אני מטמיע מנוע היוריסטי משופר שמבצע SmartGrouping לאירועים מרובים ומנגנון ניהול סיכונים מבוסס זמן. היתרון של הבוט הוא חוסר הפחד שלו, אך נדרש להמשיך ולדייק את ה"מוח" שלו. מסחר אלגוריתמי הוא לא רק קוד; הוא פסיכולוגיה של שוק מתורגמת למתמטיקה.</p>
+    
+    <p><a href="https://github.com/shay-mordechai/Project-Sniper-Anomaly-Detection" target="_blank" style="color: var(--accent-blue); font-weight: bold;">[🔗 צפו בקוד המלא של מנוע זיהוי האנומליות (Project Sniper) ב-GitHub]</a></p>
 </div>
 </body>
 </html>
