@@ -18,6 +18,9 @@
             padding: 15px; 
             margin: 15px 0; 
             border-radius: 4px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .pcap-list li code { 
             color: #ce9178; 
@@ -26,6 +29,19 @@
             background: #1e1e1e; 
             padding: 3px 8px; 
             border-radius: 4px; 
+        }
+        .download-btn {
+            background-color: var(--accent-color);
+            color: #161b22 !important;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+        .download-btn:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -39,7 +55,7 @@
     <p>בעקבות חשיפת צוות המחקר של GeoEdge על הקמפיין <strong>LANjack</strong>, שבה התוקף מנצל שרתי DNS לא מאובטחים (בעיקר ב-Mobile ו-IoT) כדי להפוך דפדפנים ל-Proxy, עלתה אצלי שאלה ארכיטקטונית: האם ניתן לחסום את וקטור התקיפה הזה לחלוטין ברמת ה-Edge Device (הראוטר הביתי או ה-Firewall הארגוני)?</p>
 
     <h2>האנלוגיה ל-AWS וההצעה (Deterministic TTL Enforcement)</h2>
-    <p>ב-AWS התמודדו עם אתגר דומה של גישה ל-Secrets (מתקפות SSRF) באמצעות מעבר ל-IMDSv2, שדורש טוקן ומגביל חבילות ל-TTL=1. על בסיס זה, הצעתי מנגנון "Defense in Depth":</p>
+    <p>ב-AWS התמודדו with an אתגר דומה של גישה ל-Secrets (מתקפות SSRF) באמצעות מעבר ל-IMDSv2, שדורש טוקן ומגביל חבילות ל-TTL=1. על בסיס זה, הצעתי מנגנון "Defense in Depth":</p>
     <p>אם יצרנים יגדירו בממשק הניהול (Web Management Interface) הגבלת TTL=1 (במקום ה-64 הדיפולטיבי של Linux), המידע החסוי של הראוטר או ה-Firewall יוכל להגיע רק למכשירים הנמצאים במרחק של Hop אחד (מכשירי ה-LAN המקומיים). ברגע שדפדפן נגוע ינסה להוציא את המידע הזה החוצה אל ה-WAN, החבילה פשוט תישמט (Drop) בראוטר הבא. כך נחסמת זליגת המידע החוצה, גם אם הדפדפן עצמו כבר פרוץ.</p>
 
     <h2>הוכחת היתכנות (PoC) עם Scapy</h2>
@@ -66,11 +82,20 @@ simulate_exfiltration(<span class="string">"8.8.8.8"</span>, <span class="keywor
 simulate_exfiltration(<span class="string">"8.8.8.8"</span>, <span class="keyword">1</span>)</pre>
 
     <h2>Supporting Evidence (PCAP Files)</h2>
-    <p>בסביבת המעבדה, הופקו שלושה קבצי PCAP שהועברו ליצרנים להוכחת ההיתכנות (PoC):</p>
+    <p>בסביבת המעבדה, הופקו שלושה קבצי PCAP שהועברו ליצרנים להוכחת ההיתכנות (PoC). ניתן להוריד ולבחון את החבילות ישירות מתוך המעבדה:</p>
     <ul class="pcap-list">
-        <li><code>baseline_vulnerable.pcap</code> - מוכיח שעם TTL=64, המידע זולג החוצה באין מפריע.</li>
-        <li><code>mitigation_ttl1.pcap</code> - הוכחת גישה מקומית (L2-adjacent) תקינה.</li>
-        <li><code>dns_rebinding_mitigation_chain.pcap</code> - בלימת התקיפה (ICMP Time Exceeded) וחסימת האקספילטרציה.</li>
+        <li>
+            <span><code>baseline_vulnerable.pcap</code> - מוכיח שעם TTL=64, המידע זולג החוצה באין מפריע.</span>
+            <a href="../../assets/baseline_vulnerable.pcap" class="download-btn" download>📥 הורדת PoC</a>
+        </li>
+        <li>
+            <span><code>mitigation_ttl1.pcap</code> - מראה שגישה מקומית (L2-adjacent) נשארת תקינה לחלוטין.</span>
+            <a href="../../assets/mitigation_ttl1.pcap" class="download-btn" download>📥 הורדת PoC</a>
+        </li>
+        <li>
+            <span><code>dns_rebinding_mitigation_chain.pcap</code> - ממחיש את בלימת התקיפה – חבילת ה-Exfiltration נשמטת מיד ומחזירה שגיאת ICMP Time Exceeded.</span>
+            <a href="../../assets/dns_rebinding_mitigation_chain.pcap" class="download-btn" download>📥 הורדת PoC</a>
+        </li>
     </ul>
 
     <h2>השיח מול התעשייה: Palo Alto Networks & TP-Link</h2>
