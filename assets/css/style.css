@@ -93,3 +93,41 @@ code {
     border-radius: 3px;
     margin-left: 10px;
 }
+
+/* הגדרות הבלטה כירורגיות לפרויקטי הדגל - שמירה על הגריד המקורי */
+a[href*="compiler-zero-days-research.html"],
+a[href*="android-bootstrap-hijacking.html"] {
+    border: 2px solid #800020 !important; /* אדום בורדו עמוק */
+    background-color: rgba(128, 0, 32, 0.04) !important;
+    position: relative;
+    display: block;
+}
+
+/* הזרקת תגיות (Badges) מעוצבות באמצעות פסאודו-אלמנט (:after) */
+a[href*="compiler-zero-days-research.html"]::after {
+    content: "מחקר נבחר";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #800020;
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+a[href*="android-bootstrap-hijacking.html"]::after {
+    content: "Forthcoming in DW";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #800020;
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
