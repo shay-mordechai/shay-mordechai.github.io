@@ -4,25 +4,68 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <title>DroneSpy: Multi-Stage Core Network CTF Architecture</title>
+    <style>
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; direction: ltr; text-align: left; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; margin: 20px 0; border: 1px solid #333; }
+        code { font-family: 'Courier New', Courier, monospace; color: #ce9178; }
+        .keyword { color: #569cd6; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .challenge-box { background: rgba(30, 41, 59, 0.5); border-right: 4px solid var(--accent-color); padding: 15px; margin: 15px 0; border-radius: 4px; }
+    </style>
 </head>
 <body>
 <div id="content">
-    <h1>DroneSpy: Multi-Stage Core Network CTF Framework</h1>
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים</a>
+    <h1>DroneSpy: Multi-Stage Core Network CTF Framework (Operation BLACKBIRD)</h1>
     <p><em>מאת שי מרדכי | 17 ביוני 2025 | פרויקט רשתות מתקדמות ע"י ברק גונן</em></p>
     
     <h2>על הפרויקט ומתודולוגיית הריכוז במלחמה</h2>
-    <p>פרויקט <code>DroneSpy</code> הוא מערך אתגרי סייבר ורשתות (CTF Framework) רב-שלבי המנוהל על ידי שרת ליבה כבד שפותח מאפס, והוא מונה כ-7,000 שורות קוד ב-C++ ופייתון. כתיבת הארכיטקטורה נעשתה בשלבים מורכבים של שירות מילואים פעיל, והיוותה עוגן מחשבתי שאיפשר לי לעבור בהצלחה את כל מבחני סוף הסמסטר מיד עם החזרה ללימודים באקדמיה.</p>
+    <p>פרויקט <code>DroneSpy</code> הוא מערך אתגרי סייבר ורשתות (CTF Framework) רב-שלבי המנוהל על ידי שרת ליבה כבד שפותח מאפס, והוא מונה כ-7,000 שורות קוד ב-C++ ופייתון. כתיבת הארכיטקטורה נעשתה בשלבים מורכבים של שירות מילואים פעיל תחת תנאי לחימה, והיוותה עוגן מחשבתי שאיפשר לי לעבור בהצלחה את כל מבחני סוף הסמסטר מיד עם החזרה ללימודים באקדמיה.</p>
+    
+    <p>הפרויקט זכה לציון 100 עגול וצוין על ידי המרצה כאחד הפרויקטים המרשימים והטובים ביותר שהוגשו בקורס.</p>
 
-    <h2>ארכיטקטורת ה-CTF והשלבים</h2>
-    <p>החזון הארכיטקטוני הציב שרת מרכזי המאזין ומגיב לוקטורים מבוססי פרוטוקולים שונים בשכבות ה-Transport וה-Network:</p>
-    <ul>
-        <li><strong>שלב 1 - אנומליות ICMP והתחמקות מערכת ההפעלה:</strong> השרת פולט רמז מקודד (<code>bbHHh!</code>). על המשתתף לפענח את התבנית ולהבין שעליו ליזום סדרה של 5 פינגים (ICMP Echo Requests) לשרת, בטווחי זמן מוגדרים ובגודל Payload עולה. במהלך המימוש ב-Windows/WSL2, נוצר קושי מאחר ומערכת ההפעלה נטתה לטפל בפינגים של ה-Localhost בעצמה ולהחזיר Reply מבלי לנתב את המידע לשרת האפליקטיבי. האתגר נפתר באמצעות מעבר ל-Scapy וקינפוג כירורגי של ממשקי הרשת והאינדקסים שלהם (<code>conf.iface = dev_from_index</code>).</li>
-        <li><strong>שלב 2 - פענוח דינמי ומניפולציות Socket:</strong> שלב ביניים הדורש זיהוי פקודות רשת ויירוט תעבורה מוצפנת בזמן אמת.</li>
-        <li><strong>שלב 3 - פריסת הדגל (Flag):</strong> חילוץ קובץ ההרצה (<code>dronespy.exe</code>) ופיצוח מנגנון הליבה לקבלת הציון הסופי.</li>
-    </ul>
+    <h2>סיפור המסגרת (The Narrative)</h2>
+    <p>בעקבות תקרית מבצעית בגבול הצפון, כלי טיס איראני נפל לידי המודיעין. בתוכו התגלה מודול מוסתר המשמש כשרת ריגול זדוני. המשימה: לחדור לשרת, לנתח את שיטות הפעולה שלו, ולהוציא את המודיעין הסופי.</p>
 
-    <h2>הערכת המרצה והישגים</h2>
-    <p>הפרויקט זכה לציון 100 עגול וצוין על ידי המרצה, ברק גונן, כאחד הפרויקטים המרשימים והטובים ביותר שהוגשו בקורס. המערכת מוכיחה יכולת פיתוח תשתיתי מורכב (Systems Engineering) תחת לחץ קיצוני והבנה נמוכה של פרוטוקולי תקשורת פנימיים.</p>
+    <h2>ארכיטקטורת האתגרים (Mission Phases)</h2>
+    <p>ה-CTF בנוי מ-3 שלבים עוקבים, כאשר שרת הליבה מנהל את ה-State ומונע מעקפים (Bypass Prevention) באמצעות מנגנון Persistent Tracking.</p>
+
+    <div class="challenge-box">
+        <h3>שלב 1: ICMP Covert Channel</h3>
+        <p><strong>האתגר:</strong> המשתתף מקבל רמז מקודד (<code>bbHHh!</code>) המרמז על פורמט ה-Struct של חבילת ה-ICMP ב-Python. השרת דורש קבלת 5 חבילות Ping עם ID ספציפי (<code>0x1337</code>), בטווחי זמן של 9-11 שניות, ובגודל Payload עולה (0, 100, 200, 300, 400 בתים).</p>
+        <p><strong>המכשול הארכיטקטוני:</strong> במהלך המימוש ב-Windows/WSL2, מערכת ההפעלה נטתה לטפל בפינגים של ה-Localhost בעצמה ולהחזיר Reply מבלי לנתב את המידע לשרת האפליקטיבי. האתגר נפתר באמצעות מעבר ל-Scapy וקינפוג כירורגי של ממשקי הרשת והאינדקסים שלהם.</p>
+    </div>
+
+    <div class="challenge-box">
+        <h3>שלב 2: Certificate Authority Infiltration (MITM)</h3>
+        <p><strong>האתגר:</strong> חדירה לתשתית ה-PKI של רשת הריגול. המשתתף מנתח קובץ PCAP ומגלה שהשרת דורש תעודת TLS מ-CA איראני ספציפי.</p>
+        <p><strong>הביצוע:</strong> המשתתף מיירט בקשת Certificate Signing Request (CSR) שגויה באמצעות Burp Suite, מתקן את שדות ה-Subject, ושולח ל-CA. לאחר שה-CA חותם, התוכנה מוחקת את המפתח הפרטי (<code>client.key</code>). המשתתף חייב לבצע Forensic Analysis למערכת הקבצים (למשל עם Recuva/Procmon) כדי לשחזר את המפתח שנמחק ולבצע אימות TLS מלא מול השרת הראשי.</p>
+    </div>
+
+    <div class="challenge-box">
+        <h3>שלב 3: Steganography & Enigma Cryptanalysis</h3>
+        <p><strong>האתגר:</strong> השרת מוריד למחשב המשתתף תמונת <code>Open-Me.png</code>. בתוך ה-Hex של התמונה מסתתר בלוק טקסט המכיל קונפיגורציה של מכונת אניגמה (Enigma) היסטורית.</p>
+        <p><strong>הביצוע:</strong> לאחר פיענוח הודעות האניגמה, המשתתף נדרש לבקש מהשרת <code>GET /audio</code>. השרת שולח זרם Base64 טקסטואלי של קובץ MP3 בתוך ה-HTTP Response. המשתתף מפענח את ה-Base64 לקובץ שמע של מריו, שבסופו מוטמע קוד מורס (Morse Code) המכיל את דגל הסיום.</p>
+    </div>
+
+    <h2>Technical Implementation Snippet</h2>
+    <p>כך יושם מנגנון הזרמת קובץ השמע כ-Base64 על גבי Socket של TLS לאחר אימות מורכב:</p>
+    <pre><span class="keyword">import</span> base64
+
+<span class="keyword">def</span> <span class="function">send_audio</span>(self, ssl_socket):
+    <span class="comment"># Read the actual MP3 file binary</span>
+    <span class="keyword">with</span> open(<span class="string">'music/mario.mp3'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:
+        b64_mp3 = base64.b64encode(f.read())
+        
+    <span class="comment"># Craft HTTP 200 OK response with the Base64 stream payload</span>
+    response = <span class="string">b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"</span> + b64_mp3
+    ssl_socket.sendall(response)</pre>
+
+    <h2>סיכום והערך המחקרי</h2>
+    <p>הפרויקט דורש הבנה עמוקה ב-Malware Analysis, Socket Programming, PKI, Steganography ו-Packet Crafting. בניית הסביבה האוטונומית הזו איפשרה לי לחבר את תחומי הרשתות ואבטחת המידע (Cybersecurity) לכדי מוצר תשתיתי שלם.</p>
+    
+    <p><strong>לצפייה בקוד המלא, בקרו ב-Repository בגיטהאב: <a href="https://github.com/shay0129/ctf-networks-challenges" target="_blank">ctf-networks-challenges</a></strong></p>
 </div>
 </body>
 </html>
