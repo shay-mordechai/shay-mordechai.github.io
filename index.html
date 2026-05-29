@@ -95,8 +95,97 @@
             border-radius: 8px;
             border: 1px dashed rgba(63, 185, 80, 0.3);
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 25px;
             letter-spacing: 0.5px;
+        }
+
+        .active-lab-box {
+            background: rgba(88, 166, 255, 0.05);
+            border: 1px dashed rgba(88, 166, 255, 0.4);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .active-lab-box strong { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+
+        /* Research Timeline Styles */
+        .timeline-section {
+            margin: 40px 0 50px 0;
+            padding: 24px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        .timeline-section h3 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 10px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .timeline-node {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #30363d;
+            border: 3px solid var(--surface-color);
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 0 0 2px #30363d;
+        }
+        .timeline-node:hover .timeline-dot {
+            background: var(--accent-blue);
+            transform: scale(1.2);
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+        .timeline-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .timeline-title {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            margin-top: 6px;
+            max-width: 130px;
+            text-align: center;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+        .timeline-node:hover .timeline-title {
+            color: #ffffff;
         }
 
         /* Project Cards */
@@ -159,18 +248,6 @@
         li { margin-bottom: 10px; }
         li strong { color: var(--text-main); }
 
-        .insight-box {
-            margin-top: 25px;
-            padding: 14px 18px;
-            background: #0d1117;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.9em;
-            color: var(--text-main);
-        }
-
-        .insight-box strong { color: var(--accent-blue); }
-
         .read-link {
             display: inline-flex;
             align-items: center;
@@ -192,6 +269,14 @@
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
             padding-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container { flex-direction: column; gap: 25px; padding-left: 15px; }
+            .timeline-container::before { left: 19px; top: 0; bottom: 0; width: 2px; height: auto; }
+            .timeline-node { flex-direction: row; align-items: flex-start; gap: 15px; text-align: left; }
+            .timeline-title { text-align: left; max-width: 100%; margin-top: 0; }
+            .timeline-date { margin-top: 0; }
         }
     </style>
 </head>
@@ -216,44 +301,79 @@
         <div class="core-skills">
             [ OS Internals ] [ Vulnerability Research ] [ System Diagnostics ] [ Mobile Malware Triage ]
         </div>
+
+        <div class="active-lab-box">
+            <strong>[ACTIVE LAB] CURRENT RESEARCH:</strong> Extracting and reverse-engineering Samsung's <code>libbinder.so</code> to build a pure C/Native UI PoC, bypassing the Java Framework via direct <code>ioctl</code> calls to <code>/dev/binder</code>.
+        </div>
     </header>
 
+    <section class="timeline-section">
+        <h3>📈 Research Evolution & Milestones</h3>
+        <div class="timeline-container">
+            <a href="blog/he/index.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Feb 2024</div>
+                <div class="timeline-title">Desktop RE & PE Extractor</div>
+            </a>
+            <a href="blog/he/index.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jun 2025</div>
+                <div class="timeline-title">Custom TLS Protocol Crafter</div>
+            </a>
+            <a href="blog/he/index.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Dec 2025</div>
+                <div class="timeline-title">V8 Engine Security Analysis</div>
+            </a>
+            <a href="blog/he/index.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Apr 2026</div>
+                <div class="timeline-title">LANjack Router Mitigation</div>
+            </a>
+            <a href="blog/he/index.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">May 2026</div>
+                <div class="timeline-title">Compiler Zero-Days & Binder PoC</div>
+            </a>
+        </div>
+    </section>
+
     <main>
+        <!-- Featured Publication Card -->
         <div class="card series">
             <div class="card-header">
-                <span class="card-title">"The Paradox of Mutability" & DW Publications</span>
-                <span class="tag series">Research Series</span>
+                <span class="card-title">Featured Publication: Android Bootstrap Hijacking</span>
+                <span class="tag series">Digital Whisper</span>
             </div>
-            <p>A complete 7-part research journey exploring one core concept: <strong>Boundaries are built to protect, and malware knows exactly how to cross them.</strong></p>
-            <ul>
-                <li><strong>Part 1 — V8 JIT:</strong> DATA turns into EXECUTION at runtime.</li>
-                <li><strong>Part 2 — JNI:</strong> The language boundary — Java loses memory safety protections when crossing to C.</li>
-                <li><strong>Part 3 — Flatpak:</strong> Sandbox protects — but only if you don't drill holes in it.</li>
-                <li><strong>Part 4 — Browser Privilege Boundary:</strong> AI gets super-privileges and bypasses the Sandbox.</li>
-                <li><strong>Part 5 — Frida vs Zygote:</strong> An analysis tool fights a timing race against the OS Bootstrap.</li>
-                <li><strong>Part 6 — Digital Whisper (Pub):</strong> Bootstrap Hijacking — Malware runs before the UI, hijacking the boot phase.</li>
-                <li><strong>Part 7 — Digital Whisper (In Progress):</strong> Accessibility Abuse — The malware is alive; now it needs to see. The ultimate Android Sandbox hole.</li>
-            </ul>
-            <div class="insight-box">
-                <strong>The Ultimate Goal:</strong> Understanding the theoretical boundary is only the first step. Engineering the exploit to cross it is the real research.
-            </div>
-            <a href="blog/he/index.html" class="read-link">🔗 Read the Series on my Blog</a>
+            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores the "Permission Paradox" and Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
+            <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Part of the 7-part <strong>"Paradox of Mutability"</strong> series mapping the exact intersections where boundaries fail—from bridging Java memory safety via JNI, breaking the Flatpak Linux sandbox, to analyzing AI super-privileges in modern browsers.</em></p>
+            <a href="blog/he/index.html" class="read-link">🔗 Read the Full Research Series</a>
         </div>
 
+        <!-- Featured Vulnerability Research Card -->
         <div class="card vr">
             <div class="card-header">
-                <span class="card-title">Vulnerability Research & Network Diagnostics</span>
-                <span class="tag vr">0-Day & VR</span>
+                <span class="card-title">0-Day Research: Breaking Compiler Boundaries</span>
+                <span class="tag vr">CERT-IL #11265</span>
             </div>
-            <p>Deep-dive research into compilation pipelines, semantic fuzzing, and hardware-level network mitigation.</p>
-            <ul>
-                <li><a href="blog/he/compiler-zero-days-research.html" style="color: var(--accent-blue); text-decoration: none;"><strong>SBCL Compiler Exploration:</strong></a> Identified security-relevant edge cases in SBCL compiler (CERT-IL #11265) via AI-assisted behavioral fuzzing — including scope isolation anomalies and crash conditions under extreme inputs.</li>
-                <li><a href="blog/he/dns-rebinding-lanjack.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
-                <li><a href="blog/he/rust-envoy-tunnel.html" style="color: var(--accent-blue); text-decoration: none;"><strong>JNI/Rust Boundary Tunnels:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
-            </ul>
-            <a href="https://github.com/shay-mordechai/ai-augmented-sbcl-research-showcase" target="_blank" class="read-link">🔬 View Compiler Fuzzing Showcase & Repos</a>
+            <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. It proves that structural compiler bugs can be manipulated to breach execution boundaries.</p>
+            <a href="blog/he/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
         </div>
 
+        <!-- Infrastructure & Architecture Card -->
+        <div class="card infra">
+            <div class="card-header">
+                <span class="card-title">Network Architecture & Mitigation</span>
+                <span class="tag infra">Architecture</span>
+            </div>
+            <p>Applied engineering to secure hardware boundaries and network tunnels.</p>
+            <ul>
+                <li><a href="blog/he/pt-dns-rebinding-mitigation.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
+                <li><a href="blog/he/rust-envoy-tunnel.html" style="color: var(--accent-blue); text-decoration: none;"><strong>JNI/Rust Boundary Tunnels:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
+            </ul>
+        </div>
+
+        <!-- Android Internals Card -->
         <div class="card internals">
             <div class="card-header">
                 <span class="card-title">Android Internals & Malware Reversing</span>
@@ -264,21 +384,21 @@
                 <li><strong>Banking Trojans (Anatsa 2024):</strong> Mapped the Android boot chain to analyze early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
                 <li><strong>Dynamic Binary Instrumentation:</strong> Defeated root detection, ptrace anti-debugging, and strict SSL pinning using Frida.</li>
                 <li><strong>Timing Races:</strong> Engineered advanced Zygote Hooks and Spawn techniques to win the runtime injection race against the OS Dynamic Linker.</li>
-                <li><strong>The 5-Layer Triage Framework:</strong> Developed a structured methodology bridging software engineering and malware research to map execution flows from static logic camouflage to dynamic sinks and AI-augmented threats.</li>
             </ul>
             <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main" target="_blank" class="read-link">📖 View Mobile Reverse Engineering Labs</a>
         </div>
 
-        <div class="card infra">
+        <!-- Cloud Diagnostics Card -->
+        <div class="card infra" style="border-left-color: #8b949e;">
             <div class="card-header">
-                <span class="card-title">Cloud Infrastructure & Kernel Diagnostics</span>
-                <span class="tag infra">SysAdmin & DevOps</span>
+                <span class="card-title">Kernel & System Diagnostics</span>
+                <span class="tag" style="background: rgba(139, 148, 158, 0.1); color: #8b949e;">SysAdmin</span>
             </div>
             <p>Root Cause Analysis (RCA) and deep system debugging across cloud and Linux kernel environments.</p>
             <ul>
-                <li><strong>AWS Resource Exhaustion Triage:</strong> Conducted an RCA on a cascading Podman failure that triggered an OOM-Killer event and generated 20,000 KMS/STS API calls via an infinite restart loop. Implemented strict memory capping and automated CI/CD schema checks to prevent "Denial of Wallet" scenarios.</li>
-                <li><strong>Red Hat Bugzilla (Bug #2415015):</strong> Diagnosed a catastrophic structural deadlock in the Btrfs filesystem that forced a Read-Only state and exhausted metadata space despite storage availability.</li>
-                <li><strong>Linux Driver Debugging (Bug #2418652):</strong> Identified and remediated severe host network degradation (900Mbps to 25Mbps) linked to KVM/QEMU state corruption in the Intel <code>iwlwifi</code> driver, engineering a PCI-E hard reset workaround to restore throughput without rebooting.</li>
+                <li><strong>AWS Resource Exhaustion Triage:</strong> Conducted an RCA on a cascading Podman failure that triggered an OOM-Killer event and generated 20,000 KMS/STS API calls via an infinite restart loop.</li>
+                <li><strong>Red Hat Bugzilla (Bug #2415015):</strong> Diagnosed a catastrophic structural deadlock in the Btrfs filesystem that forced a Read-Only state.</li>
+                <li><strong>Linux Driver Debugging (Bug #2418652):</strong> Identified and remediated severe host network degradation linked to KVM/QEMU state corruption in the Intel <code>iwlwifi</code> driver.</li>
             </ul>
             <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📁 View Diagnostics Reports & Bug Advisories</a>
         </div>
