@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Hop Firewall: Zero Trust & DLP in Rust for Envoy Proxy</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="content" style="text-align: left;">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Research Vault</a>
+    
+    <h1>Data Hop Firewall: Zero Trust & DLP in Rust for Envoy Proxy</h1>
+    <p><em>By Shay Mordechai | May 15, 2026</em></p>
+
+    <p>This project (<code>wasm-dlp-firewall</code>) was born out of a practical need for a SaaS product I developed. When I spun up the EC2 infrastructure on AWS, I quickly noticed bots from all over the world starting to scan the servers for vulnerabilities. This led me to completely redesign the infrastructure's security posture and implement a strict <strong>Zero Trust</strong> model.</p>
+
+    <h2>1. Infrastructure Hardening</h2>
+    <p>The first step was preventing direct access to the server. I completely blocked all inbound ports to the EC2 instance. In their place, I set up a <strong>Cloudflare Tunnel</strong> &mdash; routing all ingress traffic exclusively through a secure medium. I secured my personal admin access using a business Proton Mail account backed by a hardware USB Security Key. At runtime, application services were isolated inside containers running together in a <strong>Podman</strong> Pod.</p>
+
+    <h2>2. Application Layer Defense (Layer 7 DLP)</h2>
+    <p>After researching modern attack vectors like React2Shell, and given my previous deep-dives into V8 and the Log4j vulnerability (from 2022), I realized network hardening wasn't enough. The primary threat in a Microservices architecture is <strong>API Over-fetching (CWE-201/CWE-209)</strong> &mdash; a scenario where the Backend returns full objects from the database, trusting the Frontend (like React) to filter out sensitive data. This can lead to the leakage of PII, internal tokens, or Stack Traces.</p>
+    <p>I decided to shift the responsibility of data sanitization (Redaction) from the application layer directly to the infrastructure layer.</p>
+
+    <h2>3. The Architecture of Wasm DLP Firewall</h2>
+    <p>I built a smart Filter component for the <strong>Envoy Proxy</strong>. I chose to write it in <strong>Rust</strong> and compile it to WebAssembly (<code>wasm32-wasi</code>). The choice of Rust guaranteed Memory Safety and high performance (Zero-cost abstractions), while Wasm provided an isolated Sandbox inside the Proxy that allowed me to perform Hot-reloading without router downtime.</p>
+
+    <h3>Key Capabilities:</h3>
+    <ul>
+        <li><strong>Recursive JSON Redaction:</strong> Deep scanning of the Response content, masking sensitive keys (like Passwords or Secrets) based on logical rulesets.</li>
+        <li><strong>Logical Data TTL:</strong> Support for custom headers (e.g., <code>X-Data-TTL</code>) to trigger sanitization.</li>
+        <li><strong>Fail-Closed Security:</strong> If the payload cannot be decrypted or safely inspected, the request is simply dropped.</li>
+    </ul>
+
+    <h2>4. Field Case Study: Error Shielding and Information Disclosure</h2>
+    <p>To test the system, I modeled a real-world attack scenario from financial environments (CWE-209). In this scenario, a session left open for over 60 minutes combined with aggressive refreshing (Ctrl+F5) caused the ASP.NET Backend to crash. Instead of a generic error, the server returned a <strong>500 Internal Server Error</strong> that included HTML pages exposing:</p>
+    <ul>
+        <li>Physical server directory paths.</li>
+        <li>Exact versions of IIS and .NET.</li>
+        <li>Direct configuration suggestions for <code>web.config</code>.</li>
+    </ul>
+    
+    <p>The Data Hop Firewall automatically detects 5xx errors before they leave the internal network, locates system strings (like "Stack Trace" or "System.Web"), and replaces the sensitive payload with a clean, standardized JSON response:</p>
+
+<pre><code dir="ltr" class="language-json">{
+  "status": "error",
+  "message": "Internal Security Proxy Intervention",
+  "code": 500
+}</code></pre>
+
+    <p>This ensures that even if a developer forgets to set <code>customErrors="On"</code> in the application, the Zero-Trust mechanism guarantees that server configuration data will never leak to the internet.</p>
+</div>
+</body>
+</html>

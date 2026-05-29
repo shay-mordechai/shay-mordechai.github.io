@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V8 Engine's (Dis-)Security</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="content" style="text-align: left;">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Research Vault</a>
+    
+    <h1>V8 Engine's (Dis-)Security</h1>
+    <p><em>By Shay Mordechai | December 24, 2025</em></p>
+    
+    <p>Every Computer Science student knows the world is divided into two - compilers and interpreters - or in WEB terms, "Frontend" and "Backend". In the modern world, it turns out it's mostly "gray". If we summarize the security vulnerabilities of 2025, everything starts and ends with one concept: Isolation.</p>
+    
+    <h2>Physical Isolation: Code vs. Data</h2>
+    <p>In the old world, with compilers (like C), there was a clear separation: instructions are stored in the Code Section with execution privileges, and variables in the Data Section with write-only privileges. The OS enforced role isolation &mdash; DATA will never become CODE.</p>
+    <p>At compile-time, the compiler injects the program's logic as machine instructions into the Code Section, leaving variables in the Data Section. At runtime, the CPU only has to execute the Code blocks. The isolation between DATA and CODE was physically maintained by the NX (No-eXecute) Flag.</p>
+    <p>On the other hand, the interpreter (like legacy JavaScript) offered portability and safety &mdash; everything runs inside a protected "jail" where the code never directly touches the CPU. The browser engine iterates over every line in the Data created in RAM, maps it to its own pre-compiled C++ functions, and executes it securely. The cost of this safety, of course, is a massive performance hit.</p>
+    
+    <h2>The V8 Revolution and Breaching the JIT Walls</h2>
+    <p>But what if one day, the interpreter decides it's tired of interpreting an instruction, matching it, and executing it, claiming that most instructions just repeat themselves anyway? In that scenario, it would want to cut runtime. Instead of reading from DATA and then executing from its own CODE, it would want to execute directly from DATA. Would you let it?</p>
+    <p>Google was the first to agree to this in 2008 with the V8 engine. It was built using JIT (Just-In-Time) technology, previously found only in compilers, and applied the same concept to an interpreter. This massively expanded the attack vector for browsers. JIT attaches to the interpreter, writes DATA, and executes it from the exact same memory region in RAM (mapped as RWX), completely bypassing the NX Flag block.</p>
+    
+    <h2>React2Shell and the Era of FullStack Security</h2>
+    <p>Today, because JIT allows Data to become Execute in real-time, modern websites use the same language (JS) on both ends &mdash; Frontend and Backend. This convenience cost us a new vulnerability: React2Shell, where threat groups exploited this dynamism to inject commands directly into the server.</p>
+    <p>The industry's shift to XDR in 2020 wasn't just a technological change; it was a paradigm shift. We realized that the isolation between the Web and the Endpoint is dead. As a security researcher, I believe the future belongs to those who know how to connect the dots &mdash; from the JavaScript in the Browser all the way down to the Instruction Pointer in memory. That is true FullStack Security.</p>
+</div>
+</body>
+</html>
