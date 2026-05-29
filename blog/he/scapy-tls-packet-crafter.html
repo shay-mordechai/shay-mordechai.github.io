@@ -3,23 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <title>Scapy-TLS-Packet-Crafter: TLS 1.2 Handshake Simulation</title>
+    <title>Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</title>
+    <style>
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; direction: ltr; text-align: left; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; margin: 20px 0; border: 1px solid #333; }
+        code { font-family: 'Courier New', Courier, monospace; color: #ce9178; }
+        .keyword { color: #569cd6; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+    </style>
 </head>
 <body>
 <div id="content">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">← חזרה לרשימת המאמרים</a>
     <h1>Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</h1>
     <p><em>מאת שי מרדכי | 17 ביוני 2025 | פרויקט רשתות מתקדמות ע"י ברק גונן</em></p>
     
     <h2>רקע ומוטיבציה במילואים</h2>
-    <p>הפרויקט הזה נולד ופותח במהלך שירות מילואים ממושך תחת תנאי לחימה. הצורך להישאר ממוקד במטרות אקדמיות ומחקריות ולשמר חדות טכנית הוביל אותי לצלילה עמוקה אל תוך ה-RFC של פרוטוקול TLS 1.2, ובניית כלי שמדמה באופן מלא את תהליך ה-Handshake ברמת הביט והבייט.</p>
+    <p>הפרויקט הזה נולד ופותח במהלך שירות מילואים ממושך תחת תנאי לחימה. הצורך להישאר ממוקד במטרות אקדמיות ומחקריות ולשמר חדות טכנית הוביל אותי לצלילה עמוקה אל תוך ה-RFC של פרוטוקול TLS 1.2. רציתי להבין את הארכיטקטורה לא רק כמשתמש, אלא כמהנדס – ולכן בניתי מערכת המדמה באופן מלא את תהליך ה-Handshake ברמת הביט והבייט (Protocol Engineering).</p>
 
     <h2>מהות התשתית והאתגר הטכני</h2>
-    <p>מטרת הפרויקט (<code>scapy-tls-pcap-creator</code>) היא לייצר קובץ PCAP תקני המדמה תעבורת רשת של שרת מרכזי ושני לקוחות (Clients) שונים המבצעים לחיצת יד מלאה של TLS 1.2, ללא שימוש בספריות SSL/TLS סטנדרטיות של מערכת ההפעלה, אלא באמצעות הרכבת חבילות ידנית (Packet Crafting) ב-Scapy.</p>
-    
-    <p>במהלך הפיתוח התמודדתי עם אתגר מורכב בשלב הפיענוח (Decryption) של ה-Application Data ב-Wireshark. הבאג נבע מאי-התאמה של מבני ה-Padding וה-MAC (Message Authentication Code) המחושבים באמצעות ה-Master Secret וה-Client/Server Random. ניתוח מעמיק של קובצי ה-Debug של Wireshark איפשר להבין את ציפיות המפענח (Dissector) ולדייק את פריסת חבילות ה-Binary המוצפנות.</p>
+    <p>מטרת הפרויקט היא לייצר קובץ PCAP תקני המדמה תעבורת רשת של שרת ושני לקוחות המבצעים לחיצת יד מלאה של TLS 1.2. הפרויקט אינו משתמש בספריות SSL/TLS מוכנות של מערכת ההפעלה, אלא מרכיב את חבילות המידע ידנית (Packet Crafting) באמצעות Scapy ו-Cryptography.</p>
+    <p>הקוד כולל מעל <strong>4,030 שורות קוד</strong> המתפרסות על פני 22 מודולים בפייתון, ומיישם מאפס את שלבי ה-Handshake, ניהול המפתחות (Key Management), ואימות התעודות (Certificate Validation).</p>
 
-    <h2>תוצרים ותרומה</h2>
-    <p>הפרויקט מייצר קובץ הסנפה תקני (<code>capture.pcap</code>) המציג את שלבי ה-ClientHello, ServerHello, החלפת מפתחות, ואימות שלמות הנתונים. התשתית משמשת כיום כבסיס מחקרי לבחינת התנהגות מפענחי רשת (Network Dissectors) וחתימות פרוטוקולים.</p>
+    <h2>צלילה למימוש הליבה (Core Implementation)</h2>
+    
+    <h3>1. יצירת ה-Client Hello וה-SNI</h3>
+    <p>השלב הראשון דורש יצירת מספר אקראי קריפטוגרפי ובניית ה-Extensions, כולל ה-SNI (Server Name Indication). כך מימשתי את בניית החבילה:</p>
+    <pre><span class="keyword">def</span> <span class="function">create_client_hello</span>(session: object, extensions: Optional[ClientExtensions] = <span class="keyword">None</span>) -> TLSClientHello:
+    <span class="comment"># Generate client random as one piece securely</span>
+    session.client_random = os.urandom(<span class="keyword">32</span>)
+    
+    <span class="comment"># Extract GMT time and random bytes for TLSClientHello</span>
+    gmt_time = int.from_bytes(session.client_random[:<span class="keyword">4</span>], <span class="string">'big'</span>)
+    random_bytes = session.client_random[<span class="keyword">4</span>:]
+
+    <span class="keyword">if not</span> extensions:
+        extensions = ClientExtensions(
+            server_name=session.sni,
+            supported_groups=[<span class="string">"x25519"</span>],
+            signature_algorithms=[<span class="string">"sha256+rsa"</span>]
+        )
+
+    <span class="keyword">return</span> TLSClientHello(
+        version=TLSVersion.TLS_1_2,
+        ciphers=[TLS_RSA_WITH_AES_128_CBC_SHA256],
+        ext=extensions.get_extension_list(),
+        gmt_unix_time=gmt_time,
+        random_bytes=random_bytes
+    )</pre>
+
+    <h3>2. חישוב ה-Master Secret (מנגנון PRF)</h3>
+    <p>אחד האתגרים הקריפטוגרפיים בפרוטוקול הוא גזירת ה-Master Secret מתוך ה-Pre-Master Secret. ב-TLS 1.2, פעולה זו מבוצעת באמצעות פונקציה פסאודו-אקראית (Pseudo-Random Function - PRF) המבוססת על HMAC-SHA256.</p>
+    <pre><span class="keyword">def</span> <span class="function">generate_master_secret</span>(pre_master_secret: bytes, client_random: bytes, server_random: bytes) -> bytes:
+    <span class="comment"># TLS 1.2 PRF uses HMAC-SHA256 for key expansion</span>
+    seed = <span class="string">b"master secret"</span> + client_random + server_random
+    
+    <span class="comment"># Generate 48-byte master secret using PRF (P_hash)</span>
+    master_secret = P_hash(pre_master_secret, seed, <span class="keyword">48</span>)
+    
+    <span class="keyword">return</span> master_secret</pre>
+
+    <h3>3. הצפנת ה-Application Data</h3>
+    <p>לאחר הקמת המפתח, המידע האפליקטיבי מוצפן בשיטת AES-128-CBC. הייתי חייב להטמיע מנגנון HMAC כדי להבטיח את שלמות הנתונים (Data Integrity) ולהוסיף PKCS#7 Padding כדי לעמוד בדרישות הבלוקים של AES.</p>
+    <pre><span class="keyword">def</span> <span class="function">encrypt_application_data</span>(plaintext: bytes, seq_num: int, key_block: KeyBlock, is_client: bool) -> bytes:
+    <span class="comment"># Compute HMAC over seq_num + type + version + length + plaintext</span>
+    mac_data = (
+        seq_num.to_bytes(<span class="keyword">8</span>, <span class="string">'big'</span>) +
+        <span class="string">b'\x17'</span> +  <span class="comment"># Application Data type</span>
+        TLSVersion.TLS_1_2.value.to_bytes(<span class="keyword">2</span>, <span class="string">'big'</span>) +
+        len(plaintext).to_bytes(<span class="keyword">2</span>, <span class="string">'big'</span>) +
+        plaintext
+    )
+    mac = hmac.new(mac_key, mac_data, hashlib.sha256).digest()
+    
+    <span class="comment"># Create plaintext with MAC and PKCS#7 padding for CBC</span>
+    plaintext_with_mac = plaintext + mac
+    pad_length = <span class="keyword">16</span> - (len(plaintext_with_mac) % <span class="keyword">16</span>)
+    padding = bytes([pad_length - <span class="keyword">1</span>] * pad_length)
+    padded_plaintext = plaintext_with_mac + padding
+    
+    <span class="comment"># Encrypt using AES-128-CBC</span>
+    cipher = Cipher(algorithms.AES(enc_key), modes.CBC(iv))
+    encryptor = cipher.encryptor()
+    <span class="keyword">return</span> encryptor.update(padded_plaintext) + encryptor.finalize()</pre>
+
+    <h2>פתרון בעיות ושילוב Wireshark</h2>
+    <p>במהלך הפיתוח, התמודדתי עם אתגר מורכב בשלב הפענוח (Decryption) של ה-Application Data ב-Wireshark. הבאג נבע מאי-התאמה של מבני ה-Padding וה-MAC שחושבו בסוף התהליך. כדי לפתור זאת ולייצר תאימות מלאה, פיתחתי מנגנון אוטומטי שגנרט קובץ <code>SSLKEYLOGFILE</code> בזמן הריצה (המכיל את ה-<code>CLIENT_RANDOM</code> וה-<code>master_secret</code>). ניתוח מעמיק מול ה-Dissector של Wireshark איפשר לי לדייק את פריסת חבילות ה-Binary המוצפנות ולתקן את ה-MAC.</p>
+
+    <h2>סיכום</h2>
+    <p>התשתית מייצרת קובץ הסנפה תקני (<code>capture.pcap</code>) ופלט של מפתחות פיענוח. הפרויקט משמש כיום כבסיס מחקרי לבחינת התנהגות מפענחי רשת (Network Dissectors), חתימות פרוטוקולים, והבנה לעומק של אבטחת רשתות.</p>
+    
+    <p><strong>לצפייה בקוד המלא, בקרו ב-Repository בגיטהאב: <a href="https://github.com/shay0129/scapy-tls-pcap-creator" target="_blank">scapy-tls-pcap-creator</a></strong></p>
 </div>
 </body>
 </html>
