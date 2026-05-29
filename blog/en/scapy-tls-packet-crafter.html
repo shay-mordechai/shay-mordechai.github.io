@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Scapy-TLS-Packet-Crafter</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</h1><p><em>By Shay Mordechai | June 17, 2025</em></p>
+<p>Developed during reserve duty, this 4,030-line Python project simulates a full TLS 1.2 handshake from scratch using Scapy and Cryptography, bypassing standard OS SSL libraries[cite: 7].</p>
+<h2>Core Implementation</h2>
+<p><strong>1. Client Hello & SNI:</strong> Secure generation of the 32-byte client random and building Server Name Indication extensions directly at the byte level[cite: 7].</p>
+<p><strong>2. Master Secret PRF:</strong> Executing the TLS 1.2 Pseudo-Random Function (HMAC-SHA256) to derive the 48-byte master secret from the pre-master secret and random seeds[cite: 7].</p>
+<p><strong>3. Application Data Encryption:</strong> Encrypting data using AES-128-CBC. Implemented HMAC-SHA256 for Data Integrity over the sequence number and injected PKCS#7 Padding to meet AES block requirements[cite: 7].</p>
+<p>Generated runtime `SSLKEYLOGFILE` traces to debug decryption failures within the Wireshark Dissector, achieving 100% protocol compliance[cite: 7].</p>
+</div></body></html>

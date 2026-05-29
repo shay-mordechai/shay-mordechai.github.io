@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>UnCrackable Level 2 Writeup</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>UnCrackable Level 2 - Mobile Security Writeup</h1><p><em>By Shay Mordechai | April 30, 2026</em></p>
+<p>The `MainActivity` calls a Native function `bar` passing a byte array, stripping memory protections via JNI[cite: 14]. The `init()` function spawns a Worker Thread (`AsyncTask`) checking for debuggers every 100ms[cite: 14].</p>
+<p><strong>Ptrace Anti-Debugging:</strong> IDA Pro revealed a Linux mechanism where a `fork()` creates a child process that locks the parent using `ptrace(PTRACE_ATTACH)`, entering an infinite loop to block tools like Frida[cite: 14].</p>
+<p><strong>Frida Inline Hooking:</strong> Instead of patching the binary, I hooked `strncmp` exported by `libfoo.so`. By reading the memory pointers using `Memory.readUtf8String`, I intercepted the decryption comparison and successfully dumped the secret key in real-time[cite: 14].</p>
+</div></body></html>

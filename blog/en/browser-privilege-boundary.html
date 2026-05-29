@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Browser Privilege Boundary</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Browser Privilege Boundary: When AI Becomes an Agent</h1><p><em>By Shay Mordechai | May 19, 2026</em></p>
+<p>Historically, browsers operated as a single monolithic process with direct I/O and CPU access[cite: 21]. Modern Site Isolation assigns each Tab its own isolated "Renderer" process (WebKit/Blink + V8), operating inside a Sandbox restricted from Syscalls[cite: 21].</p>
+<p>The "Browser Process" acts as the Gatekeeper. Renderers request I/O access via IPC, enforcing the true Browser Privilege Boundary[cite: 21]. However, Agentic AI requires cross-tab reads and local filesystem access[cite: 21].</p>
+<p>To enable this, tech companies grant AI agents "master keys" outside the standard Sandbox[cite: 21]. Attackers no longer need complex V8 memory exploits; they merely hijack the highly-privileged AI. While recent solutions like Anthropic's "MCP Tunnels" attempt to create self-hosted sandboxes with granular permissions, the proliferation of APIs guarantees new exploit vectors[cite: 21].</p>
+</div></body></html>

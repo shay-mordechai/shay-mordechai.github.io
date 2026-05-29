@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>DroneSpy: Multi-Stage Core Network CTF</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>DroneSpy: Multi-Stage Core Network CTF Framework</h1><p><em>By Shay Mordechai | June 17, 2025</em></p>
+<p>Project <code>DroneSpy</code> is a multi-stage CTF framework managed by a robust core server, consisting of over 7,000 lines of C++ and Python code[cite: 6]. Developed during active reserve duty under combat conditions, it scored a perfect 100[cite: 6].</p>
+<h2>Mission Phases</h2>
+<p><strong>Phase 1: ICMP Covert Channel.</strong> Participants decode a struct format (`bbHHh!`) and must send 5 Ping packets with a specific ID (`0x1337`) and escalating payload sizes[cite: 6]. Bypassed WSL2 localhost routing issues using Scapy[cite: 6].</p>
+<p><strong>Phase 2: Certificate Authority MITM.</strong> Infiltrating a PKI infrastructure by intercepting a flawed CSR via Burp Suite, fixing the Subject, and performing filesystem forensics to recover a deleted `client.key`[cite: 6].</p>
+<p><strong>Phase 3: Steganography & Enigma.</strong> Analyzing the Hex of an image to find Enigma machine configurations[cite: 6]. Decrypting it prompts an HTTP `GET /audio` request, where the server streams a Base64 encoded MP3 over the TLS socket, containing a Morse code flag[cite: 6].</p>
+</div></body></html>

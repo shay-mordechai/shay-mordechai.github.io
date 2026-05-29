@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>JNI as (Un-)Safe Bridge</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>JNI as (Un-)Safe Bridge</h1><p><em>By Shay Mordechai | March 26, 2026</em></p>
+<p>Java relies on the JVM for memory management, utilizing heavy Metadata to protect references. To restore execution speed, High-Level languages use Foreign Function Interfaces (FFI) like JNI to bridge to Low-Level C code[cite: 19].</p>
+<p><strong>The Security Illusion:</strong> JNI sheds Java's memory protections (like the Garbage Collector). A JVM might validate a String explicitly by length, but when crossing the JNI boundary to C, the same raw bits are parsed via Null-termination (`\0`)[cite: 19]. This semantic gap means two systems interpret the same memory differently, creating massive architectural flaws[cite: 19].</p>
+<p><strong>The Rust Tunnel Solution:</strong> Instead of rewriting decades of C code, the JNI bridge should route through Rust tunnels to provide compile-time memory safety sanitization before touching C arrays, analogous to the WASM Envoy Firewall I implemented[cite: 19].</p>
+</div></body></html>

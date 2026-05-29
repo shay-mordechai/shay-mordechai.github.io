@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>DNS Rebinding & LANjack: Architectural Mitigation</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>DNS Rebinding & LANjack: Architectural Mitigation</h1><p><em>By Shay Mordechai | April 26, 2026</em></p>
+<p>Following GeoEdge's exposure of the <strong>LANjack</strong> campaign, where attackers exploit unsecure DNS servers to turn browsers into proxies, I explored an architectural mitigation at the Edge Device level[cite: 4].</p>
+<h2>The AWS Analogy and Deterministic TTL Enforcement</h2><p>AWS mitigated SSRF on IMDSv2 by requiring tokens and restricting packet TTL to 1. I proposed a similar "Defense in Depth" mechanism for routers[cite: 4]. If Web Management Interfaces enforce TTL=1 (instead of the Linux default 64), sensitive data can only traverse a single hop[cite: 4]. If an infected browser attempts outbound exfiltration, the gateway hop drops the packet[cite: 4].</p>
+<h2>Proof of Concept with Scapy</h2><p>I simulated the attack using Scapy, crafting packets with `ttl=1` vs `ttl=64`. The outbound exfiltration failed successfully under the TTL=1 restriction, returning an ICMP Time Exceeded[cite: 4]. Three PCAP files were provided to vendors proving the L2-adjacent mitigation[cite: 4].</p>
+<h2>Vendor Dialogue: Palo Alto Networks & TP-Link</h2><p>Palo Alto Networks and TP-Link reviewed the PCAPs and confirmed the technical accuracy of the mitigation[cite: 4]. However, they highlighted the <strong>Usability vs. Security</strong> trade-off: a blanket TTL=1 breaks L3 VPNs and Mesh topologies because routing between subnets decrements the TTL[cite: 4]. TP-Link noted they are considering it as an "Opt-in" hardened feature for future firmware[cite: 4].</p>
+</div></body></html>

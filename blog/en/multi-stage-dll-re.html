@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Multi-Stage Malware RE</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Desktop RE Writeup: Multi-Stage DLL Decryption</h1><p><em>By Shay Mordechai | April 19, 2024</em></p>
+<p>Static analysis of `crack.dll` revealed `IsDebuggerPresent` checks executed via TLS Callbacks before `main`[cite: 10]. By patching the `StartAddress` control flow, I forced the left branch to execute and dump the decrypted payload to disk[cite: 10].</p>
+<p><strong>DLL Reconstruction:</strong> The dumped `Java.dll` lacked valid PE headers. I used a Known-Plaintext attack (leveraging the standard `MZ` header) to calculate the XOR keys (`0x81` and `0x53`). I wrote a C++ script to run `xorEncryptAndWrite`, reconstructing a valid, executable PE file[cite: 10].</p>
+<p><strong>XorForever Decryption:</strong> Loading the reconstructed DLL into IDA's Hex-Rays Decompiler revealed an indexing array replacing specific characters. Analytical deduction yielded the final string `3TwB99f`, completing the URL flag[cite: 10].</p>
+</div></body></html>

@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>The Life of a Packet</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>The Life of a Packet: From Application to Routing</h1><p><em>By Shay Mordechai | December 18, 2025</em></p>
+<p>Deconstructing the network stack: HTTP relies on TCP for stateful tracking, while DNS uses UDP for stateless resolution. Encapsulation works outwards: Application data (L7) &rarr; TLS (L6) &rarr; TCP Ports (L4) &rarr; IP Addresses (L3) &rarr; MAC Addresses via ARP (L2)[cite: 18].</p>
+<p>When the packet hits the Default Gateway, NAT translates the internal IP, while PAT translates the source port. Along the BGP-routed internet, L2 MAC frames are constantly stripped and rewritten[cite: 18].</p>
+<p><strong>ARP Spoofing Threat Model:</strong> In isolated Container Namespaces routing to Linux Bridges, an attacker compromising a container can broadcast forged ARP replies, poisoning routing tables in the SDN to intercept intra-LAN traffic[cite: 18].</p>
+</div></body></html>

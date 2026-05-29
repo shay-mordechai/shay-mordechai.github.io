@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Frida in Race - UnCrackable Level 2</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Frida in Race - UnCrackable Level 2</h1><p><em>By Shay Mordechai | April 28, 2026</em></p>
+<p>Frida acts as a Black Box dynamic instrumentation tool, injecting a hook that redirects execution to a JavaScript agent[cite: 8]. To bypass the `JNI_OnLoad` anti-debugging `ptrace` implemented in UnCrackable Level 2, I explored Frida's injection timing races[cite: 8].</p>
+<p><strong>Attach vs. Spawn:</strong> The standard "Attach" mode requires root to halt active threads, but fails if `JNI_OnLoad` executes first[cite: 8]. "Spawn" mode wins the race by suspending the application immediately after the Zygote Fork, before the Instruction Pointer reads the first original opcode[cite: 8].</p>
+<p><strong>Zygote Hooking:</strong> The ultimate technique injects the Frida Agent into the parent Zygote process itself, ensuring every subsequent cloned app inherently contains the agent in its DNA before the OS bootstrap completes[cite: 8].</p>
+</div></body></html>

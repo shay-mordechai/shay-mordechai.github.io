@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Web API Diagnostics</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Web API Diagnostics: Looking Behind the UI Freeze</h1><p><em>By Shay Mordechai | April 16, 2026</em></p>
+<p>During the critical "Mehir Lamishtaken" registration, the UI completely froze. Instead of accepting it, I intercepted the network traffic and found the API Gateway was returning `200 OK` with an empty JSON array[cite: 11].</p>
+<p><strong>Fuzzing the Backend:</strong> I captured the cURL request (with Auth Headers) and ran it in Postman on Fedora Kinoite. Fuzzing the `ProjectStatus=4` parameter to `2` successfully bypassed the UI mask, returning raw, unreleased internal JSON fields such as `HU_CombatReservist_L`[cite: 11].</p>
+<p><strong>Architectural Insight:</strong> The system didn't crash; it was operating under a strict State Machine. The Frontend was blind due to API Gateway permissions, not database locks. Always bypass the UI and analyze the Raw Data[cite: 11].</p>
+</div></body></html>

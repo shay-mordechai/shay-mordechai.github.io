@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Desktop RE: PE Extraction & Patching</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Desktop RE Writeup: PE Extraction & Patching</h1><p><em>By Shay Mordechai | February 29, 2024</em></p>
+<p><strong>1. PE Carving:</strong> Analyzing a suspicious PDF in a Hex Editor revealed an embedded PE signature (`4D 5A`). I carved the block and extracted the standalone executable (`new-flag.exe`)[cite: 9].</p>
+<p><strong>2. Binary Patching in IDA:</strong> The validation logic required the ASCII sum `AND 0xFF` to equal `0Ah`. To bypass the lock entirely, I patched the `and eax, 0FFh` instruction to `mov eax, 0Ah`, guaranteeing a successful check for any input[cite: 9].</p>
+<p><strong>3. Decompilation:</strong> Reconstructed the internal XOR encryption algorithm into clean C++ code to verify the final control flow (even indices XORed with 0xA, odd with 0xB)[cite: 9].</p>
+</div></body></html>

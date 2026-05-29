@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>UnCrackable Level 1 Writeup</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>UnCrackable Level 1 - Mobile Security Writeup</h1><p><em>By Shay Mordechai | April 22, 2026</em></p>
+<p>The `onCreate` method immediately executes Root and Debug detection checks. The Root checks analyze the `PATH` environment for the `su` binary, check the ROM signature (`Build.TAGS` for `test-keys`), and utilize JNI `exists()` syscalls to silently verify restricted files[cite: 15].</p>
+<p><strong>AES Validation:</strong> The validation logic relies on `AES/ECB/PKCS7Padding` to decrypt a hardcoded string and compare it to user input[cite: 15].</p>
+<p><strong>Bypass:</strong> I wrote a Frida script to hijack the return values of the root/debug classes to always return `false`. I implemented a "Spy" Hook on the decryption wrapper class, dynamically extracting the plaintext Secret Key directly from the JVM memory prior to validation[cite: 15].</p>
+</div></body></html>

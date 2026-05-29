@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Project MyLeads AI</title></head>
+<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
+<h1>Project MyLeads AI: Secure-by-Design SaaS Architecture</h1><p><em>By Shay Mordechai | March 9, 2026</em></p>
+<p>MyLeads AI implements a "Dark Server" infrastructure, exposing 0.0.0.0/0 blocked inbound ports. Ingress traffic is exclusively tunneled via Cloudflare's Edge Network, and SSH is secured via Identity-Aware Proxy (IAP) hardware keys[cite: 17].</p>
+<p>To mitigate API Over-fetching, I deployed a WASM Data Loss Prevention (DLP) firewall written in Rust directly inside the Envoy Proxy, providing Fail-Closed JSON redaction at the network edge[cite: 17].</p>
+<p>High concurrency webhooks are handled by SQLite with Write-Ahead Logging (WAL) and a Dead Letter Queue (DLQ). The Hybrid AI engine runs local offline Faster-Whisper models for sensitive audio, and offloads conversational agents to Gemini 2.0 Flash[cite: 17].</p>
+</div></body></html>
