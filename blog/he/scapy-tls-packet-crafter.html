@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Scapy-TLS-Packet-Crafter: TLS 1.2 Handshake Simulation</title>
+</head>
+<body>
+<div id="content">
+    <h1>Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</h1>
+    <p><em>מאת שי מרדכי | 17 ביוני 2025 | פרויקט רשתות מתקדמות ע"י ברק גונן</em></p>
+    
+    <h2>רקע ומוטיבציה במילואים</h2>
+    <p>הפרויקט הזה נולד ופותח במהלך שירות מילואים ממושך תחת תנאי לחימה. הצורך להישאר ממוקד במטרות אקדמיות ומחקריות ולשמר חדות טכנית הוביל אותי לצלילה עמוקה אל תוך ה-RFC של פרוטוקול TLS 1.2, ובניית כלי שמדמה באופן מלא את תהליך ה-Handshake ברמת הביט והבייט.</p>
+
+    <h2>מהות התשתית והאתגר הטכני</h2>
+    <p>מטרת הפרויקט (<code>scapy-tls-pcap-creator</code>) היא לייצר קובץ PCAP תקני המדמה תעבורת רשת של שרת מרכזי ושני לקוחות (Clients) שונים המבצעים לחיצת יד מלאה של TLS 1.2, ללא שימוש בספריות SSL/TLS סטנדרטיות של מערכת ההפעלה, אלא באמצעות הרכבת חבילות ידנית (Packet Crafting) ב-Scapy.</p>
+    
+    <p>במהלך הפיתוח התמודדתי עם אתגר מורכב בשלב הפיענוח (Decryption) של ה-Application Data ב-Wireshark. הבאג נבע מאי-התאמה של מבני ה-Padding וה-MAC (Message Authentication Code) המחושבים באמצעות ה-Master Secret וה-Client/Server Random. ניתוח מעמיק של קובצי ה-Debug של Wireshark איפשר להבין את ציפיות המפענח (Dissector) ולדייק את פריסת חבילות ה-Binary המוצפנות.</p>
+
+    <h2>תוצרים ותרומה</h2>
+    <p>הפרויקט מייצר קובץ הסנפה תקני (<code>capture.pcap</code>) המציג את שלבי ה-ClientHello, ServerHello, החלפת מפתחות, ואימות שלמות הנתונים. התשתית משמשת כיום כבסיס מחקרי לבחינת התנהגות מפענחי רשת (Network Dissectors) וחתימות פרוטוקולים.</p>
+</div>
+</body>
+</html>
