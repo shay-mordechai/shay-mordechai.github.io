@@ -1,13 +1,13 @@
-# scripts/generate_hub.py
 import os, re
 
 DIR = 'blog/he'
 OUTPUT = 'blog/he/index.html'
 
+# מילון הקטגוריות המעודכן - מזהה מילות מפתח בצורה חכמה (סדר הבדיקה חשוב)
 CATEGORIES = {
-    "Projects": ["sniper", "diagnostics", "architecture", "registration", "mitigation", "saas", "trading", "compiler", "zero-day", "firewall", "myleads"],
-    "Articles": ["android", "browser", "paradox", "jni", "rust", "v8", "kinoite", "malware", "routing"],
-    "Writeups": ["uncrackable"]
+    "Writeups": ["writeup"],
+    "Projects": ["sniper", "diagnostics", "architecture", "registration", "mitigation", "saas", "trading", "compilation", "compiler", "zero-day", "firewall", "myleads", "dronespy", "scapy", "lanjack"],
+    "Articles": ["android", "browser", "paradox", "jni", "rust", "v8", "kinoite", "malware", "routing", "frida", "rebinding"]
 }
 
 HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
@@ -20,9 +20,7 @@ def parse_and_format_date(date_str):
     months_heb_map = {"ינואר": 1, "בינואר": 1, "פברואר": 2, "בפברואר": 2, "מרץ": 3, "במרץ": 3, "אפריל": 4, "באפריל": 4, "מאי": 5, "במאי": 5, "יוני": 6, "ביוני": 6, "יולי": 7, "ביולי": 7, "אוגוסט": 8, "באוגוסט": 8, "ספטמבר": 9, "בספטמבר": 9, "אוקטובר": 10, "באוקטובר": 10, "נובמבר": 11, "בנובמבר": 11, "דצמבר": 12, "בדצמבר": 12}
     months_eng_map = {"january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6, "july": 7, "august": 8, "september": 9, "october": 10, "november": 11, "december": 12}
 
-    # חיפוש תאריך בעברית
     m_heb = re.search(r'(\d{1,2})\s+([א-ת]+)\s+(\d{4})', date_str)
-    # חיפוש תאריך באנגלית
     m_eng = re.search(r'([a-z]+)\s+(\d{1,2}),?\s+(\d{4})', date_str_lower)
 
     if "31 ביולי 2025" in date_str or "בקרוב" in date_str:
@@ -42,14 +40,13 @@ def parse_and_format_date(date_str):
     return formatted_date, (year, month, day)
 
 def extract_clean_excerpt(content):
-    """שולף תקציר תוך דילוג על שורות קרדיט (מאת / By)"""
+    """שולף תקציר תוך דילוג על שורות קרדיט"""
     paragraphs = re.findall(r'<p>(.*?)</p>', content, re.DOTALL)
     for p in paragraphs:
-        text = re.sub(r'<[^>]+>', '', p).strip() # ניקוי HTML
-        # דילוג על פסקאות קצרות שמכילות מידע מטא
+        text = re.sub(r'<[^>]+>', '', p).strip() 
         if len(text) < 100 and any(x in text.lower() for x in ["מאת", "by ", "תאריך", "סטטוס"]):
             continue
-        if len(text) > 20: # מצאנו את פסקת התוכן האמיתית הראשונה
+        if len(text) > 20:
             return text[:90] + "..." if len(text) > 90 else text
     return ""
 
@@ -86,11 +83,9 @@ for filename in os.listdir(DIR):
             'excerpt': excerpt
         })
 
-# מיון לפי תאריך (החדש ביותר למעלה)
 for cat in data:
     data[cat].sort(key=lambda x: x['sort_key'], reverse=True)
 
-# בניית ה-HTML
 html = """<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -112,6 +107,7 @@ html = """<!DOCTYPE html>
     <div class="categories-container">
 """
 
+# מחייב סדר תצוגה שבו Projects יהיה משמאל/ימין ו-Writeups אחרון
 for cat in ["Articles", "Projects", "Writeups"]:
     if not data[cat]: continue
     html += f"<div class='category-column'><h2>{cat}</h2>"
