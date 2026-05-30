@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</title>
+</head>
+<body>
+<div id="content" style="text-align: left;">
+    <a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back to Research Vault</a>
+    
+    <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
+    <p><em>By Shay Mordechai | July 31, 2025</em></p>
+    <p style="color: #ff7b72; font-family: monospace; font-size: 0.9em;">Status: Responsible Disclosure with CERT-IL (#11265) and MITRE.</p>
+
+    <div style="background: #161b22; border-left: 4px solid #58a6ff; padding: 15px 20px; margin: 20px 0; border-radius: 4px;">
+        <strong>Executive Summary:</strong>
+        During a focused research on the Common Lisp compiler architecture, specifically the SBCL (Steel Bank Common Lisp) runtime environment, I identified 3 architectural logic flaws in the Lexical Scoping mechanism. These vulnerabilities allow an attacker to bypass the language's static isolation and inject Dynamic Bindings directly out of the protected Scope during Macro Expansion. The research was conducted using a custom Grammar-Aware Semantic Fuzzer.
+    </div>
+
+    <h2>1. The Architectural Hypothesis</h2>
+    <p>It all started from an academic project in the Nand2Tetris course, where I built a custom compiler. While investigating Meta-programming capabilities across different languages, a theoretical research question arose:</p>
+    <p>Since Macros modify and inject code at compile-time — before a Runtime Stack Frame is ever created — what internal compiler mechanism ensures that local (lexical) variables remain completely isolated and uncontaminated by external code during expansion?</p>
+    <p>To test this theory in reality, I chose to attack SBCL (v2.3.2) — a commercial, veteran, and complex compiler.</p>
+
+    <h2>2. Semantic Fuzzing & The AI Harness</h2>
+    <p>Compilers crash immediately on Syntax errors against standard Fuzzing attacks. To find deep logic bugs, I built a focused Test Harness together with an AI Agent:</p>
+    <ul>
+        <li><strong>Grammar-Aware Mutation:</strong> The Fuzzer generated strictly valid Abstract Syntax Trees (AST), creating nested environments and modifying the Symbol Table at compile-time.</li>
+        <li><strong>Semantic Oracle:</strong> The system didn't look for memory crashes (Segfaults), but rather logic flaws: a state where an isolated variable changed its value due to the macro operation without the compiler throwing an error.</li>
+    </ul>
+
+    <h2>3. The Vulnerability Primitives</h2>
+    <p>The process yielded 3 different vectors where the compiler failed to validate the <code>LEXENV</code> (Active Lexical Environment):</p>
+    
+    <h3>Primitive 1: Dynamic Binding Injection</h3>
+    <p>Using <code>proclaim</code> from within the macro expansion phase causes the compiler to globally update the symbol's flags. If the symbol is concurrently inside a protected <code>let</code> block, the resolution path shifts to the dynamic environment, overwriting the lexical memory.</p>
+
+    <h3>Primitive 2: Global Symbol Table Pollution</h3>
+    <p>Creating double pointers using <code>intern</code> during macro expansion. The compiler failed to maintain isolation, enabling the leakage of protected values (Information Disclosure).</p>
+
+    <h3>Primitive 3: Cross-Package Namespace Confusion</h3>
+    <p>Using the <code>shadow</code> technique from within a dynamic package created at compile-time caused the loss of the lexical trace, routing protected variables into the public namespace.</p>
+
+    <h2>4. Threat Model (Supply Chain)</h2>
+    <p>The primary risk here impacts CI/CD pipelines. An attacker could publish an innocent-looking third-party code package containing a "Poisoned Macro". When the build server compiles the project, the macro breaches its isolated scope and can extract or overwrite variables belonging to other developers in the same project (such as keys or tokens) — without triggering any standard runtime alerts.</p>
+
+    <div style="background: rgba(210, 168, 255, 0.05); border: 1px dashed #bc8cff; padding: 20px; border-radius: 8px; margin-top: 40px;">
+        <h3 style="margin-top: 0; color: #fff;">🛠️ Next Phase: Static Analysis (IDA Pro)</h3>
+        <p>Now that I've proven the logic flaws using Black-box Fuzzing, my current research phase (Work in Progress) is diving into the compiler's binary (<code>sbcl.exe</code>) using IDA Pro.</p>
+        <p>The goal: map the Cross-References to the Namespace management functions, locate the exact assembly instructions mutating the <code>SPECIAL_FLAG</code> without <code>lexenv</code> validation, and pinpoint the specific assembly lines constituting the Root Cause.</p>
+        <p><strong>I will update this article with the IDAPython scripts and full assembly analysis once this phase is complete!</strong></p>
+    </div>
+</div>
+</body>
+</html>
