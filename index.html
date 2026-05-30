@@ -1,173 +1,486 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <title>מאגר המאמרים והפרויקטים של שי מרדכי</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Shay Mordechai | Vulnerability Researcher">
+    <meta property="og:description" content="Offensive Security Researcher specializing in OS Internals, Compiler Vulnerabilities, and Systems Architecture.">
+    <title>Shay Mordechai | Vulnerability Researcher & Systems Architect</title>
+    <link rel="icon" href="https://fav.farm/🛡️">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        .timeline-section { max-width: 1200px; margin: 40px auto; padding: 20px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; text-align: center; }
-        .timeline-container { display: flex; justify-content: space-between; position: relative; margin-top: 30px; padding: 0 40px; }
-        .timeline-container::before { content: ''; position: absolute; top: 15px; left: 40px; right: 40px; height: 2px; background: #30363d; z-index: 1; }
-        .timeline-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; flex: 1; text-decoration: none; }
-        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #30363d; border: 2px solid #161b22; transition: background 0.2s, transform 0.2s; }
-        .timeline-node:hover .timeline-dot { background: var(--accent-color); transform: scale(1.3); }
-        .timeline-date { font-size: 0.8rem; color: #8b949e; margin-top: 8px; font-weight: bold; }
-        .timeline-title { font-size: 0.85rem; color: #c9d1d9; margin-top: 5px; max-width: 160px; text-align: center; line-height: 1.3; }
-        .timeline-node:hover .timeline-title { color: #fff; }
-        .categories-container { display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .category-column { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
-        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.5rem; }
-        .article-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; text-decoration: none; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
-        .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
-        @media (max-width: 900px) { .categories-container { flex-direction: column; } .timeline-container { flex-direction: column; gap: 20px; padding: 0; } .timeline-container::before { display: none; } }
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --accent-green: #3fb950;
+            --accent-red: #ff7b72;
+            --accent-yellow: #d2a8ff;
+            --border-color: #30363d;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.6em;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05em;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .links-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .action-btn {
+            background: var(--surface-color);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            visibility: hidden;
+            position: absolute;
+            background-color: var(--surface-color);
+            min-width: 140px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            z-index: 100;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        }
+
+        .dropdown::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 15px; 
+        }
+
+        .dropdown:hover .dropdown-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .action-btn {
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #21262d;
+            color: #ffffff;
+        }
+
+        .mission-statement {
+            font-size: 1.1em;
+            color: #ffffff;
+            margin-bottom: 35px;
+            line-height: 1.5;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 15px;
+        }
+
+        .core-skills {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            color: var(--accent-green);
+            background: rgba(63, 185, 80, 0.05);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px dashed rgba(63, 185, 80, 0.3);
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .active-lab-box {
+            background: rgba(88, 166, 255, 0.05);
+            border: 1px dashed rgba(88, 166, 255, 0.4);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .active-lab-box strong { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+
+        /* Research Timeline Styles */
+        .timeline-section {
+            margin: 40px 0 50px 0;
+            padding: 24px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        .timeline-section h3 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 5px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .timeline-node {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #30363d;
+            border: 3px solid var(--surface-color);
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 0 0 2px #30363d;
+        }
+        .timeline-node:hover .timeline-dot {
+            background: var(--accent-blue);
+            transform: scale(1.2);
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+        .timeline-date {
+            font-size: 0.70rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .timeline-title {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            margin-top: 6px;
+            max-width: 110px;
+            text-align: center;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+        .timeline-node:hover .timeline-title {
+            color: #ffffff;
+        }
+
+        /* Project Cards */
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover { 
+            border-color: #484f58; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .card.series { border-left: 4px solid var(--accent-purple); }
+        .card.vr { border-left: 4px solid var(--accent-red); }
+        .card.internals { border-left: 4px solid var(--accent-yellow); }
+        .card.infra { border-left: 4px solid var(--accent-blue); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7em;
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        .tag.series { background: rgba(188, 140, 255, 0.1); color: var(--accent-purple); }
+        .tag.vr { background: rgba(255, 123, 114, 0.1); color: var(--accent-red); }
+        .tag.internals { background: rgba(210, 168, 255, 0.1); color: var(--accent-yellow); }
+        .tag.infra { background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); }
+
+        ul {
+            margin: 15px 0 0 20px;
+            padding: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        li { margin-bottom: 10px; }
+        li strong { color: var(--text-main); }
+
+        .read-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: color 0.2s;
+        }
+
+        .read-link:hover { color: #ffffff; }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container { flex-direction: column; gap: 25px; padding-left: 15px; }
+            .timeline-container::before { left: 19px; top: 0; bottom: 0; width: 2px; height: auto; }
+            .timeline-node { flex-direction: row; align-items: flex-start; gap: 15px; text-align: left; }
+            .timeline-title { text-align: left; max-width: 100%; margin-top: 0; }
+            .timeline-date { margin-top: 0; }
+        }
     </style>
 </head>
 <body>
-<div id="content" style="max-width: 100%; padding:0;">
-    <h1 style="text-align: center; margin: 40px 0 10px 0;">מאגר הפרויקטים והמחקרים</h1>
-    <p style="text-align: center; color: #8b949e; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.5;">חוקר אבטחה ומפתח תוכנה, מתמקד ב-Vulnerability Research ו-Reverse Engineering בשכבות ה-Low-Level. להלן אבני הדרך המרכזיות במחקר הליבה שלי:</p>
 
-    <div class="timeline-section">
-        <h3 style="margin: 0; color: #fff; font-size: 1.1rem;">📈 אבולוציית המחקר (Research Timeline)</h3>
+    <header>
+        <h1>Shay Mordechai</h1>
+        <p class="subtitle">Vulnerability Researcher & Systems Architect</p>
+
+        <div class="links-container">
+            <div class="dropdown">
+                <a href="javascript:void(0)" class="action-btn">📝 Research Blog ▾</a>
+                <div class="dropdown-content">
+                    <a href="blog/en/index.html">🇺🇸 English (EN)</a>
+                    <a href="blog/he/index.html">🇮🇱 עברית (HE)</a>
+                </div>
+            </div>
+
+            <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
+            <a href="cv.pdf" class="action-btn" target="_blank">📄 Résumé</a>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 GitHub Vault</a>
+            <a href="https://www.linkedin.com/in/shay-mordechai/" class="action-btn" target="_blank">🔗 LinkedIn</a>
+        </div>
+
+        <div class="mission-statement">
+            I specialize in Vulnerability Research, OS Internals, and Compiler Behavior. I don't just look at how systems work—I look for exactly where their boundaries break, because that is exactly where malware hides.
+        </div>
+
+        <div class="core-skills">
+            [ OS Internals ] [ Vulnerability Research ] [ System Diagnostics ] [ Mobile Malware Triage ]
+        </div>
+
+        <div class="active-lab-box">
+            <strong>[ACTIVE LAB] CURRENT RESEARCH:</strong> Reverse-engineering <code>libbinder.so</code> (ARM64) extracted from a physical Samsung S20 to analyze <code>/dev/binder</code> ioctl transaction flows, investigating the structural boundaries of UI allocation during the application bootstrap.
+        </div>
+    </header>
+
+    <section class="timeline-section">
+        <h3>📈 Research Evolution & Milestones</h3>
         <div class="timeline-container">
-            <a href="re-intro-patching.html" class="timeline-node">
+            <a href="blog/en/re-intro-patching.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">פברואר 2024</div>
-                <div class="timeline-title">Desktop RE & PE Extraction</div>
+                <div class="timeline-date">Feb 2024</div>
+                <div class="timeline-title">Desktop RE</div>
             </a>
-            <a href="scapy-tls-packet-crafter.html" class="timeline-node">
+            <a href="blog/en/scapy-tls-packet-crafter.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">יוני 2025</div>
-                <div class="timeline-title">Custom TLS Protocol Crafter</div>
+                <div class="timeline-date">Jun 2025</div>
+                <div class="timeline-title">TLS Protocol Crafter</div>
             </a>
-            <a href="compiler-zero-days-research.html" class="timeline-node">
+            <a href="blog/en/compiler-zero-days-research.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">יולי 2025</div>
-                <div class="timeline-title">Compiler Logic Zero-Days Research</div>
+                <div class="timeline-date">Jul 2025</div>
+                <div class="timeline-title">Compiler 0-Days</div>
             </a>
-            <a href="v8-engine-security.html" class="timeline-node">
+            <a href="blog/en/v8-engine-security.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">דצמבר 2025</div>
-                <div class="timeline-title">V8 Engine Security Analysis</div>
+                <div class="timeline-date">Dec 2025</div>
+                <div class="timeline-title">V8 Engine Security</div>
             </a>
-            <a href="pt-dns-rebinding-mitigation.html" class="timeline-node">
+            <a href="blog/en/pt-dns-rebinding-mitigation.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">אפריל 2026</div>
-                <div class="timeline-title">LANjack Router Mitigation</div>
+                <div class="timeline-date">Apr 2026</div>
+                <div class="timeline-title">LANjack Mitigation</div>
             </a>
-            <a href="permission-paradox.html" class="timeline-node">
+            <a href="blog/en/permission-paradox.html" class="timeline-node">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">מאי 2026</div>
-                <div class="timeline-title">The Permission Paradox: Binder IPC (In Progress)</div>
+                <div class="timeline-date">May 2026</div>
+                <div class="timeline-title">The Permission Paradox</div>
             </a>
         </div>
-    </div>
+    </section>
 
-    <div class="categories-container">
-        <div class='category-column'><h2>Articles</h2>
-        <a href="permission-paradox.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Permission Paradox</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">המאמר "The Permission Paradox" נמצא כרגע בשלבי מחקר וכתיבה.יפורסם בקרוב!</div>
-        </a>
-        <a href="android-bootstrap-hijacking.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Android Bootstrap Hijacking</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">27 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת שי מרדכי | 27 במאי 2026 הקדמה הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מו...</div>
-        </a>
-        <a href="browser-privilege-boundary.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעבר, כל דפדפן היה תהליך אחד גדול. אם אתר אחד קרס, ה-OS היה מבצע killall וכל ה-Tabs היו נס...</div>
-        </a>
-        <a href="frida-in-race-level2.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Frida in Race - UnCrackable Level 2</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">במאמר הראשון בסדרה, דיברנו על פרדוקס האבטחה שבמנוע V8, שמסוגל להפוך מידע (Data) לקוד בר-בי...</div>
-        </a>
-        <a href="flatpak-sandbox-isolation.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak - Linux Sandbox Isolation</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 במרץ 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום...</div>
-        </a>
-        <a href="jni-unsafe-bridge.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">שפת תכנות היא בסופו של דבר דרך לנהל את הזיכרון בצורה חכמה. בשפת C, יש למתכנת גישה כמעט ישי...</div>
-        </a>
-        <a href="malware-lab-kinoite.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">איך הניסיון להריץ מעבדת Malware גרם לי לעבור ל-Fedora Kinoite</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כחוקר אבטחה, המחשב שלי הוא המעבדה שלי. כשהתחלתי לבנות מעבדת Malware Analysis מקומית, נתקלת...</div>
-        </a>
-        <a href="v8-engine-security.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine's (Dis-)Security</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כל סטודנט למדעי המחשב, מכיר שהעולם מתחלק לשניים - קומפיילר ואינטרפרטר - או בשפת ה-WEB, "Fr...</div>
-        </a>
-        <a href="life-of-a-packet-routing.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Life of a Packet: From Application to Routing</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">18 בדצמבר 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כשמנסים לגשת לאתר (למשל פאלו אלטו) מהטרמינל בלינוקס, קל לחשוב על התהליך כמושג אבסטרקטי. בת...</div>
-        </a></div>
-        <div class='category-column'><h2>Projects</h2>
-        <a href="rust-envoy-tunnel.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">15 במאי 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הפרויקט הזה (wasm-dlp-firewall) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את ת...</div>
-        </a>
-        <a href="pt-dns-rebinding-mitigation.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding & LANjack: Architectural Mitigation</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בעקבות חשיפת צוות המחקר של GeoEdge על הקמפיין LANjack, שבה התוקף מנצל שרתי DNS לא מאובטחים...</div>
-        </a>
-        <a href="pt-web-registration-diagnostic.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web API Diagnostics: Looking Behind the UI Freeze</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">16 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">באפריל 2026, הייתה אמורה להיפתח הרשמה משמעותית לפרויקט "מחיר למשתכן" של משרד השיכון. עבורי...</div>
-        </a>
-        <a href="myleads-saas-architecture.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Project MyLeads AI: Secure-by-Design SaaS Architecture</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">9 במרץ 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">When engineering a modern SaaS platform that handles sensitive customer inquiries and AI i...</div>
-        </a>
-        <a href="compiler-zero-days-research.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Breaking the Compilation Boundary: Semantic Fuzzing and Static Analysis of the SBCL Runtime</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">31 ביולי 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת: שי מרדכי | 31 ביולי 2025 | | מחקר חולשות לוגיות (Vulnerability Research) | הנדסת מערכ...</div>
-        </a>
-        <a href="scapy-tls-packet-crafter.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">17 ביוני 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הפרויקט הזה נולד ופותח במהלך שירות מילואים ממושך תחת תנאי לחימה. הצורך להישאר ממוקד במטרות...</div>
-        </a>
-        <a href="multistage-network-ctf.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DroneSpy: Multi-Stage Core Network CTF Framework (Operation BLACKBIRD)</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">17 ביוני 2025</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">פרויקט DroneSpy הוא מערך אתגרי סייבר ורשתות (CTF Framework) רב-שלבי המנוהל על ידי שרת ליבה...</div>
-        </a></div>
-        <div class='category-column'><h2>Writeups</h2>
-        <a href="uncrackable-level2.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 2 - Mobile Security Writeup</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מאת שי מרדכי | 30 באפריל 2026 איתור מכשולים ב-Java קובץ ה-Manifest מראה שה-La...</div>
-        </a>
-        <a href="uncrackable-level1.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 1 - Mobile Security Writeup</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">22 באפריל 2026</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בתחילת האפליקציה, הפונקציה onCreate בודקת האם המכשיר פרוץ או מחובר לדיבאגר...</div>
-        </a>
-        <a href="multi-stage-dll-re.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: Multi-Stage DLL Decryption</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 באפריל 2024</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">התוכנית טוענת בזמן ריצה את crack.dll אשר קורא לפונקציה BrainDamage, וטוענת DLL נוסף שקורא ...</div>
-        </a>
-        <a href="re-intro-patching.html" class="article-card">
-            <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: PE Extraction & Patching</div>
-            <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 בפברואר 2024</div>
-            <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">במבט ראשוני על קובץ ה-PDF שסופק באתגר, התגלה תוכן חריג. באמצעות עורך הקסדצימלי (Hex Editor...</div>
-        </a></div>
-    </div>
-</div>
+    <main>
+        <div class="card series">
+            <div class="card-header">
+                <span class="card-title">Featured Publication: Android Bootstrap Hijacking</span>
+                <span class="tag series">Digital Whisper</span>
+            </div>
+            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores the "Permission Paradox" and Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
+            <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Part of the 7-part <strong>"Paradox of Mutability"</strong> series mapping the exact intersections where boundaries fail—from bridging Java memory safety via JNI, breaking the Flatpak Linux sandbox, to analyzing AI super-privileges in modern browsers.</em></p>
+            <a href="blog/en/index.html" class="read-link">🔗 Read the Full Research Series</a>
+        </div>
+
+        <div class="card vr">
+            <div class="card-header">
+                <span class="card-title">0-Day Research: Breaking Compiler Boundaries</span>
+                <span class="tag vr">CERT-IL #11265</span>
+            </div>
+            <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. It proves that structural compiler bugs can be manipulated to breach execution boundaries.</p>
+            <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
+        </div>
+
+        <div class="card infra">
+            <div class="card-header">
+                <span class="card-title">Network Architecture & Mitigation</span>
+                <span class="tag infra">Architecture</span>
+            </div>
+            <p>Applied engineering to secure hardware boundaries and network tunnels.</p>
+            <ul>
+                <li><a href="blog/en/pt-dns-rebinding-mitigation.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
+                <li><a href="blog/en/rust-envoy-firewall.html" style="color: var(--accent-blue); text-decoration: none;"><strong>JNI/Rust Boundary Tunnels:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
+            </ul>
+        </div>
+
+        <div class="card internals">
+            <div class="card-header">
+                <span class="card-title">Android Internals & Malware Reversing</span>
+                <span class="tag internals">OS Internals / Frida</span>
+            </div>
+            <p>Hands-on architectural analysis and dynamic instrumentation of early execution timing races and highly protected environments.</p>
+            <ul>
+                <li><strong>Banking Trojans (Anatsa 2024):</strong> Mapped the Android boot chain to analyze early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
+                <li><strong>Dynamic Binary Instrumentation:</strong> Defeated root detection, ptrace anti-debugging, and strict SSL pinning using Frida.</li>
+                <li><strong>Timing Races:</strong> Engineered advanced Zygote Hooks and Spawn techniques to win the runtime injection race against the OS Dynamic Linker.</li>
+            </ul>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main" target="_blank" class="read-link">📖 View Mobile Reverse Engineering Labs</a>
+        </div>
+
+        <div class="card infra" style="border-left-color: #8b949e;">
+            <div class="card-header">
+                <span class="card-title">Kernel & System Diagnostics</span>
+                <span class="tag" style="background: rgba(139, 148, 158, 0.1); color: #8b949e;">SysAdmin</span>
+            </div>
+            <p>Root Cause Analysis (RCA) and deep system debugging across cloud and Linux kernel environments.</p>
+            <ul>
+                <li><strong>AWS Resource Exhaustion Triage:</strong> Conducted an RCA on a cascading Podman failure that triggered an OOM-Killer event and generated 20,000 KMS/STS API calls via an infinite restart loop.</li>
+                <li><strong>Red Hat Bugzilla (Bug #2415015):</strong> Diagnosed a catastrophic structural deadlock in the Btrfs filesystem that forced a Read-Only state.</li>
+                <li><strong>Linux Driver Debugging (Bug #2418652):</strong> Identified and remediated severe host network degradation linked to KVM/QEMU state corruption in the Intel <code>iwlwifi</code> driver.</li>
+            </ul>
+            <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📁 View Diagnostics Reports & Bug Advisories</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div>© 2026 Shay Mordechai. Built for Precision & Impact.</div>
+    </footer>
+
 </body>
 </html>
