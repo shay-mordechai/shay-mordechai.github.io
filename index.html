@@ -77,6 +77,74 @@
             transform: translateY(-2px);
         }
 
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            visibility: hidden;
+            position: absolute;
+            background-color: var(--surface-color);
+            min-width: 140px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            z-index: 100;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        }
+
+        /* הגשר השקוף - מונע מהתפריט להיסגר כשהעכבר זז קצת הצידה */
+        .dropdown::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 15px; 
+        }
+
+        .dropdown:hover .dropdown-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .action-btn {
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #21262d;
+            color: #ffffff;
+        }
+
         .mission-statement {
             font-size: 1.1em;
             color: #ffffff;
@@ -287,7 +355,15 @@
         <p class="subtitle">Vulnerability Researcher & Systems Architect</p>
 
         <div class="links-container">
-            <a href="blog/he/index.html" class="action-btn">📝 Research Blog</a>
+            <!-- שדרוג הכפתור לתפריט נפתח (Dropdown) -->
+            <div class="dropdown">
+                <a href="javascript:void(0)" class="action-btn">📝 Research Blog ▾</a>
+                <div class="dropdown-content">
+                    <a href="blog/en/index.html">🇺🇸 English (EN)</a>
+                    <a href="blog/he/index.html">🇮🇱 עברית (HE)</a>
+                </div>
+            </div>
+
             <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
             <a href="cv.pdf" class="action-btn" target="_blank">📄 Résumé</a>
             <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 GitHub Vault</a>
@@ -310,32 +386,32 @@
     <section class="timeline-section">
         <h3>📈 Research Evolution & Milestones</h3>
         <div class="timeline-container">
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Feb 2024</div>
                 <div class="timeline-title">Desktop RE</div>
             </a>
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Jun 2025</div>
                 <div class="timeline-title">TLS Protocol Crafter</div>
             </a>
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Jul 2025</div>
                 <div class="timeline-title">Compiler 0-Days</div>
             </a>
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Dec 2025</div>
                 <div class="timeline-title">V8 Engine Security</div>
             </a>
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Apr 2026</div>
                 <div class="timeline-title">LANjack Mitigation</div>
             </a>
-            <a href="blog/he/index.html" class="timeline-node">
+            <a href="blog/en/index.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">May 2026</div>
                 <div class="timeline-title">Bootstrap Hijacking</div>
@@ -352,7 +428,7 @@
             </div>
             <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores the "Permission Paradox" and Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
             <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Part of the 7-part <strong>"Paradox of Mutability"</strong> series mapping the exact intersections where boundaries fail—from bridging Java memory safety via JNI, breaking the Flatpak Linux sandbox, to analyzing AI super-privileges in modern browsers.</em></p>
-            <a href="blog/he/index.html" class="read-link">🔗 Read the Full Research Series</a>
+            <a href="blog/en/index.html" class="read-link">🔗 Read the Full Research Series</a>
         </div>
 
         <!-- Featured Vulnerability Research Card -->
@@ -362,7 +438,7 @@
                 <span class="tag vr">CERT-IL #11265</span>
             </div>
             <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. It proves that structural compiler bugs can be manipulated to breach execution boundaries.</p>
-            <a href="blog/he/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
+            <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
         </div>
 
         <!-- Infrastructure & Architecture Card -->
@@ -373,8 +449,8 @@
             </div>
             <p>Applied engineering to secure hardware boundaries and network tunnels.</p>
             <ul>
-                <li><a href="blog/he/pt-dns-rebinding-mitigation.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
-                <li><a href="blog/he/rust-envoy-tunnel.html" style="color: var(--accent-blue); text-decoration: none;"><strong>JNI/Rust Boundary Tunnels:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
+                <li><a href="blog/en/pt-dns-rebinding-mitigation.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks by proposing deterministic TTL=1 enforcement for management interfaces. Formally validated and acknowledged by the TP-Link and Palo Alto Networks PSIRT teams.</li>
+                <li><a href="blog/en/rust-envoy-firewall.html" style="color: var(--accent-blue); text-decoration: none;"><strong>JNI/Rust Boundary Tunnels:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy written in Rust, creating secure memory tunnels to sanitize data before it crosses the High-Level/Low-Level semantic boundary.</li>
             </ul>
         </div>
 
