@@ -10,38 +10,74 @@
 <div id="content">
     <h1>Flatpak - Linux Sandbox Isolation</h1>
     <p><em>מאת שי מרדכי | 29 במרץ 2026</em></p>
-    <p>בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום נדבר על מערכת ההפעלה עצמה. Flatpak זוהי סביבת sandboxes מאובטחת עבור מערכות הפעלה מודרניות (כמו Fedora Kinoite שאני עובד עליה). היא לא מסתפקת ב-sandboxes שכל דפדפן פותח, אלא עוטפת את כל התהליך הראשי ב-sandbox מאובטח מאוד.</p>
-    <p>הבעיה מתעוררת כשמנסים להשתמש ב-extensions ותיקים שלא עדכנו את הדרך בה ה-desktop app מדברת עם הדפדפן (IPC). במחקר החדש שלי, יצאתי לחקור מדוע ה-LibreWolf Browser שלי לא תואם ל-KeePassXC. גיליתי שהדרך המודרנית בה Flatpak מצפה שידברו איתו, זו לא הדרך בה KeePassXC מדבר. כדי לגרום לתקשורת לעבוד, הייתי צריך "לקדוח חור" ב-sandbox.</p>
-    <p>מתן הרשאת הרצה על מערכת ההפעלה הופך את ה-Sandbox לשקוף – כל חולשת RCE בדפדפן תהפוך מיד להשתלטות מלאה על המחשב. תקשורת מודרנית חייבת להיות מבוססת הודעות טקסט בלבד (כמו DBus Portals).</p>
-    <hr>
-    
-    <div dir="ltr" style="text-align: left; background-color: #1e293b; padding: 20px; border-radius: 8px;">
-        <h2 style="color: #38bdf8;">Investigating IPC Boundaries and Sandboxing in Flatpak: The LibreWolf & KeePassXC Case</h2>
-        <h3>Executive Summary (TL;DR)</h3>
-        <p><strong>Problem:</strong> Strict OS-level isolation (Flatpak/bubblewrap) breaks essential browser functionality, specifically Native Messaging IPC (KeePassXC) and hardware-based authentication (WebAuthn/USB Security Keys).<br>
-        <strong>Action:</strong> Investigated Flatpak mount namespaces, Unix Domain Sockets, and hardware permissions. Engineered granular sandbox overrides and analyzed browser engine configurations.<br>
-        <strong>Result:</strong> Successfully mapped the trade-off between OS-level sandboxing, functionality, and browser fingerprinting.</p>
 
-        <h3>2. The Investigation: Locating the IPC Socket</h3>
-        <pre><code dir="ltr">shay0129@fedora:~$ ls -l /run/user/1000/app/org.keepassxc.KeePassXC/
+    <p>בפוסטים הקודמים שלי דיברנו על בידוד ברמת ריצת ה-process בזכרון (V8) וברמת השפה (JNI). היום נדבר על מערכת ההפעלה עצמה. Flatpak זוהי סביבת sandboxes מאובטחת עבור מערכות הפעלה ממודרניות (כמו Fedora Kinoite שאני עובד עליה). היא לא מסתפקת ב-sandboxes שכל דפדפן פותח לכל כרטיסייה, אלא עוטפת את כל התהליך הראשי ב-sandbox מאובטח מאוד.</p>
+
+    <p>הבעיה מתעוררת כשמנסים להשתמש ב-extensions ותיקים שלא עדכנו את הדרך בה ה-desktop app מדברת עם הדפדפן (IPC). בעידן הקודם, הדפדפן יכל לגשת ישירות למערכת ההפעלה. כיום, דפדפן מבודד שמבקש לגשת למצלמה או למיקרופון כבר לא דורש ש"נקדח לו חורים" באבטחה, אלא מבקש גישה בצורה מבוקרת דרך מערכת ה-Portals.</p>
+
+    <p>במחקר החדש שלי, יצאתי לחקור מדוע ה-LibreWolf Browser שלי לא תואם ל-KeePassXC ששומר לי את הסיסמאות במחשב, ובנוסף מדוע הוא חוסם לי שימוש במפתחות אבטחה פיזיים (USB Security Keys / WebAuthn). גיליתי שהדרך המודרנית בה Flatpak מצפה שידברו איתו, זו לא הדרך בה האפליקציות האלו מדברות. כדי לגרום לתקשורת לעבוד, הייתי צריך לחקור את מרחב ה-Mount Namespaces, לאתר את ה-Unix Domain Socket של האפליקציה ב-Host, ולבצע הגדרת override נקודתית שחוסכת "קידוח חורים" רחב ומסוכן במערכת.</p>
+
+    <p>מתן הרשאת הרצה על מערכת ההפעלה (כמו דרישת Legacy Native Messaging המבוססת על stdio) דורשת מאיתנו להעניק הרשאה מסוג flatpak-spawn --host שמפעילה קבצים בינאריים ישירות על המארח (ה-Fedora Kinoite). הרשאה כזו הופכת את ה-Sandbox לשקוף לחלוטין – כל חולשת RCE בדפדפן תהפוך מיד להשתלטות מלאה על המחשב. תקשורת מודרנית חייבת להיות מבוססת הודעות טקסט בלבד (כמו DBus Portals).</p>
+
+    <p>עוד תובנה שהרווחתי, היא לראות את רמת הבידוד אצל דפדפנים אחרים המותקנים כ-flatpak, כגון Chrome ו-Brave. סריקת ה-Manifests שלהם הראתה שהמפתחים שלהם מראש קדחו הרבה יותר "חורים" ב-sandbox של flatpak (לתיקיית מסמכים, תמונות ומשטחי DBus רחבים), מאשר LibreWolf שמכיל כברירת מחדל חור אחד בלבד (לתיקיית Downloads).</p>
+
+    <hr>
+
+    <div id="technical-report" dir="ltr" style="text-align: left; background-color: #1e293b; padding: 25px; border-radius: 8px; color: #f8fafc; font-family: monospace;">
+        <h2 style="color: #38bdf8; font-family: sans-serif;">Investigating IPC Boundaries and Sandboxing in Flatpak: The LibreWolf & KeePassXC Case</h2>
+
+        <h3 style="color: #fbbf24; font-family: sans-serif;">Executive Summary (TL;DR)</h3>
+        <p>
+            <strong>Problem:</strong> Strict OS-level isolation (Flatpak/bubblewrap) breaks essential browser functionality, specifically Native Messaging IPC (KeePassXC) and hardware-based authentication (WebAuthn/USB Security Keys).<br>
+            <strong>Action:</strong> Investigated Flatpak mount namespaces, Unix Domain Sockets, and hardware permissions. Engineered granular sandbox overrides and analyzed browser engine configurations (about:config) to restore functionality.<br>
+            <strong>Result:</strong> Successfully mapped the trade-off between OS-level sandboxing, functionality, and browser fingerprinting. Demonstrated that exposing hardware for WebAuthn fundamentally breaks fingerprinting resistance (RFP), highlighting a critical attack/detection surface.
+        </p>
+
+        <h3 style="color: #38bdf8; font-family: sans-serif;">1. Theoretical Background</h3>
+        <p>Modern Linux systems increasingly rely on containerized application formats like Flatpak to enhance security. Flatpak uses features like namespaces and bubblewrap to isolate applications into separate sandboxes.</p>
+        <p>However, this strict isolation breaks traditional Inter-Process Communication (IPC). Legacy mechanisms relying on stdio execution or shared directories often fail under mount namespace boundaries.</p>
+
+        <h3 style="color: #38bdf8; font-family: sans-serif;">2. The Investigation: Locating the IPC Socket</h3>
+        <p>To understand why the LibreWolf browser extension cannot communicate with the KeePassXC desktop app, we first locate the active Unix Domain Socket on the host operating system:</p>
+        <pre style="background-color: #0f172a; padding: 12px; border-radius: 6px; overflow-x: auto; color: #34d399;"><code>shay0129@fedora:~$ ls -l /run/user/1000/app/org.keepassxc.KeePassXC/
 srwx------. 1 shay0129 shay0129 0 Mar 28 21:21 org.keepassxc.KeePassXC.BrowserServer</code></pre>
 
-        <h3>3. Proving the Sandbox Isolation</h3>
-        <pre><code dir="ltr">shay0129@fedora:~$ flatpak run --command=ls io.gitlab.librewolf-community -l /run/user/1000/app/org.keepassxc.KeePassXC/
+        <h3 style="color: #38bdf8; font-family: sans-serif;">3. Proving the Sandbox Isolation</h3>
+        <p>To verify the boundary, we inject an installation diagnostic command directly into the LibreWolf runtime container to query the socket path:</p>
+        <pre style="background-color: #0f172a; padding: 12px; border-radius: 6px; overflow-x: auto; color: #f87171;"><code>shay0129@fedora:~$ flatpak run --command=ls io.gitlab.librewolf-community -l /run/user/1000/app/org.keepassxc.KeePassXC/
 F: Not sharing "/dev/bus/usb" with sandbox: Path "/dev" is reserved by Flatpak
 ls: cannot access '/run/user/1000/app/org.keepassxc.KeePassXC/': No such file or directory</code></pre>
+        <p>
+            <strong>Mount Namespaces (IPC Blocked):</strong> The sandbox environment receives an isolated, restricted view of the filesystem. The target socket directory simply does not exist within the container's namespace.<br>
+            <strong>Device Isolation (Hardware Blocked):</strong> The warning warning shows that raw hardware access (/dev/bus/usb) is strictly denied by default.
+        </p>
 
-        <h3>4. Architectural Solutions</h3>
-        <p>To resolve these isolation barriers without compromising the entire sandbox, granular permissions must be applied:</p>
-        <pre><code dir="ltr">flatpak override --user --filesystem=/run/user/1000/app/org.keepassxc.KeePassXC io.gitlab.librewolf-community</code></pre>
+        <h3 style="color: #38bdf8; font-family: sans-serif;">4. Architectural Solutions</h3>
+        <p>To resolve the isolation barriers without exposing the global filesystem, granular overrides are enforced to map only the necessary socket path into the container layout:</p>
+        <pre style="background-color: #0f172a; padding: 12px; border-radius: 6px; overflow-x: auto; color: #38bdf8;"><code>flatpak override --user --filesystem=/run/user/1000/app/org.keepassxc.KeePassXC io.gitlab.librewolf-community</code></pre>
 
-        <h3>5. Resolving the Hardware Token (USB Key)</h3>
-        <pre><code dir="ltr">flatpak override --user --device=all io.gitlab.librewolf-community</code></pre>
-        <p>Browser Engine Configuration LibreWolf modified internal engine flags (about:config):</p>
-        <pre><code dir="ltr">security.webauth.webauthn = true
+        <h3 style="color: #38bdf8; font-family: sans-serif;">5. Resolving the Hardware Token (USB Key) & The Fingerprinting Trade-off</h3>
+        <p>Modern FIDO2/WebAuthn tokens rely on direct USB HID communication. Restoring functionality requires a multi-stage configuration:</p>
+        <p><strong>Step 1: Sandbox Hardware Override</strong></p>
+        <pre style="background-color: #0f172a; padding: 12px; border-radius: 6px; overflow-x: auto; color: #38bdf8;"><code>flatpak override --user --device=all io.gitlab.librewolf-community</code></pre>
+        <p><strong>Step 2: Browser Engine Configuration</strong></p>
+        <p>LibreWolf's strict anti-fingerprinting mechanism (RFP) actively suppresses USB token probes. We modified internal Javascript engine flags (about:config) to bypass the block:</p>
+        <pre style="background-color: #0f172a; padding: 12px; border-radius: 6px; overflow-x: auto; color: #e2e8f0;"><code>// Enable underlying WebAuthn processing layers
+security.webauth.webauthn = true
 security.webauth.u2f = true
 security.webauth.webauthn_enable_usbtoken = true</code></pre>
-        <p><strong>Conclusion:</strong> Legacy IPC mechanisms relying on stdio execution are fundamentally incompatible with strict modern sandboxes.</p>
+        <p><strong>The Privacy Conflict:</strong> Overriding the sandbox to communicate with local USB subsystems exposes unique hardware configurations to web scripts, creating a traceable fingerprinting signature.</p>
+
+        <h3 style="color: #38bdf8; font-family: sans-serif;">6. Comparative Attack Surface Analysis: LibreWolf vs. Chrome & Brave</h3>
+        <p>We extracted active application profiles (flatpak info --show-permissions) to assess the threat profile if a Remote Code Execution (RCE) occurs inside the sandbox layout:</p>
+        <ul>
+            <li><strong>Google Chrome (Data Exposure):</strong> Requests extensive filesystem permissions (xdg-documents, xdg-download). RCE grants immediate access to local file boundaries.</li>
+            <li><strong>Brave Browser (System Integration Risk):</strong> Requests extensive DBus session access, expanding the attack surface toward host system services.</li>
+            <li><strong>LibreWolf (Strict Least Privilege):</strong> Restricts filesystem access solely to xdg-download and limits the DBus surface to an absolute minimum.</li>
+        </ul>
+
+        <h3 style="color: #fbbf24; font-family: sans-serif;">Conclusion</h3>
+        <p>Legacy IPC mechanisms relying on host binary execution via stdio are fundamentally incompatible with modern secure sandboxes. To balance both system integrity and user privacy, applications must transition to modern isolation-aware communication models, such as DBus WebExtensions Portals.</p>
     </div>
 </div>
 </body>
