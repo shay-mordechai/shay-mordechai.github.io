@@ -49,16 +49,44 @@
         <p>במהדר SBCL, המציאות הפוכה. במקום לנהוג בפסימיות, לחשוש מפני זיהום לוגי ולחסום את הפעולה, המהדר מאפשר מניפולציות compile-time עקומות ללא אימות תקינות מול ה-<code>LEXENV</code> (הסביבה הלקסיקלית האקטיבית). להלן ניתוח וקטורי התקיפה הלוגיים בצירוף דוגמאות הקוד (PoC) שייצר ה-Fuzzer:</p>
 
         <h3>וקטור 1: הזרקת קישור דינמי (Dynamic Binding Injection)</h3>
-        <p>שימוש בפקודת <code>proclaim</code> מתוך שלב הרחבת המאקרו גורם למהדר לעדכן את תכונות הסמל (Symbol Flags) ברמה הגלובלית תוך כדי תהליך ההידור. המהדר מאבד את גבולות ה-Scope המקומי (בלוק ה-<code>let</code>), והופך את המשתנה הלקסיקלי למשתנה דינמי (<code>SPECIAL</code>) שקוד חיצוני מסוגל לקרוא ולשכתב בשקט מוחלט.</p>
+<p>וקטור זה מנצל כשל לוגי בסדר פעולות עיבוד הנתונים של המהדר (Compilation Pass Order). כדי להבין כיצד פקודת המאקרו מצליחה לשבור את ה-Scope המקומי, נביט בצינור ההידור (Pipeline) של המהדר והיכן נקודת הזיהום מתרחשת:</p>
+
+<div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; direction: ltr; text-align: left;">
+  [Step 1: Front-End] Read & Parse (AST Generation)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 2: Lexical Analysis] Register "secret-token" as LOCAL in LEXENV<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs inject-dynamic-binding macro</span><br>
+  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
+  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Global Symbol Table is OVERRIDE immediately!</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 4: Code Generation] Compiler checks Symbol Table for "secret-token"<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Sees dynamic SPECIAL_FLAG set in Step 3<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span style="color: #ff7b72;">CRITICAL BYPASS</span>: Generates Dynamic Runtime Lookup!<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 5: Back-End] Final Assembly/Bytecode generation (Isolation broken)<br>
+</div>
+
+<p><strong>הסבר המנגנון בקצר:</strong><br>
+כפי שניתן לראות בתרשים, בשלב 2 המהדר פועל בצורה תקינה ורושם את המשתנה <code>secret-token</code> כמשתנה מקומי ומבודד (Lexical) בתוך בלוק ה-<code>let</code>. בשלב זה, הערבויות של השפה עדיין מתקיימות.</p>
+
+<p>הכשל מתרחש במעבר לשלב 3 (Macro Expansion). המהדר עוצר את זרימת ההידור הסטנדרטית ומריץ את פונקציית המאקרו. בתוך המאקרו, פקודת ה-<code>proclaim</code> מופעלת ומשנה את ה-Metadata של הסמל <strong>באופן מיידי וגלובלי</strong> בטבלת הסמלים (Global Symbol Table), והופכת אותו ל-<code>SPECIAL</code> (דינמי).</p>
+
+<p>כאשר המהדר מסיים את הרחבת המאקרו ועובר לשלב 4 (Code Generation) כדי לייצר קוד עבור המשך הפונקציה, הוא ניגש לבדוק כיצד לתרגם את הגישה למשתנה <code>secret-token</code>. המהדר מזהה את הדגל הגלובלי החדש שנשתל בשלב 3, מתבלבל סמנטית, ומשנה את ארכיטקטורת הפלט: במקום לייצר הפניה לקסיקלית בטוחה על ה-Stack Frame, הוא מייצר קוד של קישור דינמי (Dynamic Runtime Lookup) מבוסס מחסנית קריאות. גבולות הבידוד של ה-Scope המקומי נמחקו לחלוטין ברמת הבינארי הסופי, וקוד חיצוני יכול כעת לקרוא ולדרוס את המשתנה.</p>
+
 <pre><code>;; PoC Code: dynamic_binding_attack.lisp
 (defmacro inject-dynamic-binding (var-name)
-  (proclaim `(special ,var-name)) ; Mutation of global symbol metadata inside compilation phase
+  (proclaim `(special ,var-name)) ; Immediate mutation of global symbol metadata inside compilation phase
   `(inline-log "Flag compilation modified"))
 
 (defun target-function ()
   (let ((secret-token "ENCRYPTED_DATA")) ; Supposed to be immutable and isolated lexically
-    (inject-dynamic-binding secret-token) ; Triggering macro expansion
-    secret-token))
+    (inject-dynamic-binding secret-token) ; Triggering macro expansion and flag override
+    secret-token)) ; Compiler now generates dynamic runtime lookup instead of safe lexical offset
 
 ;; Under vulnerable compilers, external call stack manipulation can now hijack 'secret-token'
 </code></pre>
