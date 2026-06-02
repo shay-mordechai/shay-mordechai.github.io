@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel="stylesheet" href="../../assets/css/style.css"><title>Scapy-TLS-Packet-Crafter</title></head>
-<body><div id="content" style="text-align: left;"><a href="index.html" style="color: var(--accent-color); font-weight: bold; margin-bottom: 20px;">&larr; Back</a>
-<h1>Scapy-TLS-Packet-Crafter: Custom TLS 1.2 Handshake Generation</h1><p><em>By Shay Mordechai | June 17, 2025</em></p>
-<p>Developed during reserve duty, this 4,030-line Python project simulates a full TLS 1.2 handshake from scratch using Scapy and Cryptography, bypassing standard OS SSL libraries[cite: 7].</p>
-<h2>Core Implementation</h2>
-<p><strong>1. Client Hello & SNI:</strong> Secure generation of the 32-byte client random and building Server Name Indication extensions directly at the byte level[cite: 7].</p>
-<p><strong>2. Master Secret PRF:</strong> Executing the TLS 1.2 Pseudo-Random Function (HMAC-SHA256) to derive the 48-byte master secret from the pre-master secret and random seeds[cite: 7].</p>
-<p><strong>3. Application Data Encryption:</strong> Encrypting data using AES-128-CBC. Implemented HMAC-SHA256 for Data Integrity over the sequence number and injected PKCS#7 Padding to meet AES block requirements[cite: 7].</p>
-<p>Generated runtime `SSLKEYLOGFILE` traces to debug decryption failures within the Wireshark Dissector, achieving 100% protocol compliance[cite: 7].</p>
-</div></body></html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Scapy TLS 1.2 Packet Crafter | Shay Mordechai</title>
+    <style>
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; direction: ltr; text-align: left; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; margin: 20px 0; border: 1px solid #333; }
+        code { font-family: 'Courier New', Courier, monospace; color: #ce9178; }
+    </style>
+</head>
+<body>
+<div id="content" style="text-align: left;">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Research Vault</a>
+
+    <h1>Scapy TLS 1.2 Packet Crafter: Custom Handshake Generation</h1>
+    <p><em>By Shay Mordechai | June 17, 2025</em></p>
+
+    <hr>
+
+    <p>This project was built during extended reserve duty under field conditions. I needed to stay sharp technically, so I went deep into RFC 5246 — not as a user of TLS, but as someone building it from scratch at the bit and byte level.</p>
+
+    <p>The goal: generate a valid PCAP simulating a full TLS 1.2 handshake between a server and two clients. No OS SSL libraries. Everything assembled manually using Scapy and the <code>cryptography</code> library — 4,030 lines across 22 Python modules.</p>
+
+    <h2>What I Actually Implemented</h2>
+
+    <h3>1. Client Hello & SNI</h3>
+    <p>Generating the 32-byte client random securely and constructing extensions at the byte level, including SNI, supported groups, and signature algorithms.</p>
+    <pre>session.client_random = os.urandom(32)
+gmt_time = int.from_bytes(session.client_random[:4], 'big')
+random_bytes = session.client_random[4:]
+
+return TLSClientHello(
+    version=TLSVersion.TLS_1_2,
+    ciphers=[TLS_RSA_WITH_AES_128_CBC_SHA256],
+    ext=extensions.get_extension_list(),
+    gmt_unix_time=gmt_time,
+    random_bytes=random_bytes
+)</pre>
+
+    <h3>2. Master Secret Derivation (PRF)</h3>
+    <p>TLS 1.2 derives the master secret using a Pseudo-Random Function built on HMAC-SHA256. I implemented P_hash directly from the RFC — no shortcuts.</p>
+    <pre>seed = b"master secret" + client_random + server_random
+master_secret = P_hash(pre_master_secret, seed, 48)</pre>
+
+    <h3>3. Key Block Generation</h3>
+    <p>From the master secret, both sides derive MAC keys, encryption keys, and IVs. For TLS_RSA_WITH_AES_128_CBC_SHA256 that means 128 bytes of key material total.</p>
+    <pre>seed = b"key expansion" + server_random + client_random
+key_material = P_hash(master_secret, seed, 128)
+
+# Extract in RFC 5246 order:
+# client_write_mac_key (32) + server_write_mac_key (32)
+# + client_write_key (16) + server_write_key (16)
+# + client_write_iv (16) + server_write_iv (16)</pre>
+
+    <h3>4. Application Data Encryption</h3>
+    <p>AES-128-CBC with HMAC-SHA256. Had to implement the MAC-then-encrypt construction correctly: HMAC over sequence number + record header + plaintext, then PKCS#7 padding, then CBC encryption.</p>
+    <pre>mac_data = (
+    seq_num.to_bytes(8, 'big') +
+    b'\x17' +  # Application Data type
+    TLSVersion.TLS_1_2.value.to_bytes(2, 'big') +
+    len(plaintext).to_bytes(2, 'big') +
+    plaintext
+)
+mac = hmac.new(mac_key, mac_data, hashlib.sha256).digest()</pre>
+
+    <h2>The Hard Part: Wireshark Decryption</h2>
+    <p>Getting Wireshark to fully decrypt the generated PCAP was the real debugging challenge. The dissector was rejecting Application Data due to MAC/padding mismatches. I implemented runtime <code>SSLKEYLOGFILE</code> generation — exporting CLIENT_RANDOM and master_secret — and used that to trace exactly where my binary layout diverged from the expected format. Fixed the padding construction and got full protocol compliance.</p>
+
+    <h2>What This Taught Me</h2>
+    <p>Understanding TLS as a user and understanding it as an implementer are very different things. The RFC looks clean on paper. The actual byte layout, the ordering of MAC computation, the padding edge cases — those only become clear when Wireshark tells you the MAC is wrong and you have to figure out why.</p>
+
+    <p><strong>Full code: <a href="https://github.com/shay0129/scapy-tls-pcap-creator" target="_blank">github.com/shay0129/scapy-tls-pcap-creator</a></strong></p>
+</div>
+</body>
+</html>
