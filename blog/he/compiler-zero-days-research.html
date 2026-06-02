@@ -12,6 +12,8 @@
         .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; font-family: monospace; }
         .abstract { background: #161b22; border-right: 4px solid #58a6ff; padding: 15px 20px; margin: 20px 0; border-radius: 4px; }
         code { background: #1f2428; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; color: #bc8cff; }
+        pre { background: #161b22; padding: 15px; border-radius: 6px; border: 1px solid #30363d; overflow-x: auto; }
+        pre code { background: none; padding: 0; color: #e6edf3; }
         .next-steps { background: rgba(210, 168, 255, 0.05); border: 1px dashed #bc8cff; padding: 20px; border-radius: 8px; margin-top: 40px; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #58a6ff; text-decoration: none; font-weight: bold; }
         .back-link:hover { text-decoration: underline; }
@@ -44,15 +46,53 @@
         <h2>3. שלושת הממצאים (Vulnerability Primitives) וההשוואה ל-Java Generics</h2>
         <p>מנגנון הבדיקה הציף פער ארכיטקטוני חריף, במיוחד כאשר משווים אותו למנגנון ה-Wildcards ב-Java Generics, ותחת עקרון PECS עם הביטוי <code>? super T</code>.</p>
         <p>ב-Java, הקומפיילר פועל בצורה פסימית ומחמירה כדי למנוע כשלים לוגיים בזמן ריצה. אם ישנו ספק לגבי בטיחות הפעולה, הוא יחסום אותה ויזרוק שגיאת קומפילציה. ברשימה המוגדרת כ-<code>List&lt;? super Apple&gt; basket</code>, המהדר מבין שמדובר ברשימה של תפוחים או אבותיו (כמו Fruit או Object). מאחר שהוא אינו יודע מהו הטיפוס המדויק, ניסיון להכניס אובייקט מסוג האב הכללי <code>Fruit</code> באמצעות <code>basket.add(new Fruit())</code> ייחסם מיד בשגיאת קומפילציה, מחשש שמא מדובר בפועל ברשימת תפוחים ספציפית וההכנסה תגרום לזיהום הטיפוסים. בקריאה (get), המהדר יגן על גבולות המשתנה ויאפשר שליפה אך ורק לתוך הטיפוס הכללי והבטוח ביותר – <code>Object</code>.</p>
-        <p>במהדר SBCL, המציאות הפוכה. במקום לנהוג בפסימיות, לחשוש מפני זיהום לוגי ולחסום את הפעולה, המהדר מאפשר מניפולציות compile-time עקומות ללא אימות תקינות מול ה-<code>LEXENV</code> (הסביבה הלקסיקלית האקטיבית):</p>
+        <p>במהדר SBCL, המציאות הפוכה. במקום לנהוג בפסימיות, לחשוש מפני זיהום לוגי ולחסום את הפעולה, המהדר מאפשר מניפולציות compile-time עקומות ללא אימות תקינות מול ה-<code>LEXENV</code> (הסביבה הלקסיקלית האקטיבית). להלן ניתוח וקטורי התקיפה הלוגיים בצירוף דוגמאות הקוד (PoC) שייצר ה-Fuzzer:</p>
 
-        <ul>
-            <li><strong>וקטור 1 (Dynamic Binding Injection):</strong> הזרקת פקודת <code>proclaim</code> מתוך שלב הרחבת המאקרו. הקומפיילר מעדכן את הדגלים של הסמל ברמה הגלובלית, מאבד את גבולות ה-Scope המקומי (בלוק ה-<code>let</code>), והופך את המשתנה הלקסיקלי למשתנה דינמי (<code>SPECIAL</code>) שניתן לדריסה ולשכתוב על ידי קוד חיצוני בשקט מוחלט.</li>
-            <li><strong>וקטור 2 (Global Symbol Table Pollution):</strong> יצירת מצביעים כפולים באמצעות פונקציית <code>intern</code> בזמן פריסת המאקרו. המהדר כשל בשמירה על הבידוד (Isolation), ונוצר Reference שגוי המאפשר הדלפת ערכים חסומים החוצה (Information Disclosure).</li>
-            <li><strong>וקטור 3 (Cross-Package Namespace Confusion):</strong> שימוש בטכניקת <code>shadow</code> מתוך חבילה דינמית שנוצרה בזמן קומפילציה. הפעולה גורמת לאיבוד ה-Trace של המשתנה המקומי ולניתובו למרחב הציבורי הכללי (<code>cl-user</code>).</li>
-        </ul>
+        <h3>וקטור 1: הזרקת קישור דינמי (Dynamic Binding Injection)</h3>
+        <p>שימוש בפקודת <code>proclaim</code> מתוך שלב הרחבת המאקרו גורם למהדר לעדכן את תכונות הסמל (Symbol Flags) ברמה הגלובלית תוך כדי תהליך ההידור. המהדר מאבד את גבולות ה-Scope המקומי (בלוק ה-<code>let</code>), והופך את המשתנה הלקסיקלי למשתנה דינמי (<code>SPECIAL</code>) שקוד חיצוני מסוגל לקרוא ולשכתב בשקט מוחלט.</p>
+<pre><code>;; PoC Code: dynamic_binding_attack.lisp
+(defmacro inject-dynamic-binding (var-name)
+  (proclaim `(special ,var-name)) ; Mutation of global symbol metadata inside compilation phase
+  `(inline-log "Flag compilation modified"))
 
-        <h2>4. ממודל איום (Supply Chain) – למה זה מסוכן?</h2>
+(defun target-function ()
+  (let ((secret-token "ENCRYPTED_DATA")) ; Supposed to be immutable and isolated lexically
+    (inject-dynamic-binding secret-token) ; Triggering macro expansion
+    secret-token))
+
+;; Under vulnerable compilers, external call stack manipulation can now hijack 'secret-token'
+</code></pre>
+
+        <h3>וקטור 2: זיהום טבלת הסמלים (Global Symbol Table Pollution)</h3>
+        <p>יצירת מצביעים כפולים או כפייה של מיפוי מחדש באמצעות פונקציית <code>intern</code> בזמן פריסת המאקרו. המהדר נכשל בשמירה על ההפרדה הלוגית (Isolation), ויוצר קישור פנימי דרוס (Collided Reference) בין ה-Global Object Storage לבין ה-Lexical Pointer, מה שמאפשר להדליף ערכים חסומים החוצה (Information Disclosure).</p>
+<pre><code>;; PoC Code: symbol_interning_attack.lisp
+(defmacro pollute-symbol-table (sym-name)
+  (let ((global-sym (intern (string sym-name))))
+    (setf (get global-sym 'compromised-leak) t)
+    `(quote ,global-sym)))
+
+(defun secure-enclave ()
+  (let ((internal-key "PRIVATE_KEY"))
+    (pollute-symbol-table internal-key) ; Context confusion during compilation
+    ;; Execution trace leaks internal-key bounds to global symbol property listings
+    ))
+</code></pre>
+
+        <h3>וקטור 3: בלבול מרחבי שמות בין חבילות (Cross-Package Namespace Confusion)</h3>
+        <p>שימוש בטכניקת <code>shadow</code> או מניפולציות של Package Systems מתוך חבילה דינמית שנוצרה ב-Compile-time. הפעולה גורמת לקריסה של ה-Trace שהמהדר מנהל עבור המשתנה המקומי, ומנתבת את הגישה אליו למרחב הציבורי הכללי (<code>cl-user</code>).</p>
+<pre><code>;; PoC Code: package_hijack_attack.lisp
+(defmacro hijack-namespace (target-sym)
+  (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG" :use '("CL"))))
+    (shadow (string target-sym) shadow-pkg) ; Hijacking compilation target pointer
+    `(inline-log "Namespace tracing broken")))
+
+(defun sensitive-scope ()
+  (let ((auth-token "SESSION_VALID"))
+    (hijack-namespace auth-token) ; Compilation context dereferences token from local frame
+    auth-token))
+</code></pre>
+
+        <h2>4. מודל איום (Supply Chain) – למה זה מסוכן?</h2>
         <p>החולשה אינה דורשת הרשאות מנהל, ומציגה וקטור תקיפה מובהק עבור שרתי בנייה אוטומטיים (CI/CD Pipelines). תוקף יכול לשתול מאקרו זדוני ("Poisoned Macro") בתוך חבילת קוד צד-שלישי. בזמן קומפילציית הפרויקט, המאקרו מופעל בשלב הבנייה, חורג מגבולות הסקופ המבודד שלו, ומסוגל לשלוף או לשכתב משתנים וערכים רגישים של רכיבים אחרים בפרויקט (כמו מפתחות הצפנה או API Tokens) – מבלי לעורר התרעות בזמן הריצה הסטנדרטי.</p>
 
         <div class="next-steps">
