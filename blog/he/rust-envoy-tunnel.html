@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Hop Firewall: Zero Trust & DLP in Rust for Envoy Proxy</title>
+    <title>Data Hop Firewall: Zero Trust & DLP ב-Rust ו-Envoy</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 <div id="content">
-    
+
     <h1>Data Hop Firewall: יישום Zero Trust ו-DLP ב-Rust ו-Envoy</h1>
     <p><em>מאת שי מרדכי | 15 במאי 2026</em></p>
+
+    <div style="background-color: rgba(0, 0, 0, 0.03); border-right: 4px solid var(--accent-color, #007bff); padding: 15px; margin: 20px 0; border-radius: 4px;">
+        <strong>הערת חוקר:</strong> המוקד של פרויקט זה הוא המחקר והאפיון הארכיטקטוני. הרעיון, תכנון מודל ה-Zero Trust, וזיהוי וקטורי התקיפה (CWE-209, Information Disclosure, React2Shell) הם פרי מחקר ועיצוב בלעדיים שלי. מכיוון שההתמחות שלי היא בחקר חולשות ומנגנוני ריצה, ולא בפיתוח יומיומי ב-Rust, כתיבת הקוד עצמו (Rust/WASM) בוצעה בסיוע AI תחת הנחייתי ואחריותי הטכנית המלאה. הנכס המרכזי המוצג כאן הוא זיהוי החולשה בסביבת ייצור פיננסית והתכנון ההנדסי של המענה.
+    </div>
 
     <p>הפרויקט הזה (<code>wasm-dlp-firewall</code>) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את תשתית ה-EC2 ב-AWS, שמתי לב מהר מאוד שבוטים מכל רחבי העולם מתחילים לסרוק את השרתים ולחפש חולשות. זה הוביל אותי לתכנן מחדש את רמת האבטחה של התשתית, ולהטמיע מודל <strong>Zero Trust</strong> מחמיר.</p>
 
@@ -39,7 +43,7 @@
         <li>גרסאות מדויקות של IIS ו-.NET.</li>
         <li>הצעות קונפיגורציה ישירות ל-<code>web.config</code>.</li>
     </ul>
-    
+
     <p>ה-Data Hop Firewall מזהה אוטומטית שגיאות 5xx לפני שהן עוזבות את הרשת הפנימית, מאתר מחרוזות מערכת (כמו "Stack Trace" או "System.Web"), ומחליף את ה-Payload הרגיש בתגובת JSON נקייה וסטנדרטית:</p>
 
 <pre><code dir="ltr" class="language-json">{
@@ -50,7 +54,7 @@
 
     <p>כך, גם אם המפתח שכח להגדיר <code>customErrors="On"</code> באפליקציה, מנגנון ה-Zero-Trust מבטיח שמידע על תצורת השרת לעולם לא ידלוף לאינטרנט.</p>
 
-    <p><a href="https://github.com/shay-mordechai/wasm-dlp-firewall" target="_blank" style="color: var(--accent-blue); font-weight: bold;">[🔗 צפו בקוד המלא (Rust / Envoy Wasm) ב-GitHub]</a></p>
+    <p><a href="https://github.com/shay-mordechai/wasm-dlp-firewall" target="_blank" style="color: var(--accent-blue, #0056b3); font-weight: bold;">[🔗 צפו בקוד המלא (Rust / Envoy Wasm) ב-GitHub]</a></p>
 </div>
 </body>
 </html>

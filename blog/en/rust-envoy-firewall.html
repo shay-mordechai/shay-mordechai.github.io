@@ -9,9 +9,13 @@
 <body>
 <div id="content" style="text-align: left;">
     <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Research Vault</a>
-    
+
     <h1>Data Hop Firewall: Zero Trust & DLP in Rust for Envoy Proxy</h1>
     <p><em>By Shay Mordechai | May 15, 2026</em></p>
+
+    <div style="background-color: rgba(0, 0, 0, 0.03); border-left: 4px solid var(--accent-color, #007bff); padding: 15px; margin: 20px 0; border-radius: 4px;">
+        <strong>Researcher's Note:</strong> The core value of this project lies in the architectural research. The conceptualization, Zero-Trust security architecture, and identification of the attack vectors (React2Shell, CWE-209, Information Disclosure) are entirely my own design. Because my focus is vulnerability research and system internals rather than day-to-day Rust engineering, the actual Rust/WASM implementation was executed with AI assistance under my direct technical guidance and responsibility. The true asset presented here is the identification of a structural flaw in a production financial environment and the engineering of its mitigation.
+    </div>
 
     <p>This project (<code>wasm-dlp-firewall</code>) was born out of a practical need for a SaaS product I developed. When I spun up the EC2 infrastructure on AWS, I quickly noticed bots from all over the world starting to scan the servers for vulnerabilities. This led me to completely redesign the infrastructure's security posture and implement a strict <strong>Zero Trust</strong> model.</p>
 
@@ -39,7 +43,7 @@
         <li>Exact versions of IIS and .NET.</li>
         <li>Direct configuration suggestions for <code>web.config</code>.</li>
     </ul>
-    
+
     <p>The Data Hop Firewall automatically detects 5xx errors before they leave the internal network, locates system strings (like "Stack Trace" or "System.Web"), and replaces the sensitive payload with a clean, standardized JSON response:</p>
 
 <pre><code dir="ltr" class="language-json">{
