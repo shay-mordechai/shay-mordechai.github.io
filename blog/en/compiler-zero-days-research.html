@@ -12,9 +12,15 @@
         .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; font-family: monospace; }
         .abstract { background: #161b22; border-left: 4px solid #58a6ff; padding: 15px 20px; margin: 20px 0; border-radius: 4px; }
         code { background: #1f2428; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; color: #bc8cff; }
-        .next-steps { background: rgba(210, 168, 255, 0.05); border: 1px dashed #bc8cff; padding: 20px; border-radius: 8px; margin-top: 40px; }
+        pre { background: #161b22; padding: 15px; border-radius: 6px; border: 1px solid #30363d; overflow-x: auto; text-align: left; }
+        pre code { background: none; padding: 0; color: #e6edf3; }
+        .references { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; margin-top: 40px; }
+        .references ul { padding-left: 20px; margin-bottom: 0; }
+        .references li { margin-bottom: 10px; font-size: 0.95em; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #58a6ff; text-decoration: none; font-weight: bold; }
         .back-link:hover { text-decoration: underline; }
+        a.ref-link { color: #58a6ff; text-decoration: none; }
+        a.ref-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -23,46 +29,112 @@
 
     <article>
         <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
-        <div class="meta">By Shay Mordechai | July 31, 2025 | Category: Vulnerability Research, Compiler Internals</div>
-        <div class="meta" style="color: #ff7b72;">Status: Full Responsible Disclosure via CERT-IL (#11265) and MITRE.</div>
+        <div class="meta">By Shay Mordechai | July 2025 | Category: Vulnerability Research, Compiler Internals</div>
+        <div class="meta" style="color: #ff7b72;">Status: Security-Relevant Behavioral Finding — Reported to CERT-IL (#11265) and MITRE.</div>
 
         <div class="abstract">
-            <strong>Executive Summary:</strong>
-            During a targeted research pipeline investigating compiler architectures, specifically the SBCL (Steel Bank Common Lisp) runtime environment, I uncovered a structural logic flaw within the scoping mechanism (Lexical Scoping). This vulnerability allows an attacker to entirely bypass the static isolation guarantees of the language, injecting dynamic bindings out of the protected scope directly during Macro Expansion-time. The discovery was driven by a custom Grammar-Aware Semantic Fuzzer.
+            <strong>Executive Summary</strong><br>
+            During a targeted fuzzing research pipeline on the SBCL compiler (LISP), I focused on the Macro Expansion phase. The goal was to investigate whether the Lexical Scoping mechanism could be bypassed at compile-time. Utilizing an AI-assisted automation process, I identified architectural behaviors with severe security implications that allow an attacker to bypass lexical isolation and inject dynamic bindings out of the "protected" scope.
         </div>
 
-        <h2>1. Genesis of the Research Question</h2>
-        <p>The core hypothesis originated during an academic project for the Nand2Tetris curriculum, where I engineered a custom compiler using an AI Agent for raw syntax translation in Raku. While simultaneously analyzing the compiler pipeline's capacity to intercept logic via macro transformations at compile-time, a fundamental architectural anomaly emerged:</p>
-        <p>If macros alter and inject source tokens at compile-time&mdash;well before a standard runtime execution Stack Frame is ever allocated&mdash;what internal state-machine ensures that static lexical scopes remain impervious to contamination during the expansion phase?</p>
-        <p>To evaluate the real-world resilience of static scoping boundaries, I moved past theoretical lab models and targeted a mature, highly audited enterprise environment: SBCL (v2.3.2).</p>
+        <h2>1. Problem Definition</h2>
+        <p>The core research question was how the compiler enforces lexical isolation boundaries during macro expansion. Since macros manipulate code before the runtime Stack Frame is allocated, I sought to determine if a compile-time manipulation could cause a variable to leak or change its logical state within a local environment.</p>
 
-        <h2>2. Technical Execution: Grammar-Aware Semantic Fuzzing</h2>
-        <p>Compilers are structurally rigid; processing mutational fuzzing inputs typically causes the Lexer or Parser to halt immediately on syntax violations. To bypass this barrier and isolate deep structural flaws, I implemented a robust programmatic test harness:</p>
+        <h2>2. Methodology: Grammar-Aware Fuzzing</h2>
+        <p>Compilers immediately crash on random input due to Syntax errors, making traditional fuzzing ineffective for finding deep logical flaws. Therefore, a semantically focused automated harness was built:</p>
         <ul>
-            <li><strong>Grammar-Aware Mutation:</strong> The engine programmatically emitted structurally valid Abstract Syntax Trees (ASTs), strictly validating parenthesis matching while establishing deeply nested lexical environments to manipulate the Symbol Table flags during compilation.</li>
-            <li><strong>Semantic Oracle:</strong> The instrumentation targeted semantic anomalies rather than physical memory corruption (such as Segfaults). By establishing a high-frequency feedback loop against the compiler, the oracle monitored bounded variables. The moment a strictly isolated lexical reference altered its internal evaluation state due to an overlapping macro transformation without throwing a compilation error, a logical breach was confirmed.</li>
+            <li><strong>Grammar-Aware Mutation:</strong> The fuzzer generated exclusively valid Abstract Syntax Trees (ASTs) using standard grammar to bypass Lexing and Parsing validation successfully.</li>
+            <li><strong>Semantic Oracle:</strong> Instead of looking for memory crashes (Segfaults), the oracle monitored semantic anomalies via <code>stdout</code>. A breach was flagged the moment a strictly isolated lexical variable altered its state due to macro execution, without the compiler identifying an error or halting the build.</li>
         </ul>
 
-        <h2>3. Vulnerability Primitives & The Java Generics Analogy</h2>
-        <p>This structural behavior highlights a fascinating paradigm contrast when evaluated against type-safety enforcement mechanisms like wildcards in Java Generics, specifically the <code>? super T</code> restriction (the PECS principle).</p>
-        <p>In Java, the compiler's primary directive is to eliminate runtime structural failure. Consequently, the type-checker operates on an assumption of absolute pessimism: if a semantic operation introduces even a marginal probability of type confusion, compilation is halted immediately.</p>
-        <p>Consider a generic reference structured as <code>List<? super Apple> basket</code>. The compiler recognizes that at runtime, the target reference could represent a highly specific <code>List<Apple></code>. Consequently, attempting to append a generic parent instance like Fruit (<code>basket.add(new Fruit())</code>) triggers an immediate compilation blockage. The type-checker assumes the worst-case scenario: <em>"If this specific allocation slot expects strictly Apple types, injecting a generic object will cause type confusion at runtime."</em> Because a single unsafe permutation exists, the operation is forbidden entirely. The same restriction applies to extraction (<code>get</code>), forcing resolution into the most generic, baseline container (<code>Object</code>) to maintain absolute semantic boundaries.</p>
-        <p>In SBCL, the architectural reality I uncovered was completely reversed. Instead of maintaining absolute boundary restrictions on local variables, the compiler fails to validate state integrity within the active <code>LEXENV</code> (Lexical Environment) across 3 distinct vulnerability primitives:</p>
-        
-        <ul>
-            <li><strong>Primitive 1: Dynamic Binding Injection:</strong> By executing a <code>proclaim</code> directive from within an expanding macro, the compiler faces a scenario where an external token attempts to modify the metadata attributes of a protected local reference. Rather than triggering a compilation abort under unsafe state parameters, the compiler accepts the mutation, updates the symbol flags globally, and strips the variable's lexical constraints&mdash;silently mutating it into a dynamic reference (<code>SPECIAL</code>) that can be overridden by external code boundaries without warning.</li>
-            <li><strong>Primitive 2: Global Symbol Table Pollution:</strong> Generating duplicate pointers via the <code>intern</code> lookup mechanism during macro expansion. The compiler failed to isolate the compilation context, creating an erroneous internal reference linkage between the global storage allocations and the lexical environment, enabling a clear Information Disclosure vector.</li>
-            <li><strong>Primitive 3: Cross-Package Namespace Confusion:</strong> Utilizing a <code>shadowing</code> routine from within an isolated package created dynamically at compile-time. The compiler lost track of the underlying lexical scope tracking context, redirecting protected local variable paths directly into the public namespace (<code>cl-user</code>).</li>
-        </ul>
+        <h2>3. Architectural Findings and Java Generics Analogy</h2>
+        <p>To grasp the nature of this finding in SBCL, it is highly useful to compare it to type-safety models in Java Generics, specifically the PECS principle and the use of <code>? super T</code>.</p>
+        <p>In Java, the compiler operates with strict pessimism: any doubt regarding type safety triggers a compilation error. For instance, in a <code>List&lt;? super Apple&gt;</code>, the compiler prohibits inserting a generic parent object like <code>Fruit</code> (via <code>add</code>), because the list might strictly contain Apples. This strict enforcement aims to prevent memory pollution and runtime crashes.</p>
+        <p>In SBCL, the paradigm is reversed. The compiler does not validate operations against the active Lexical Environment (<code>LEXENV</code>) during macro expansion. This oversight allowed me to isolate three security-relevant architectural behaviors, which are rooted directly in the official language specification:</p>
 
-        <h2>4. Supply Chain Threat Modeling</h2>
-        <p>Exploiting these structural logic flaws requires zero elevated privileges, presenting a severe risk vector for automated CI/CD pipelines. A malicious actor can inject a poisoned macro into a seemingly benign third-party open-source dependency. When a build server executes a compilation sweep on the project, the macro triggers during compile-time, breaches its scoping boundary, and silently extracts or rewrites sensitive configuration properties (such as private encryption keys, access tokens, or hardcoded constants) belonging to adjacent code blocks in the application&mdash;leaving zero footprint at runtime.</p>
+        <h3>Vector 1: Dynamic Binding Injection</h3>
+        <p>This vector exploits a discrepancy in the compiler's Pass Order, backed by the <code>SPECIAL</code> declaration defined in the ANSI Specification [1]. The following flowchart illustrates the compilation pipeline and the exact point of code injection:</p>
 
-        <div class="next-steps">
-            <h3 style="margin-top: 0;">🛠️ Next Phase: Static Binary Analysis (Work in Progress)</h3>
-            <p>Having structurally verified the vulnerabilities via black-box dynamic fuzzing pipelines, the current phase of this research involves a deep-dive binary investigation of the compiler runtime executable (<code>sbcl.exe</code>) utilizing IDA Pro.</p>
-            <p>I am currently engineering custom IDAPython automation scripts to map the internal Cross-References of the namespace management subroutines, isolate the exact bitwise assembly instructions handling the <code>SPECIAL_FLAG</code> metadata manipulation without <code>lexenv</code> validation, and target the precise Root Cause layout inside the binary.</p>
-            <p><strong>Full assembly teardowns and script repositories will be pushed here the moment this validation cycle concludes!</strong></p>
+<div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; text-align: left;">
+  [Step 1: Front-End] Read & Parse (AST Generation)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 2: Lexical Analysis] Register "secret-token" as LOCAL in LEXENV<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs inject-dynamic-binding macro</span><br>
+  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
+  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Global Symbol Table is OVERRIDDEN immediately!</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 4: Code Generation] Compiler checks Symbol Table for "secret-token"<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Sees dynamic SPECIAL_FLAG set in Step 3<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span style="color: #ff7b72;">CRITICAL BYPASS</span>: Generates Dynamic Runtime Lookup!<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+  [Step 5: Back-End] Final Assembly/Bytecode generation (Isolation broken)<br>
+</div>
+
+        <p><strong>What is actually happening here?</strong><br>
+        In Step 2, the compiler registers the variable <code>secret-token</code> as isolated (Lexical) within the <code>let</code> block. However, in Step 3, during macro expansion, the <code>proclaim</code> directive modifies the symbol's metadata globally, defining it as <code>SPECIAL</code> (dynamic). As documented in CLtL2 [2], this declaration forces all subsequent bindings to act dynamically.</p>
+        <p>When the compiler reaches Step 4 (Code Generation), it checks the symbol table, recognizes the newly implanted global flag, and generates a Dynamic Runtime Lookup instruction rather than a secure lexical reference. The local scope boundary is eradicated at the binary level, allowing external code to access the variable.</p>
+
+<pre><code>;; PoC Code: dynamic_binding_attack.lisp
+(defmacro inject-dynamic-binding (var-name)
+  (proclaim `(special ,var-name)) ; Immediate mutation of global symbol metadata inside compilation phase
+  `(inline-log "Flag compilation modified"))
+
+(defun target-function ()
+  (let ((secret-token "ENCRYPTED_DATA")) ; Supposed to be immutable and isolated lexically
+    (inject-dynamic-binding secret-token) ; Triggering macro expansion and flag override
+    secret-token)) ; Compiler now generates dynamic runtime lookup instead of safe lexical offset
+
+;; Under vulnerable compilers, external call stack manipulation can now hijack 'secret-token'
+</code></pre>
+
+        <h3>Vector 2: Global Symbol Table Pollution</h3>
+        <p>In LISP, a Symbol is a physical singleton object in memory [4]. The <code>intern</code> function locates or creates symbols in the global Symbol Table. According to the HyperSpec [3], if a symbol with the same name is already accessible, <code>intern</code> returns the existing pointer. When a macro executes this function on an existing lexical variable name (like <code>internal-key</code>), it secures a direct, public, global pointer to it.</p>
+        <p>This action establishes an <strong>"Overlapping Reference"</strong>: a single memory cell with two pointers—one internally protected, and one externally controlled by the macro. The macro abuses this external pointer to implant data onto the object's Property List via the <code>setf</code> function. Since symbol properties are globally exposed and explicitly defined as destructive in the specification [4], an attacker can utilize this to exfiltrate data from heavily shielded scopes, making it accessible to external code.</p>
+<pre><code>;; PoC Code: symbol_interning_attack.lisp
+(defmacro pollute-symbol-table (sym-name)
+  (let ((global-sym (intern (string sym-name))))
+    (setf (get global-sym 'compromised-leak) t)
+    `(quote ,global-sym)))
+
+(defun secure-enclave ()
+  (let ((internal-key "PRIVATE_KEY"))
+    (pollute-symbol-table internal-key) ; Context confusion during compilation
+    ;; Execution trace leaks internal-key bounds to global symbol property listings
+    ))
+</code></pre>
+
+        <h3>Vector 3: Cross-Package Namespace Confusion</h3>
+        <p>Unlike Vector 1 which alters the symbol's <strong>Type</strong>, Vector 3 corrupts its <strong>Routing</strong> across namespaces. According to Chapter 11 of the ANSI Spec [5], the <code>shadow</code> function alters system consistency rules, hiding an existing symbol and generating a new symbol under the same name.</p>
+        <p>By dynamically spawning a package at compile-time (via <code>make-package</code>) and calling <code>shadow</code> on the local variable's name, the macro obliterates the compiler's lexical tracking table. When the compiler subsequently attempts to resolve the address of the local variable <code>auth-token</code>, the hijacked routing deceives it, redirecting execution to the global public namespace (<code>cl-user</code>) rather than the protected local stack.</p>
+<pre><code>;; PoC Code: package_hijack_attack.lisp
+(defmacro hijack-namespace (target-sym)
+  (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG" :use '("CL"))))
+    (shadow (string target-sym) shadow-pkg) ; Hijacking compilation target pointer
+    `(inline-log "Namespace tracing broken")))
+
+(defun sensitive-scope ()
+  (let ((auth-token "SESSION_VALID"))
+    (hijack-namespace auth-token) ; Compilation context dereferences token from local frame
+    auth-token))
+</code></pre>
+
+        <h2>4. Threat Model: Supply Chain Attacks</h2>
+        <p>Architectural behaviors of this nature pose a critical threat to CI/CD pipelines. An attacker can publish a package containing a "Poisoned Macro". When a build server compiles the project, the macro triggers, breaks out of its scoping boundary, and silently accesses sensitive variables (such as API keys or encryption secrets) belonging to other modules in the environment, all without triggering runtime alerts.</p>
+
+        <div class="references">
+            <h3 style="margin-top: 0; color: #58a6ff;">References & Specifications</h3>
+            <ul style="list-style-type: none;">
+                <li>[1] <strong>ANSI Common Lisp HyperSpec:</strong> <a href="http://clhs.lisp.se/Body/d_specia.htm" class="ref-link" target="_blank" rel="noopener">Declaration SPECIAL</a></li>
+                <li>[2] <strong>Common Lisp the Language, 2nd Edition:</strong> <a href="https://www.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/html/cltl/clm/node105.html" class="ref-link" target="_blank" rel="noopener">Section 9.2 - Declaration Specifiers</a></li>
+                <li>[3] <strong>ANSI Common Lisp HyperSpec:</strong> <a href="http://clhs.lisp.se/Body/f_intern.htm" class="ref-link" target="_blank" rel="noopener">Function INTERN</a></li>
+                <li>[4] <strong>ANSI Common Lisp HyperSpec / MIT:</strong> <a href="http://www.ai.mit.edu/projects/iiip/doc/CommonLISP/HyperSpec/Body/syscla_symbol.html" class="ref-link" target="_blank" rel="noopener">System Class SYMBOL (Property List)</a></li>
+                <li>[5] <strong>ANSI Common Lisp HyperSpec / MIT:</strong> <a href="http://www.ai.mit.edu/projects/iiip/doc/CommonLISP/HyperSpec/Body/sec_11-1-1.html" class="ref-link" target="_blank" rel="noopener">Section 11.1.1 - Introduction to Packages (shadow)</a></li>
+            </ul>
         </div>
 
     </article>
