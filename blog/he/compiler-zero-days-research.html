@@ -12,7 +12,7 @@
         .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; font-family: monospace; }
         .abstract { background: #161b22; border-right: 4px solid #58a6ff; padding: 15px 20px; margin: 20px 0; border-radius: 4px; }
         code { background: #1f2428; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; color: #bc8cff; }
-        pre { background: #161b22; padding: 15px; border-radius: 6px; border: 1px solid #30363d; overflow-x: auto; }
+        pre { background: #161b22; padding: 15px; border-radius: 6px; border: 1px solid #30363d; overflow-x: auto; direction: ltr; text-align: left; }
         pre code { background: none; padding: 0; color: #e6edf3; }
         .next-steps { background: rgba(210, 168, 255, 0.05); border: 1px dashed #bc8cff; padding: 20px; border-radius: 8px; margin-top: 40px; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #58a6ff; text-decoration: none; font-weight: bold; }
@@ -29,27 +29,27 @@
         <div class="meta" style="color: #ff7b72;">סטטוס: Responsible Disclosure מול CERT-IL (מס' 11265) ו-MITRE.</div>
 
         <div class="abstract">
-            <strong>תקציר:</strong><br>
-            במהלך מחקר fuzzing שביצעתי על הקומפיילר של שפת LISP, במטרה למצוא שבירה בתהליך פריסת ה-MACRO בזמן קומפילציה, זיהיתי כשל לוגי במנגנון ה-Lexical Scoping. החולשה מאפשרת לעקוף את הבידוד הלקסיקלי, ולהזריק משתנים דינמיים מחוץ ל-Scope ה"מוגן". המחקר בוצע בשילוב תהליכי אוטומציה בעזרת AI Agent Copilot.
+            <strong>תקציר</strong><br>
+            במהלך מחקר Fuzzing על קומפיילר SBCL (שפת LISP), התמקדתי בשלב פריסת המאקרו (Macro Expansion). המטרה הייתה לבחון האם ניתן לשבור את מנגנון ה-Lexical Scoping בזמן קומפילציה. תוך כדי המחקר, ששילב אוטומציה בעזרת AI Agent, זיהיתי כשל לוגי המאפשר לעקוף את הבידוד הלקסיקלי ולהזריק משתנים דינמיים אל מחוץ ל-Scope ה"מוגן".
         </div>
 
-        <h2>1. שאלת המחקר</h2>
-        <p>כיצד הקומפיילר, בזמן פריסת ה-Macro בקוד, שומר על גבולות הבידוד של משתנים לקסיקליים בסקופים שונים? והאם ניתן לגרום למשתנים מחוץ למתחם ה-Macro לגלוש אליו ולשנות את מצבו הלוגי?</p>
+        <h2>1. הגדרת הבעיה</h2>
+        <p>השאלה המרכזית שעמדה בבסיס המחקר היא כיצד הקומפיילר מתמודד עם גבולות הבידוד של משתנים לקסיקליים בזמן פריסת מאקרו. מכיוון שמאקרואים משנים קוד לפני יצירת ה-Stack Frame, ניסיתי לבדוק האם מניפולציה בשלב הזה יכולה לגרום למשתנה לדלוף או לשנות את המצב הלוגי שלו בסביבה המקומית.</p>
 
-        <h2>2. הניסוי: בניית ה-Grammar-Aware Fuzzer</h2>
-        <p>קומפיילרים הם מערכות קשיחות; קלט אקראי ייעצר ב-Lexer או ב-Parser על שגיאות תחביר (Syntax). כדי להגיע לבאגים לוגיים עמוקים, נבנה מערך בדיקות אוטומטי (Harness):</p>
+        <h2>2. מתודולוגיית הבדיקה: Grammar-Aware Fuzzing</h2>
+        <p>מכיוון שקומפיילרים קורסים מיד על קלט אקראי בשל שגיאות Syntax, אי אפשר להשתמש ב-Fuzzing מסורתי כדי למצוא באגים לוגיים. לשם כך, נבנה Harness אוטומטי שמתמקד בסמנטיקה:</p>
         <ul>
-            <li><strong>Grammar-Aware Mutation:</strong> ה-Fuzzer ייצר עצי תחביר (AST) חוקיים בלבד מבחינת דקדוק וסוגריים, כדי לאפשר מעבר חלק של שלבי ההידור הראשוניים.</li>
-            <li><strong>Semantic Oracle:</strong> מערך הבדיקה לא התמקד בקריסות זיכרון (Segfaults), אלא באנומליות לוגיות. בתהליך של פינג-פונג מהיר מול המהדר, המערכת עקבה אחרי הפלט (stdout) וסימנה פריצה מושגת ברגע שמשתנה שאמור להיות חסום ומבודד שינה את ערכו עקב פעולת המאקרו – ללא התרעה או שגיאה מצד הקומפיילר.</li>
+            <li><strong>Grammar-Aware Mutation:</strong> ה-Fuzzer הוגדר לייצר עצי תחביר (AST) חוקיים בלבד, תוך שימוש בדקדוק תקני, כדי לצלוח את שלבי ה-Lexing וה-Parsing.</li>
+            <li><strong>Semantic Oracle:</strong> במקום לחפש קריסות (Segfaults), המערכת עקבה אחרי אנומליות לוגיות באמצעות stdout. הפריצה סומנה ברגע שמשתנה בסביבה לקסיקלית סגורה שינה את ערכו בעקבות הרצת המאקרו, מבלי שהקומפיילר יזהה שגיאה או יעצור את ההידור.</li>
         </ul>
 
-        <h2>3. שלושת הממצאים (Vulnerability Primitives) וההשוואה ל-Java Generics</h2>
-        <p>מנגנון הבדיקה הציף פער ארכיטקטוני חריף, במיוחד כאשר משווים אותו למנגנון ה-Wildcards ב-Java Generics, ותחת עקרון PECS עם הביטוי <code>? super T</code>.</p>
-        <p>ב-Java, הקומפיילר פועל בצורה פסימית ומחמירה כדי למנוע כשלים לוגיים בזמן ריצה. אם ישנו ספק לגבי בטיחות הפעולה, הוא יחסום אותה ויזרוק שגיאת קומפילציה. ברשימה המוגדרת כ-<code>List&lt;? super Apple&gt; basket</code>, המהדר מבין שמדובר ברשימה של תפוחים או אבותיו (כמו Fruit או Object). מאחר שהוא אינו יודע מהו הטיפוס המדויק, ניסיון להכניס אובייקט מסוג האב הכללי <code>Fruit</code> באמצעות <code>basket.add(new Fruit())</code> ייחסם מיד בשגיאת קומפילציה, מחשש שמא מדובר בפועל ברשימת תפוחים ספציפית וההכנסה תגרום לזיהום הטיפוסים. בקריאה (get), המהדר יגן על גבולות המשתנה ויאפשר שליפה אך ורק לתוך הטיפוס הכללי והבטוח ביותר – <code>Object</code>.</p>
-        <p>במהדר SBCL, המציאות הפוכה. במקום לנהוג בפסימיות, לחשוש מפני זיהום לוגי ולחסום את הפעולה, המהדר מאפשר מניפולציות compile-time עקומות ללא אימות תקינות מול ה-<code>LEXENV</code> (הסביבה הלקסיקלית האקטיבית). להלן ניתוח וקטורי התקיפה הלוגיים בצירוף דוגמאות הקוד (PoC) שייצר ה-Fuzzer:</p>
+        <h2>3. ממצאים ארכיטקטוניים והשוואה למודל של Java</h2>
+        <p>כדי להבין את מהות הכשל ב-SBCL, שווה להשוות אותו למודל הטיפוסיות ב-Java Generics, ספציפית לעקרון PECS והשימוש ב-<code>? super T</code>.</p>
+        <p>ב-Java, הקומפיילר נוקט בגישה פסימית קשיחה: כל ספק לגבי בטיחות הטיפוסים גורר שגיאת קומפילציה. לדוגמה, ברשימה מסוג <code>List&lt;? super Apple&gt;</code>, הקומפיילר אוסר על הכנסת אובייקט מסוג האב <code>Fruit</code> (דרך <code>add</code>), מכיוון שיש סיכוי שהרשימה מכילה רק תפוחים. ההחמרה הזו נועדה למנוע זיהום של הזיכרון וקריסות בזמן ריצה.</p>
+        <p>ב-SBCL המצב שונה. הקומפיילר לא מוודא את תקינות הפעולה מול הסביבה הלקסיקלית (ה-<code>LEXENV</code>) בזמן הרחבת המאקרו. הדבר איפשר לי לבודד שלושה וקטורי תקיפה שונים:</p>
 
         <h3>וקטור 1: הזרקת קישור דינמי (Dynamic Binding Injection)</h3>
-<p>וקטור זה מנצל כשל לוגי בסדר פעולות עיבוד הנתונים של המהדר (Compilation Pass Order). כדי להבין כיצד פקודת המאקרו מצליחה לשבור את ה-Scope המקומי, נביט בצינור ההידור (Pipeline) של המהדר והיכן נקודת הזיהום מתרחשת:</p>
+        <p>וקטור זה מנצל פער בסדר הפעולות (Pass Order) של הקומפיילר. להלן תרשים הממחיש את שלבי ההידור ואת נקודת הזרקת הקוד:</p>
 
 <div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; direction: ltr; text-align: left;">
   [Step 1: Front-End] Read & Parse (AST Generation)<br>
@@ -60,7 +60,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
   <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs inject-dynamic-binding macro</span><br>
   <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
-  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Global Symbol Table is OVERRIDE immediately!</span><br>
+  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Global Symbol Table is OVERRIDDEN immediately!</span><br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
   [Step 4: Code Generation] Compiler checks Symbol Table for "secret-token"<br>
@@ -71,12 +71,9 @@
   [Step 5: Back-End] Final Assembly/Bytecode generation (Isolation broken)<br>
 </div>
 
-<p><strong>הסבר המנגנון בקצר:</strong><br>
-כפי שניתן לראות בתרשים, בשלב 2 המהדר פועל בצורה תקינה ורושם את המשתנה <code>secret-token</code> כמשתנה מקומי ומבודד (Lexical) בתוך בלוק ה-<code>let</code>. בשלב זה, הערבויות של השפה עדיין מתקיימות.</p>
-
-<p>הכשל מתרחש במעבר לשלב 3 (Macro Expansion). המהדר עוצר את זרימת ההידור הסטנדרטית ומריץ את פונקציית המאקרו. בתוך המאקרו, פקודת ה-<code>proclaim</code> מופעלת ומשנה את ה-Metadata של הסמל <strong>באופן מיידי וגלובלי</strong> בטבלת הסמלים (Global Symbol Table), והופכת אותו ל-<code>SPECIAL</code> (דינמי).</p>
-
-<p>כאשר המהדר מסיים את הרחבת המאקרו ועובר לשלב 4 (Code Generation) כדי לייצר קוד עבור המשך הפונקציה, הוא ניגש לבדוק כיצד לתרגם את הגישה למשתנה <code>secret-token</code>. המהדר מזהה את הדגל הגלובלי החדש שנשתל בשלב 3, מתבלבל סמנטית, ומשנה את ארכיטקטורת הפלט: במקום לייצר הפניה לקסיקלית בטוחה על ה-Stack Frame, הוא מייצר קוד של קישור דינמי (Dynamic Runtime Lookup) מבוסס מחסנית קריאות. גבולות הבידוד של ה-Scope המקומי נמחקו לחלוטין ברמת הבינארי הסופי, וקוד חיצוני יכול כעת לקרוא ולדרוס את המשתנה.</p>
+        <p><strong>מה בעצם קורה כאן?</strong><br>
+        בשלב 2, המהדר רושם את המשתנה <code>secret-token</code> כמשתנה מבודד (Lexical) בתוך בלוק ה-<code>let</code>. אולם בשלב 3, במהלך פריסת המאקרו, פקודת ה-<code>proclaim</code> משנה את המטא-דאטה של הסמל בטבלת הסמלים הגלובלית, ומגדירה אותו כ-<code>SPECIAL</code> (דינמי).</p>
+        <p>כאשר המהדר מגיע לשלב 4 (Code Generation), הוא בוחן שוב את טבלת הסמלים, מזהה את הדגל הגלובלי החדש שנשתל, ומייצר קוד המבצע קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה לקסיקלית מאובטחת. גבולות ה-Scope המקומי נדרסים ברמת הבינארי, וקוד חיצוני יכול כעת לגשת למשתנה.</p>
 
 <pre><code>;; PoC Code: dynamic_binding_attack.lisp
 (defmacro inject-dynamic-binding (var-name)
@@ -92,7 +89,7 @@
 </code></pre>
 
         <h3>וקטור 2: זיהום טבלת הסמלים (Global Symbol Table Pollution)</h3>
-        <p>יצירת מצביעים כפולים או כפייה של מיפוי מחדש באמצעות פונקציית <code>intern</code> בזמן פריסת המאקרו. המהדר נכשל בשמירה על ההפרדה הלוגית (Isolation), ויוצר קישור פנימי דרוס (Collided Reference) בין ה-Global Object Storage לבין ה-Lexical Pointer, מה שמאפשר להדליף ערכים חסומים החוצה (Information Disclosure).</p>
+        <p>שימוש בפונקציית <code>intern</code> במהלך פריסת המאקרו ליצירת מצביעים כפולים. המהדר נכשל בבידוד ההפניות, מה שמוביל ליצירת Reference חופף בין האובייקט הגלובלי למצביע הלקסיקלי. פגיעות זו מובילה להדלפת מידע (Information Disclosure) מתוך סקופים חסומים.</p>
 <pre><code>;; PoC Code: symbol_interning_attack.lisp
 (defmacro pollute-symbol-table (sym-name)
   (let ((global-sym (intern (string sym-name))))
@@ -106,8 +103,8 @@
     ))
 </code></pre>
 
-        <h3>וקטור 3: בלבול מרחבי שמות בין חבילות (Cross-Package Namespace Confusion)</h3>
-        <p>שימוש בטכניקת <code>shadow</code> או מניפולציות של Package Systems מתוך חבילה דינמית שנוצרה ב-Compile-time. הפעולה גורמת לקריסה של ה-Trace שהמהדר מנהל עבור המשתנה המקומי, ומנתבת את הגישה אליו למרחב הציבורי הכללי (<code>cl-user</code>).</p>
+        <h3>וקטור 3: בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
+        <p>על ידי יצירת חבילה (Package) דינמית ב-Compile-time ושימוש בפקודת <code>shadow</code>, ניתן לשבור את טבלת המעקב של הקומפיילר אחר משתנים מקומיים, ולנתב את הגישה אליהם ישירות למרחב הכללי (<code>cl-user</code>).</p>
 <pre><code>;; PoC Code: package_hijack_attack.lisp
 (defmacro hijack-namespace (target-sym)
   (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG" :use '("CL"))))
@@ -120,14 +117,14 @@
     auth-token))
 </code></pre>
 
-        <h2>4. מודל איום (Supply Chain) – למה זה מסוכן?</h2>
-        <p>החולשה אינה דורשת הרשאות מנהל, ומציגה וקטור תקיפה מובהק עבור שרתי בנייה אוטומטיים (CI/CD Pipelines). תוקף יכול לשתול מאקרו זדוני ("Poisoned Macro") בתוך חבילת קוד צד-שלישי. בזמן קומפילציית הפרויקט, המאקרו מופעל בשלב הבנייה, חורג מגבולות הסקופ המבודד שלו, ומסוגל לשלוף או לשכתב משתנים וערכים רגישים של רכיבים אחרים בפרויקט (כמו מפתחות הצפנה או API Tokens) – מבלי לעורר התרעות בזמן הריצה הסטנדרטי.</p>
+        <h2>4. מודל איום: פגיעה בשרשראות אספקה (Supply Chain)</h2>
+        <p>וקטורים מסוג זה מהווים סיכון משמעותי לתשתיות CI/CD. תוקף יכול לפרסם חבילת קוד המכילה "Poisoned Macro". בעת קימפול הפרויקט בשרת ה-Build, המאקרו מופעל, פורץ את גבולות הסקופ שלו, ויכול לגשת למשתנים רגישים (כגון מפתחות API או סודות הצפנה) של רכיבים אחרים בסביבת העבודה, כל זאת ללא זיהוי או קריסה בזמן הריצה השוטף.</p>
 
         <div class="next-steps">
-            <h3 style="margin-top: 0;">🛠️ השלב הבא: ניתוח סטטי ב-IDA Pro (עבודה בעיצומה)</h3>
-            <p>לאחר הוכחת הכשלים הלוגיים באמצעות Black-box Fuzzing, שלב המחקר הנוכחי (Work in Progress) מתמקד בניתוח סטטי של קובץ הבינארי (<code>sbcl.exe</code>) ב-IDA Pro.</p>
-            <p>העבודה מבוצעת באמצעות סקריפטים ב-IDAPython במטרה למפות את ה-Cross-References לפונקציות הניהול של ה-Namespaces, לאתר את פקודות האסמבלי המדויקות שמבצעות את השינוי הבינארי לדגל ה-<code>SPECIAL_FLAG</code> ללא וולידציה, ולהצביע בדיוק על שורות ה-Assembly שמהוות את ה-Root Cause של הכשל המבני.</p>
-            <p><strong>ממצאי ה-Assembly המלאים יעודכנו כאן עם סיום השלב.</strong></p>
+            <h3 style="margin-top: 0;">🛠️ שלב מחקר נוכחי: ניתוח סטטי (IDA Pro)</h3>
+            <p>לאחר אימות הפגיעות ברמת הקוד (Black-box), אני מנתח כעת את קובץ הבינארי של הקומפיילר (<code>sbcl.exe</code>) באמצעות IDA Pro.</p>
+            <p>המטרה היא למפות את ה-Cross-References הרלוונטיים באמצעות סקריפטים ב-IDAPython, לאתר את ההוראות (Assembly Instructions) שמבצעות את השינוי לדגל <code>SPECIAL_FLAG</code> מבלי לבצע וולידציה מול ה-Scope, ולבודד את ה-Root Cause ברמת האסמבלי.</p>
+            <p><strong>תוצאות הניתוח יפורסמו ויצורפו למסמך זה בהמשך.</strong></p>
         </div>
 
     </article>
