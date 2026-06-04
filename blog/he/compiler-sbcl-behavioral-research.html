@@ -30,11 +30,11 @@
     <article>
         <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
         <div class="meta">יולי 2025 | קטגוריה: Vulnerability Research, Compiler Internals</div>
-        <div class="meta" style="color: #ff7b72;">סטטוס: Security-Relevant Behavioral Finding — דווח ל-CERT-IL (מס' 11265) ול-MITRE.</div>
+        <div class="meta" style="color: #ff7b72;">סטטוס: Architectural Behavioral Research — התנהגויות אלו מעוגנות במפרט הרשמי של השפה. הממצאים דווחו ל-CERT-IL (מס׳ 11265) ול-MITRE לתיעוד.</div>
 
         <div class="abstract">
             <strong>תקציר</strong><br>
-            במהלך מחקר Fuzzing על קומפיילר SBCL (שפת LISP), התמקדתי בשלב פריסת המאקרו (Macro Expansion). המטרה הייתה לבחון האם ניתן לשבור את מנגנון ה-Lexical Scoping בזמן קומפילציה. תוך כדי המחקר, ששילב אוטומציה בעזרת AI Agent, זיהיתי התנהגות ארכיטקטונית בעלת השלכות אבטחה, המאפשרת לעקוף את הבידוד הלקסיקלי ולהזריק משתנים דינמיים אל מחוץ ל-Scope ה"מוגן".
+            במהלך מחקר Fuzzing על קומפיילר SBCL (שפת LISP), התמקדתי בשלב פריסת המאקרו (Macro Expansion). המטרה הייתה לבחון כיצד הקומפיילר מגן על גבולות ה-Lexical Scoping בזמן קומפילציה. תוך כדי המחקר, ששילב אוטומציה בעזרת AI Agent, זיהיתי שלוש התנהגויות ארכיטקטוניות המעוגנות במפרט הרשמי של השפה — ואשר בהקשר תקיפה מאפשרות עקיפת בידוד לקסיקלי. ההתנהגויות דווחו ל-CERT-IL ול-MITRE לתיעוד.
         </div>
 
         <h2>1. הגדרת הבעיה</h2>

@@ -30,11 +30,11 @@
     <article>
         <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
         <div class="meta">By Shay Mordechai | July 2025 | Category: Vulnerability Research, Compiler Internals</div>
-        <div class="meta" style="color: #ff7b72;">Status: Security-Relevant Behavioral Finding — Reported to CERT-IL (#11265) and MITRE.</div>
+        <div class="meta" style="color: #ff7b72;">Status: Architectural Behavioral Research — These behaviors are rooted in the official language specification. Findings reported to CERT-IL (#11265) and MITRE for documentation.</div>
 
         <div class="abstract">
             <strong>Executive Summary</strong><br>
-            During a targeted fuzzing research pipeline on the SBCL compiler (LISP), I focused on the Macro Expansion phase. The goal was to investigate whether the Lexical Scoping mechanism could be bypassed at compile-time. Utilizing an AI-assisted automation process, I identified architectural behaviors with severe security implications that allow an attacker to bypass lexical isolation and inject dynamic bindings out of the "protected" scope.
+            During a targeted fuzzing research pipeline on the SBCL compiler (LISP), I focused on the Macro Expansion phase. The goal was to investigate how the compiler enforces lexical isolation boundaries during macro expansion. Using an AI-assisted automation process, I identified three architectural behaviors rooted in the official language specification — behaviors that, in an adversarial context, enable lexical scope isolation bypass. These findings were reported to CERT-IL (#11265) and MITRE for documentation.
         </div>
 
         <h2>1. Problem Definition</h2>
