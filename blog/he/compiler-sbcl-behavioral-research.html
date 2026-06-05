@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</title>
+    <title>Breaking the Compilation Boundary: From Suspected Zero-Day to Common Lisp Trust Model</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.7; color: #c9d1d9; background: #0d1117; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
@@ -26,24 +26,24 @@
     <a href="index.html" class="back-link">← חזרה למאגר המאמרים</a>
 
     <article>
-        <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
+        <h1>Breaking the Compilation Boundary: From Suspected Zero-Day to Common Lisp Trust Model</h1>
         <div class="meta">מאת: שי מרדכי | קטגוריה: Vulnerability Research, Compiler Internals</div>
         <div class="meta" style="color: #ff7b72;">סטטוס: Architectural Behavioral Research — התנהגויות אלו מעוגנות במפרט הרשמי של השפה.</div>
 
         <div class="abstract">
             <strong>תקציר המחקר: מ-Zero Day ל-Trust Model</strong><br>
-            במהלך מחקר Fuzzing סמנטי על קומפיילר SBCL (שפת LISP), זיהיתי שלוש דרכים שונות להפר גבולות לקסיקליים בזמן קומפילציה. בתחילה, לצד קומיטים מחשידים בקוד המקור, הממצאים נראו כמו "Zero-Day" קלאסי של עקיפת בידוד שזכה לתיקון שקט (Silent Patch). אולם, יישום מתודולוגיית "Trust but Verify" ובדיקות דיפרנציאליות הפריכו את ההשערה הראשונית שלי. המסקנה שאליה הגעתי מרתקת הרבה יותר מבאג נקודתי: מדובר בכשל של גבול אבטחתי (Compiler Trust Boundary Failure) המובנה ארכיטקטונית בשפה, אשר פותח דלת למודל תקיפה של Supply Chain Poisoning.
+            כמפתח המגיע מעולמות בעלי טיפוסיות קשיחה כמו Java ו-C#, הנחתי באופן אינטואיטיבי שמשתנה לקסיקלי מהווה גבול בידוד גם בזמן קומפילציה. במהלך מחקר Fuzzing סמנטי על קומפיילר SBCL (שפת LISP), זיהיתי שלושה מנגנונים שעלולים להיראות כהפרת בידוד לקסיקלי למפתחים המגיעים מרקע דומה. בתחילה, לצד קומיטים מחשידים בקוד המקור, הממצאים נראו כמו "Zero-Day" קלאסי של עקיפת בידוד שזכה לתיקון שקט (Silent Patch). אולם, יישום מתודולוגיית "Trust but Verify" ובדיקות דיפרנציאליות הפריכו את ההשערה הראשונית שלי. המסקנה שאליה הגעתי מרתקת הרבה יותר מבאג נקודתי: מדובר בכשל של גבול אבטחתי (Compiler Trust Boundary Failure) המובנה ארכיטקטונית בשפה, אשר פותח דלת למודל תקיפה של Supply Chain Poisoning.
         </div>
 
         <h2>פרק א': ההשערה והווקטורים — אשליית ה-CVE</h2>
-        <p>המחקר החל בשאלה: כיצד הקומפיילר מתמודד עם גבולות הבידוד של משתנים לקסיקליים בזמן פריסת מאקרו (Macro Expansion)? להבדיל משפות קשיחות כמו Java האוכפות בידוד לקסיקלי נוקשה, בניתי Fuzzer סמנטי שהצליח לבודד שלושה וקטורים אבטחתיים ששברו את הבידוד ב-SBCL:</p>
+        <p>המחקר החל בשאלה: כיצד הקומפיילר מתמודד עם גבולות הבידוד של משתנים לקסיקליים בזמן פריסת מאקרו (Macro Expansion)? בניתי Fuzzer סמנטי שבודד שלושה מנגנונים המאפשרים למאקרו להשפיע על סביבת הקומפילציה, בדרכים שעלולות להיראות כהפרת בידוד לקסיקלי מובהקת:</p>
 
-        <h3>1. הזרקת קישור דינמי (Dynamic Binding Injection)</h3>
-        <p>ניצול הפקודה <code>proclaim</code> בתוך המאקרו כדי לדרוס את המטא-דאטה הגלובלי של הסמל, וכפייה על הקומפיילר לייצר קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה למחסנית (Lexical Stack Offset).</p>
+        <h3>1. שינוי מאפייני קישור דינמי (Dynamic Binding Injection)</h3>
+        <p>שימוש בפקודה <code>proclaim</code> בתוך המאקרו כדי לשנות את המטא-דאטה הגלובלי של הסמל, וכפייה על הקומפיילר לייצר קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה מוגנת למחסנית (Lexical Stack Offset).</p>
 <pre><code>;; PoC Code: isolation-bypass-attack
 (defmacro isolation-bypass-attack (target new-value)
   `(progn
-     (proclaim '(special ,target)) ; Injecting dynamic binding at compile-time
+     (proclaim '(special ,target)) ; Altering dynamic binding at compile-time
      (setf ,target ,new-value)))   ; Overriding the lexical value
 
 (defun verify-vulnerability ()
@@ -54,7 +54,7 @@
 </code></pre>
 
         <h3>2. זיהום טבלת הסמלים (Global Symbol Table Pollution)</h3>
-        <p>שימוש ב-<code>intern</code> כדי להשיג מצביע גלובלי למשתנה המקומי המוגן, ושתילת נתונים על גבי ה-Property List שלו (<code>plist</code>), מה שמאפשר חילוץ מידע לסביבה החיצונית.</p>
+        <p>שימוש ב-<code>intern</code> כדי להשיג מצביע גלובלי למשתנה המקומי, ושתילת נתונים על גבי ה-Property List שלו (<code>plist</code>), מה שמאפשר חילוץ מידע לסביבה החיצונית.</p>
 
         <h3>3. בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
         <p>הרצת פקודת <code>shadow</code> מתוך המאקרו שוברת את טבלת המעקב הלקסיקלית ומפנה את המשתנה ממרחב מוגן ל-Namespace ציבורי.</p>
@@ -62,16 +62,16 @@
         <h2>פרק ב': מבחן המציאות — Trust but Verify</h2>
         <p>בשלב זה, נראה היה שיש בידי פגיעות קלאסית. החשד גבר כאשר זיהיתי קומיטים היסטוריים ודחופים בקוד המקור של SBCL (באפריל 2026), כגון הוספת מנגנוני <code>pseudo-atomic</code> סביב פעולות ה-<code>dynbind</code> ב-<code>cell.lisp</code> ושינויים ארכיטקטוניים ב-TLS. זה נראה כמו Silent Patch מושלם.</p>
         
-        <p><strong>אך חוקר אבטחה נמדד ביכולתו להפריך את עצמו.</strong><br>
+        <p><strong style="color: #58a6ff; font-size: 1.1em;">אך חוקר אבטחה נמדד ביכולתו להפריך את עצמו.</strong><br>
         ביצעתי הרצה דיפרנציאלית (Differential Testing): הרצתי את ה-PoCs על גרסת ה-Baseline הישנה (1.4.3) ועל הגרסה החדשה וה"מתוקנת" ביותר. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong></p>
 
-        <p><strong>המסקנה (The Pivot):</strong> ההתנהגות שמצאתי אינה באג תוכנה או פגיעות קוד, אלא <strong>התנהגות ארכיטקטונית By Design המעוגנת במפרט ה-ANSI.</strong> בשפת Lisp, מאקרואים מריצים קוד בזמן קומפילציה (Code is Data), ולכן מותר להם חוקית לעשות מניפולציות עם <code>proclaim</code> או <code>intern</code>. הפאצ'ים המחשידים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון תהליכונים (Thread Safety) ו-GC, ולא נועדו ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
+        <p><strong>המסקנה (The Pivot):</strong> לא מצאתי פגיעות ב-SBCL. מצאתי הנחת אבטחה שגויה לגבי מודל האמון של מאקרואים ב-Common Lisp. ההתנהגות שמצאתי היא <strong>התנהגות ארכיטקטונית By Design המעוגנת במפרט ה-ANSI.</strong> בשפת Lisp, מאקרואים מריצים קוד בזמן קומפילציה, ולכן מותר להם חוקית לעשות מניפולציות עם <code>proclaim</code> או <code>intern</code>. הפאצ'ים המחשידים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
 
         <h2>פרק ג': לסיכום — Compiler Trust Boundary Failure</h2>
-        <p>העובדה שזהו אינו "Zero-Day קלאסי" אינה מורידה מהערך האבטחתי של הממצא, אלא ממקדת אותו בקטגוריה של <strong>Compile-Time Trusted Code Execution Model</strong>. התגלית האמיתית פה היא ש-Common Lisp לא מספקת גבול אבטחתי (Trust Boundary) בין קוד הפרויקט לבין קוד המאקרו שרץ בזמן קומפילציה.</p>
+        <p>התגלית האמיתית פה היא ש-Common Lisp לא מספקת גבול אבטחתי (Trust Boundary) בין קוד הפרויקט לבין קוד המאקרו שרץ בזמן קומפילציה. הסיכון האמיתי הוא הרצת קוד לא אמין בשלב ההידור.</p>
         
         <p><strong>Supply Chain Poisoning:</strong><br>
-        בסביבות CI/CD מודרניות, מפתח שמייבא ספריית צד-שלישי תמימה-למראה עלול להריץ "מאקרו מורעל". המאקרו הזה יכול לנצל את הלוגיקה החוקית שמצאנו כדי לעקוף גבולות לקסיקליים, לחלץ מפתחות או סודות, ולזהם את הסביבה — הכול בזמן ה-Build, מבלי להותיר שום זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST או RASP. במערכות שבהן הקומפיילר מריץ קוד, ההנחה שלקומפיילר יש גבולות אבטחה היא ההונאה הגדולה ביותר.</p>
+        בסביבות CI/CD מודרניות, מפתח המגיע משפות כמו C# או Java עלול להניח בטעות שהסקופ הלקסיקלי מגן עליו, ולייבא ספריית צד-שלישי תמימה-למראה. המאקרו בספריה יכול לנצל את הלוגיקה החוקית שמצאנו כדי לעקוף גבולות לקסיקליים ולחלץ סודות — הכול בזמן ה-Build, מבלי להותיר שום זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST או RASP. מערכות האבטחה מתמקדות בזמן הריצה (Runtime), אך במקרה של קומפיילרים המריצים קוד דינמי, ההתקפה כבר הסתיימה הרבה לפני שהתוכנה בכלל עלתה לאוויר.</p>
     </article>
 </body>
 </html>
