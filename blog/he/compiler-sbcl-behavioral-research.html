@@ -53,8 +53,9 @@
  <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
- [Step 4: Code Generation] Compiler checks Symbol Table<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Generates Dynamic Runtime Lookup!<br>
+ [Step 4: Code Generation]<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Compiler resolves the symbol according to<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the updated compilation environment.<br>
 </div>
 <pre><code>;; Vector 1 PoC
 (defmacro isolation-bypass-attack (target new-value)
@@ -73,7 +74,7 @@
 </code></pre>
 
         <h3>3. בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
-        <p>הרצת פקודת <code>shadow</code> מתוך המאקרו שוברת את טבלת המעקב הלקסיקלית ומפנה את המשתנה ממרחב מוגן ל-Namespace ציבורי.</p>
+        <p>שימוש בפקודת <code>shadow</code> במהלך Macro Expansion מאפשר לשנות את סביבת פתרון הסמלים (Symbol Resolution Environment) באופן שעלול ליצור בלבול בין הנחות המפתח לגבי ה-Scope הלקסיקלי לבין מנגנון ה-Namespace בפועל.</p>
 <pre><code>;; Vector 3 PoC
 (defmacro hijack-namespace (target-sym)
   (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
@@ -85,9 +86,11 @@
         <p>בשלב זה, נראה היה שיש בידי פגיעות קלאסית. החשד גבר כאשר זיהיתי קומיטים היסטוריים ודחופים בקוד המקור של SBCL, כגון הוספת מנגנוני <code>pseudo-atomic</code> סביב פעולות ה-<code>dynbind</code>. זה נראה כמו Silent Patch מושלם.</p>
         
         <p><strong style="color: #58a6ff; font-size: 1.1em;">אך חוקר אבטחה נמדד ביכולתו להפריך את עצמו.</strong><br>
-        ביצעתי הרצה דיפרנציאלית (Differential Testing) על גרסה ישנה וחדשה. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong> המסקנה: ההתנהגות היא By Design ומעוגנת במפרט ה-ANSI. הפאצ'ים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
+        ביצעתי הרצה דיפרנציאלית (Differential Testing) על גרסה ישנה וחדשה. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong></p>
 
-        <h2>פרק ג': לסיכום — Compiler Trust Boundary Failure</h2>
+        <p><strong>המסקנה (The Pivot):</strong> ההתנהגות היא By Design ומעוגנת במפרט ה-ANSI. הפאצ'ים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה. במילים אחרות, ה-Lexical Scope ב-Common Lisp הוא מנגנון סמנטי עבור התוכנית, אך אינו מהווה גבול אבטחתי מול קוד מאקרו שרץ בזמן קומפילציה.</p>
+
+        <h2>פרק ג': לסיכום — When Lexical Scope Is Not a Security Boundary</h2>
         <p>מנקודת מבט של מפתח המגיע משפות בעלות מודל קומפילציה שמרני יותר, ההתנהגות עלולה ליצור תחושת ביטחון שגויה לגבי גבולות הבידוד בזמן Build. למרות שההתנהגות תואמת את מפרט ANSI Common Lisp ואינה מהווה באג ב-SBCL, היא מדגימה כיצד הרצת קוד בזמן קומפילציה יוצרת משטח תקיפה שאינו זוכה בדרך כלל להתייחסות במודלי אבטחה מסורתיים.</p>
         
         <p><strong>Supply Chain Poisoning:</strong><br>
