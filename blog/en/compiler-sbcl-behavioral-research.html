@@ -19,6 +19,9 @@
         .references li { margin-bottom: 10px; font-size: 0.95em; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #58a6ff; text-decoration: none; font-weight: bold; }
         .back-link:hover { text-decoration: underline; }
+        .glossary-box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; margin: 20px 0; }
+        .glossary-box dt { font-weight: bold; color: #58a6ff; margin-top: 10px; }
+        .glossary-box dd { margin-left: 20px; color: #e6edf3; }
     </style>
 </head>
 <body>
@@ -35,6 +38,27 @@
             This research was born from the collision of two seemingly opposing disciplines I studied simultaneously: Reverse Engineering and Compiler Construction.<br><br>
             In RE, while performing binary patching with IDA Pro, I learned how to "break the rules"—for example, persisting a local variable across functions via CPU registers. Conversely, my compiler coursework emphasized the rigid theory of Lexical Scopes, which supposedly guarantee absolute variable isolation. This contradiction sparked my curiosity: <em>Could these strict static rules be bypassed during the compilation phase itself?</em><br><br>
             Utilizing a custom AI-assisted semantic fuzzer, I set out to stress-test the trust boundaries of the SBCL compiler (LISP).
+        </div>
+
+        <h2>Core Concepts: SBCL & Lisp Architectural Glossary</h2>
+        <div class="glossary-box">
+            <p>To understand the mechanics of the isolated vectors, we must clarify the unique vocabulary of Lisp-based environments and runtime systems:</p>
+            <dl>
+                <dt>Lexical Variable</dt>
+                <dd>A variable whose visibility is bound to a strict physical layout in the source tree (such as a <code>let</code> block). The compiler translates this to a static memory location on the stack frame (Stack Offset). Modern software engineers intuitively treat this as a solid security barrier.</dd>
+                
+                <dt>Macro</dt>
+                <dd>Unlike low-level text substitution macros (like in C), a Common Lisp macro is <strong>dynamic code executed by the compiler during compile-time</strong>. It intercepts the Abstract Syntax Tree (AST) and mutates it. Because it evaluates inside the compiler's memory space, it operates as fully privileged Trusted Code.</dd>
+                
+                <dt><code>proclaim</code></dt>
+                <dd>A global administrative configuration function directed at the compiler. Calling it modifies properties globally across the active compilation tree—such as forcing a symbol's binding model to become dynamic (`special`).</dd>
+                
+                <dt><code>intern</code></dt>
+                <dd>In Lisp architectures, variables and functions are handled as memory objects called Symbols. The <code>intern</code> function takes a string and retrieves a direct pointer to its global, single-instance object (Singleton) in the system's core Symbol Table.</dd>
+                
+                <dt><code>shadow</code></dt>
+                <dd>An isolation management feature for packages. It forces the environment to override or hide an imported symbol from a different namespace, generating an identical local instance and altering the compiler's default path routing.</dd>
+            </dl>
         </div>
 
         <h2>Chapter 1: The Hypothesis & Mechanisms</h2>
@@ -74,7 +98,7 @@
 </code></pre>
 
         <h3>3. Cross-Package Namespace Confusion</h3>
-        <p>Using the <code>shadow</code> command during Macro Expansion allows altering the Package Namespace in a way that may contradict the developer's intuitive assumptions regarding the identity of the symbol being resolved at compile-time.</p>
+        <p>Using the <code>shadow</code> function during Macro Expansion allows altering the symbol resolution environment, potentially creating confusion between a developer's assumptions regarding lexical scope and the actual namespace routing mechanism.</p>
 <pre><code>;; Vector 3 PoC
 (defmacro hijack-namespace (target-sym)
   (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
