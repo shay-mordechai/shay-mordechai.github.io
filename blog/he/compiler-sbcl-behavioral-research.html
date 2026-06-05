@@ -26,20 +26,20 @@
     <a href="index.html" class="back-link">← חזרה למאגר המאמרים</a>
 
     <article>
-        <h1>Breaking the Compilation Boundary: Semantic Analysis of the SBCL Runtime</h1>
+        <h1>Breaking the Compilation Boundary: Semantic Fuzzing of the SBCL Runtime</h1>
         <div class="meta">מאת: שי מרדכי | קטגוריה: Vulnerability Research, Compiler Internals</div>
-        <div class="meta" style="color: #ff7b72;">סטטוס: Architectural Behavioral Research — הוכח כהתנהגות ארכיטקטונית By-Design לפי מפרט ANSI.</div>
+        <div class="meta" style="color: #ff7b72;">סטטוס: Architectural Behavioral Research — התנהגויות אלו מעוגנות במפרט הרשמי של השפה.</div>
 
         <div class="abstract">
-            <strong>הקדמה</strong><br>
-            במהלך מחקר Fuzzing על קומפיילר SBCL (שפת LISP), התמקדתי בשלב פריסת המאקרו (Macro Expansion). השאלה המרכזית שעמדה בבסיס המחקר היא כיצד הקומפיילר מתמודד עם גבולות הבידוד של משתנים לקסיקליים בזמן קומפילציה. מכיוון שמאקרואים משנים קוד לפני יצירת ה-Stack Frame, ניסיתי לבדוק האם מניפולציה בשלב הזה יכולה לגרום למשתנה רגיש לדלוף או לשנות את המצב הלוגי שלו בסביבה המקומית המבודדת.
+            <strong>תקציר המחקר: מ-Zero Day ל-Trust Model</strong><br>
+            במהלך מחקר Fuzzing סמנטי על קומפיילר SBCL (שפת LISP), זיהיתי שלוש דרכים שונות להפר גבולות לקסיקליים בזמן קומפילציה. בתחילה, לצד קומיטים מחשידים בקוד המקור, הממצאים נראו כמו "Zero-Day" קלאסי של עקיפת בידוד שזכה לתיקון שקט (Silent Patch). אולם, יישום מתודולוגיית "Trust but Verify" ובדיקות דיפרנציאליות הפריכו את ההשערה הראשונית שלי. המסקנה שאליה הגעתי מרתקת הרבה יותר מבאג נקודתי: מדובר בכשל של גבול אבטחתי (Compiler Trust Boundary Failure) המובנה ארכיטקטונית בשפה, אשר פותח דלת למודל תקיפה של Supply Chain Poisoning.
         </div>
 
-        <h2>פרק א': שאלת המחקר והחולשות (The Three Vectors)</h2>
-        <p>בעוד שקומפיילרים כמו Java אוכפים גבולות Strict Lexical Scoping (למשל, מונעים גישה ממשתנה פרטי לפומבי בגלל חוסר התאמה טיפוסית או היקפית), SBCL מתייחס ל-<code>LEXENV</code> (הסביבה הלקסיקלית) בצורה שונה לחלוטין. מצאתי שלושה וקטורים שדרכם מאקרו יכול לשבור את הבידוד הלקסיקלי בעת הקימפול:</p>
+        <h2>פרק א': ההשערה והווקטורים — אשליית ה-CVE</h2>
+        <p>המחקר החל בשאלה: כיצד הקומפיילר מתמודד עם גבולות הבידוד של משתנים לקסיקליים בזמן פריסת מאקרו (Macro Expansion)? להבדיל משפות קשיחות כמו Java האוכפות בידוד לקסיקלי נוקשה, בניתי Fuzzer סמנטי שהצליח לבודד שלושה וקטורים אבטחתיים ששברו את הבידוד ב-SBCL:</p>
 
         <h3>1. הזרקת קישור דינמי (Dynamic Binding Injection)</h3>
-        <p>הוקטור מנצל פקודת <code>proclaim</code> בתוך המאקרו כדי לדרוס את המטא-דאטה הגלובלי של הסמל. הקומפיילר נכפה להחליף את הכתובת הבטוחה של המשתנה הלקסיקלי (Lexical Stack Offset) בקריאה דינמית פתוחה (Dynamic Runtime Lookup).</p>
+        <p>ניצול הפקודה <code>proclaim</code> בתוך המאקרו כדי לדרוס את המטא-דאטה הגלובלי של הסמל, וכפייה על הקומפיילר לייצר קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה למחסנית (Lexical Stack Offset).</p>
 <pre><code>;; PoC Code: isolation-bypass-attack
 (defmacro isolation-bypass-attack (target new-value)
   `(progn
@@ -53,31 +53,25 @@
         (format t "[!] VULNERABILITY CONFIRMED~%"))))
 </code></pre>
 
-        <h3>2. זיהום טבלת הסמלים הגלובלית (Global Symbol Table Pollution)</h3>
-        <p>שימוש בפונקציית <code>intern</code> מאפשר למאקרו להשיג מצביע לאובייקט הסמל הגלובלי המייצג את המשתנה המקומי. דרכו ניתן לשתול מידע ברשימת התכונות (<code>plist</code>), ולמעשה לחלץ מידע מתוך הסקופ הלקסיקלי אל המרחב הגלובלי.</p>
-<pre><code>;; PoC Code: symbol_interning_attack
-(defmacro pollute-symbol-table (sym-name)
-  (let ((global-sym (intern (string sym-name))))
-    (setf (get global-sym 'compromised-leak) t)
-    `(quote ,global-sym)))
-</code></pre>
+        <h3>2. זיהום טבלת הסמלים (Global Symbol Table Pollution)</h3>
+        <p>שימוש ב-<code>intern</code> כדי להשיג מצביע גלובלי למשתנה המקומי המוגן, ושתילת נתונים על גבי ה-Property List שלו (<code>plist</code>), מה שמאפשר חילוץ מידע לסביבה החיצונית.</p>
 
         <h3>3. בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
-        <p>יצירת Package זמני והפעלת פקודת <code>shadow</code> על שם המשתנה מסיתה את הקומפיילר מנתיב הניתוב הלגיטימי שלו למשתנה המקומי, ומפנה אותו למרחב שמות פומבי.</p>
+        <p>הרצת פקודת <code>shadow</code> מתוך המאקרו שוברת את טבלת המעקב הלקסיקלית ומפנה את המשתנה ממרחב מוגן ל-Namespace ציבורי.</p>
 
         <h2>פרק ב': מבחן המציאות — Trust but Verify</h2>
-        <p>לכאורה, הממצאים הללו (לצד סדרת קומיטים שדחפו מפתחי SBCL באפריל 2026, כגון שינויים ב-<code>cell.lisp</code> ו-<code>dynbind</code>) נראו כמו Zero-Day קלאסי של Scope Bypass, שאף זכה לתיקון שקט (Silent Patch).</p>
-        <p>אך על פי עיקרון <strong>"Trust but Test and Verify"</strong>, ביצעתי בדיקה דיפרנציאלית. הרצתי את ה-PoC הן על גרסת Baseline ישנה (1.4.3) והן על הגרסה המודרנית וה"מתוקנת" ביותר. <strong>התוצאה: ה-PoC עבד בשתיהן. הפגיעות שוחזרה במלואה.</strong></p>
+        <p>בשלב זה, נראה היה שיש בידי פגיעות קלאסית. החשד גבר כאשר זיהיתי קומיטים היסטוריים ודחופים בקוד המקור של SBCL (באפריל 2026), כגון הוספת מנגנוני <code>pseudo-atomic</code> סביב פעולות ה-<code>dynbind</code> ב-<code>cell.lisp</code> ושינויים ארכיטקטוניים ב-TLS. זה נראה כמו Silent Patch מושלם.</p>
         
-        <p><strong>הניתוח הארכיטקטוני: באג או פיצ'ר?</strong><br>
-        העובדה שההתנהגות נשמרה מוכיחה שזו אינה חולשת קוד (Bug), אלא <strong>התנהגות ארכיטקטונית המוגדרת במפרט (ANSI Common Lisp Specification)</strong>. בשפת Lisp, "קוד הוא מידע" (Code is Data). מאקרו שמורץ בזמן קומפילציה נחשב לקוד אמין (Trusted Code) ופועל בהרשאות מלאות. הפקודה <code>proclaim</code> עושה בדיוק את מה שהתקן דורש ממנה — משנה את הסביבה הגלובלית.</p>
-        <p>מה לגבי הפאצ'ים שנמצאו? ניתוח ה-Diffs העלה שההוספה של <code>pseudo-atomic</code> מסביב ל-<code>dynbind</code> נועדה לפתור בעיות סנכרון תהליכונים (Thread Safety) ואתמות ה-Garbage Collector (GC Correctness), ולא למנוע ממאקרו לשנות קישור דינמי.</p>
+        <p><strong>אך חוקר אבטחה נמדד ביכולתו להפריך את עצמו.</strong><br>
+        ביצעתי הרצה דיפרנציאלית (Differential Testing): הרצתי את ה-PoCs על גרסת ה-Baseline הישנה (1.4.3) ועל הגרסה החדשה וה"מתוקנת" ביותר. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong></p>
 
-        <h2>פרק ג': לסיכום (The Supply Chain Risk)</h2>
-        <p>העובדה שזהו אינו "Zero-Day קלאסי" אינה מורידה מחומרת הסיכון, אלא ממקמת אותו כ<strong>מודל איום מודרני של Supply Chain Poisoning (הרעלת שרשרת אספקה) בזמן קומפילציה.</strong></p>
-        <p>מכיוון שהקומפיילר אינו משמש כ-Sandbox אבטחתי, מפתח המייבא ספריית צד-שלישי תמימה-למראה עלול להריץ "מאקרו מורעל" בזמן ה-Build. המאקרו הזה יכול לעקוף גבולות לקסיקליים, לחלץ מפתחות API מקומיים (Hardcoded), ולשבש את סביבת הריצה – הכול בשלב ההידור, מבלי להותיר עקבות בקוד הבינארי הסופי שיזוהו על ידי כלי DAST. המחקר מוכיח שוב: בסביבות שבהן הקומפיילר מריץ קוד דינמי, הגבול בין שלב הפיתוח לזמן הריצה הוא אשליה בלבד.</p>
+        <p><strong>המסקנה (The Pivot):</strong> ההתנהגות שמצאתי אינה באג תוכנה או פגיעות קוד, אלא <strong>התנהגות ארכיטקטונית By Design המעוגנת במפרט ה-ANSI.</strong> בשפת Lisp, מאקרואים מריצים קוד בזמן קומפילציה (Code is Data), ולכן מותר להם חוקית לעשות מניפולציות עם <code>proclaim</code> או <code>intern</code>. הפאצ'ים המחשידים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון תהליכונים (Thread Safety) ו-GC, ולא נועדו ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
 
+        <h2>פרק ג': לסיכום — Compiler Trust Boundary Failure</h2>
+        <p>העובדה שזהו אינו "Zero-Day קלאסי" אינה מורידה מהערך האבטחתי של הממצא, אלא ממקדת אותו בקטגוריה של <strong>Compile-Time Trusted Code Execution Model</strong>. התגלית האמיתית פה היא ש-Common Lisp לא מספקת גבול אבטחתי (Trust Boundary) בין קוד הפרויקט לבין קוד המאקרו שרץ בזמן קומפילציה.</p>
+        
+        <p><strong>Supply Chain Poisoning:</strong><br>
+        בסביבות CI/CD מודרניות, מפתח שמייבא ספריית צד-שלישי תמימה-למראה עלול להריץ "מאקרו מורעל". המאקרו הזה יכול לנצל את הלוגיקה החוקית שמצאנו כדי לעקוף גבולות לקסיקליים, לחלץ מפתחות או סודות, ולזהם את הסביבה — הכול בזמן ה-Build, מבלי להותיר שום זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST או RASP. במערכות שבהן הקומפיילר מריץ קוד, ההנחה שלקומפיילר יש גבולות אבטחה היא ההונאה הגדולה ביותר.</p>
     </article>
-
 </body>
 </html>
