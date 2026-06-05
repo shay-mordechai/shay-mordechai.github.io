@@ -31,12 +31,14 @@
         <div class="meta" style="color: #ff7b72;">Status: Architectural Behavioral Research — Proven to be a By-Design trait per ANSI Specs.</div>
 
         <div class="abstract">
-            <strong>Executive Summary: From Zero-Day to Trust Model Analysis</strong><br>
-            Coming from stricter development environments like Java or C#, I intuitively assumed that a lexical variable provides an isolation boundary even at compile-time. During a semantic fuzzing research pipeline on the SBCL compiler (LISP), I identified three mechanisms allowing a macro to influence the compilation environment in ways that might appear as lexical isolation breaches. Initially, coupled with suspicious Git commits, this appeared to be a classic "Zero-Day" Lexical Scope Bypass accompanied by a Silent Patch. However, applying a strict "Trust but Verify" methodology through differential testing refuted my initial hypothesis. The resulting conclusion is far more fascinating than a simple software bug: It exposes a false security assumption regarding the Compiler Trust Boundary, paving the way for sophisticated Supply Chain Poisoning attacks.
+            <strong>Introduction: The Collision of Theory and Reality</strong><br>
+            This research was born from the collision of two seemingly opposing disciplines I studied simultaneously: Reverse Engineering and Compiler Construction (specifically during a `nand2tetris` course where I built a compiler in Raku).<br><br>
+            In RE, while performing binary patching with IDA Pro, I learned how to "break the rules"—for example, persisting a local variable from Function A into Function B via CPU registers. Conversely, my compiler coursework emphasized the rigid theory of Lexical Scopes, which supposedly guarantee absolute variable isolation. This contradiction sparked my curiosity: <em>Could these strict static rules be bypassed during the compilation phase itself?</em><br><br>
+            This question intensified as I researched Meta-programming and Macro capabilities across various languages. The core question became: If a macro executes and manipulates code at compile-time—long before the runtime stack is ever allocated—is that static lexical boundary truly bulletproof? Utilizing a custom AI-assisted semantic fuzzer, I set out to stress-test the trust boundaries of the SBCL compiler (LISP).
         </div>
 
         <h2>Chapter 1: The Hypothesis & Mechanisms</h2>
-        <p>Unlike strictly typed compilers that rigidly enforce lexical boundaries, my semantic fuzzer successfully isolated three mechanisms where SBCL permitted macros to bypass local environment (<code>LEXENV</code>) protections during the macro expansion phase:</p>
+        <p>Coming from stricter development environments like Java or C#, I intuitively assumed that a lexical variable provides an isolation boundary even at compile-time. However, my semantic fuzzer successfully isolated three mechanisms where SBCL permitted macros to bypass local environment (<code>LEXENV</code>) protections during the macro expansion phase:</p>
 
         <h3>1. Dynamic Binding Modification</h3>
         <p>Utilizing the <code>proclaim</code> directive within a macro to alter the target symbol's metadata flag in the global symbol table. The compiler is subsequently forced to emit a Dynamic Runtime Lookup instruction instead of a secure Lexical Stack Offset.</p>
