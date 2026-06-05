@@ -27,8 +27,8 @@
 
     <article>
         <h1>Breaking the Compilation Boundary: From Suspected Zero-Day to Common Lisp Trust Model</h1>
-        <div class="meta">מאת: שי מרדכי | קטגוריה: Vulnerability Research, Compiler Internals</div>
-        <div class="meta" style="color: #ff7b72;">סטטוס: Architectural Behavioral Research — התנהגויות אלו מעוגנות במפרט הרשמי של השפה.</div>
+        <div class="meta">מאת: שי מרדכי | תאריך פרסום: 5 ביוני 2026 (המחקר בוצע ב-31 ביולי 2025) | קטגוריה: Vulnerability Research, Compiler Internals</div>
+        <div class="meta" style="color: #ff7b72;">סטטוס: דווח ל-CERT-IL (11265) ול-MITRE לצורכי תיעוד ובחינת סיווג. נכון למועד כתיבת המאמר לא הוכרה פגיעות CVE.</div>
 
         <div class="abstract">
             <strong>הקדמה: ההתנגשות בין התיאוריה למציאות</strong><br>
@@ -74,7 +74,7 @@
 </code></pre>
 
         <h3>3. בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
-        <p>שימוש בפקודת <code>shadow</code> במהלך Macro Expansion מאפשר לשנות את סביבת פתרון הסמלים (Symbol Resolution Environment) באופן שעלול ליצור בלבול בין הנחות המפתח לגבי ה-Scope הלקסיקלי לבין מנגנון ה-Namespace בפועל.</p>
+        <p>שימוש בפקודת <code>shadow</code> במהלך Macro Expansion מאפשר לשנות את מרחב השמות (Package Namespace) באופן שעלול לסתור את ההנחות האינטואיטיביות של המפתח לגבי זהות הסמל הנפתר בזמן קומפילציה.</p>
 <pre><code>;; Vector 3 PoC
 (defmacro hijack-namespace (target-sym)
   (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
@@ -96,7 +96,7 @@
         <p><strong>Supply Chain Poisoning:</strong><br>
         בסביבות CI/CD מודרניות, מפתח המייבא ספריית צד-שלישי תמימה-למראה עלול לאפשר למאקרו מורעל לשאוב מפתחות API מקומיים (Hardcoded) בזמן ה-Build, מבלי להותיר זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST.</p>
         
-        <p>ראוי לציין כי במהלך המחקר לא מצאתי בתיעוד הרשמי של SBCL התייחסות מפורשת למאקרואים כאל Trusted Code Boundary או אזהרה המכוונת למפתחים המגיעים משפות בעלות מודל קומפילציה שונה. התגלית האמיתית פה היא שלא מצאתי פגיעות בקומפיילר, אלא חשפתי הנחת אבטחה שגויה סביב מודל האמון של מאקרואים בעולם ה-Supply Chain.</p>
+        <p>המחקר לא חשף חולשת מימוש ב-SBCL, אלא פער בין הציפיות שמפתחים מביאים משפות מודרניות בעלות מודל קומפילציה שמרני לבין מודל האמון של Common Lisp. עבור מי שמגיע מעולמות Java, C# או Rust, עצם העובדה שמאקרו יכול להריץ קוד בעל השפעה גלובלית בזמן קומפילציה אינה אינטואיטיבית. הערך המחקרי כאן אינו בהוכחת CVE, אלא בהבהרת הגבול שבו Lexical Scope מפסיק להיות מנגנון בידוד והופך להיות מושג סמנטי בלבד.</p>
     </article>
 </body>
 </html>
