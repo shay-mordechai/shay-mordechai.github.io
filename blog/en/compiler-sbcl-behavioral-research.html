@@ -38,29 +38,62 @@
         </div>
 
         <h2>Chapter 1: The Hypothesis & Mechanisms</h2>
-        <p>Coming from stricter development environments like Java or C#, I intuitively assumed that a lexical variable provides an isolation boundary even at compile-time. However, my semantic fuzzer successfully isolated three mechanisms where SBCL permitted macros to bypass local environment protections:</p>
+        <p>Coming from stricter development environments like Java or C#, I intuitively assumed that a lexical variable provides an isolation boundary even at compile-time. However, my semantic fuzzer successfully isolated three mechanisms where macros could influence the compilation environment in ways that might appear as clear lexical isolation breaches:</p>
 
         <h3>1. Dynamic Binding Modification</h3>
-        <p>Utilizing the <code>proclaim</code> directive within a macro to alter the target symbol's metadata flag in the global symbol table. The compiler is subsequently forced to emit a Dynamic Runtime Lookup instruction instead of a secure Lexical Stack Offset.</p>
+        <p>Utilizing the <code>proclaim</code> directive within a macro to alter the target symbol's metadata flag, forcing the compiler to emit a Dynamic Runtime Lookup instruction instead of a secure Lexical Stack Offset.</p>
+<div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; text-align: left;">
+ [Step 1: Front-End] Read & Parse (AST Generation)<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ [Step 2: Lexical Analysis] Register "secret-token" as LOCAL in LEXENV<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs macro modifying global state</span><br>
+ <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ [Step 4: Code Generation] Compiler checks Symbol Table<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Generates Dynamic Runtime Lookup!<br>
+</div>
+<pre><code>;; Vector 1 PoC
+(defmacro isolation-bypass-attack (target new-value)
+  `(progn
+     (proclaim '(special ,target))
+     (setf ,target ,new-value)))
+</code></pre>
 
         <h3>2. Global Symbol Table Pollution</h3>
         <p>Using the <code>intern</code> function grants the macro a direct public pointer to the global symbol object representing the local variable, allowing property list (<code>plist</code>) mutation and data exfiltration.</p>
+<pre><code>;; Vector 2 PoC
+(defmacro pollute-symbol-table (sym-name)
+  (let ((global-sym (intern (string sym-name))))
+    (setf (get global-sym 'compromised-leak) t)
+    `(quote ,global-sym)))
+</code></pre>
 
         <h3>3. Cross-Package Namespace Confusion</h3>
         <p>Executing <code>make-package</code> and the <code>shadow</code> function during macro expansion derails the compiler’s namespace routing.</p>
+<pre><code>;; Vector 3 PoC
+(defmacro hijack-namespace (target-sym)
+  (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
+    (shadow (string target-sym) shadow-pkg)
+    nil))
+</code></pre>
 
         <h2>Chapter 2: Reality Check — Trust but Verify</h2>
-        <p>At this stage, this looked like a severe CVE. This suspicion was heavily amplified when I discovered a series of urgent commits pushed to the SBCL codebase (circa April 2026), implementing <code>pseudo-atomic</code> constraints around <code>dynbind</code> operations. It strongly resembled a classic Silent Patch.</p>
+        <p>At this stage, this looked like a severe CVE. This suspicion was heavily amplified when I discovered a series of urgent commits pushed to the SBCL codebase, implementing <code>pseudo-atomic</code> constraints around <code>dynbind</code> operations. It strongly resembled a classic Silent Patch.</p>
         
         <p><strong style="color: #58a6ff; font-size: 1.1em;">However, a security researcher is measured by their ability to falsify their own theories.</strong><br>
-        I conducted Differential Testing, running the exact Proof-of-Concepts on both a legacy baseline and the most modern master branch. The result was unequivocal: <strong>The PoC successfully bypassed the scope on both versions.</strong> The behavior is an <strong>Architectural By-Design feature dictated by the ANSI Common Lisp Specification</strong>. The suspicious historical patches were actually engineered to resolve Thread Safety synchronization issues, not to construct a security sandbox.</p>
+        I conducted Differential Testing, running the exact Proof-of-Concepts on both a legacy baseline and the most modern master branch. The result was unequivocal: <strong>The PoC successfully bypassed the scope on both versions.</strong> The behavior is a By-Design feature dictated by the ANSI Common Lisp Specification. The suspicious historical patches were actually engineered to resolve Thread Safety synchronization issues, not to construct a security sandbox.</p>
 
-        <h2>Chapter 3: Why is this a Security Issue and not just a Feature?</h2>
-        <p>If the language specification permits this behavior, where is the vulnerability? The vulnerability lies not in the <code>proclaim</code> command itself, but in the <strong>Failure to Warn and the resulting False Sense of Security.</strong></p>
+        <h2>Chapter 3: Conclusion — Compiler Trust Boundary Failure</h2>
+        <p>From the perspective of a developer coming from languages with a more conservative compilation model, this behavior can create a false sense of security regarding isolation boundaries during the Build phase. Although the behavior conforms to the ANSI Common Lisp specification and does not constitute a bug in SBCL, it demonstrates how executing code at compile-time creates an attack surface that is generally overlooked in traditional security models.</p>
         
-        <p>Common Lisp provides zero security boundary between project source code and macro execution at compile-time. In modern CI/CD pipelines, a developer coming from Java/C# might incorrectly assume lexical scope provides absolute isolation during compilation. By importing a seemingly benign third-party library, a malicious macro can break lexical isolation and exfiltrate hardcoded API keys—all during the compilation phase, leaving no trace in the resulting binary.</p>
+        <p><strong>Supply Chain Poisoning Risk:</strong><br>
+        In modern CI/CD pipelines, a developer importing a seemingly benign third-party library could enable a poisoned macro to exfiltrate hardcoded local API keys during the build phase, leaving no trace in the resulting binary for Dynamic Application Security Testing (DAST) tools to detect.</p>
 
-        <p>This attack vector is entirely invisible to standard runtime security tools (DAST/RASP), as the exploit concludes before the software is ever deployed. Furthermore, the official SBCL documentation contains zero security warnings regarding compile-time environment poisoning. In vulnerability classification, this lack of boundary enforcement and failure to warn aligns seamlessly with <strong>CWE-693 (Protection Mechanism Failure)</strong> and <strong>CWE-668 (Exposure of Resource to Wrong Sphere)</strong>.</p>
+        <p>It is worth noting that during the research, I did not find any explicit reference in the official SBCL documentation treating macros as a Trusted Code Boundary, nor any warnings directed at developers arriving from different compilation models. The true discovery here is not a vulnerability within the compiler itself, but the exposure of a flawed security assumption surrounding the trust model of macros in the Supply Chain ecosystem.</p>
     </article>
 
 </body>

@@ -40,27 +40,60 @@
         <h2>פרק א': ההשערה והווקטורים — אשליית ה-CVE</h2>
         <p>כמפתח המגיע מעולמות בעלי טיפוסיות קשיחה כמו Java ו-C#, הנחתי באופן אינטואיטיבי שמשתנה לקסיקלי מהווה גבול בידוד גם בזמן קומפילציה. אולם, ה-Fuzzer הסמנטי בודד שלושה מנגנונים המאפשרים למאקרו להשפיע על סביבת הקומפילציה, בדרכים שעלולות להיראות כהפרת בידוד לקסיקלי מובהקת:</p>
 
-        <h3>1. שינוי מאפייני קישור דינמי (Dynamic Binding Injection)</h3>
+        <h3>1. שינוי מאפייני קישור דינמי (Dynamic Binding Modification)</h3>
         <p>שימוש בפקודה <code>proclaim</code> בתוך המאקרו כדי לשנות את המטא-דאטה הגלובלי של הסמל, וכפייה על הקומפיילר לייצר קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה מוגנת למחסנית.</p>
+<div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; direction: ltr; text-align: left;">
+ [Step 1: Front-End] Read & Parse (AST Generation)<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ [Step 2: Lexical Analysis] Register "secret-token" as LOCAL in LEXENV<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs macro modifying global state</span><br>
+ <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
+ [Step 4: Code Generation] Compiler checks Symbol Table<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Generates Dynamic Runtime Lookup!<br>
+</div>
+<pre><code>;; Vector 1 PoC
+(defmacro isolation-bypass-attack (target new-value)
+  `(progn
+     (proclaim '(special ,target))
+     (setf ,target ,new-value)))
+</code></pre>
 
         <h3>2. זיהום טבלת הסמלים (Global Symbol Table Pollution)</h3>
-        <p>שימוש ב-<code>intern</code> כדי להשיג מצביע גלובלי למשתנה המקומי, ושתילת נתונים על גבי ה-Property List שלו (<code>plist</code>), מה שמאפשר חילוץ מידע לסביבה החיצונית.</p>
+        <p>שימוש ב-<code>intern</code> כדי להשיג מצביע גלובלי למשתנה המקומי, ושתילת נתונים על גבי ה-Property List שלו, מה שמאפשר חילוץ מידע לסביבה החיצונית.</p>
+<pre><code>;; Vector 2 PoC
+(defmacro pollute-symbol-table (sym-name)
+  (let ((global-sym (intern (string sym-name))))
+    (setf (get global-sym 'compromised-leak) t)
+    `(quote ,global-sym)))
+</code></pre>
 
         <h3>3. בלבול מרחבי שמות (Cross-Package Namespace Confusion)</h3>
         <p>הרצת פקודת <code>shadow</code> מתוך המאקרו שוברת את טבלת המעקב הלקסיקלית ומפנה את המשתנה ממרחב מוגן ל-Namespace ציבורי.</p>
+<pre><code>;; Vector 3 PoC
+(defmacro hijack-namespace (target-sym)
+  (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
+    (shadow (string target-sym) shadow-pkg)
+    nil))
+</code></pre>
 
         <h2>פרק ב': מבחן המציאות — Trust but Verify</h2>
         <p>בשלב זה, נראה היה שיש בידי פגיעות קלאסית. החשד גבר כאשר זיהיתי קומיטים היסטוריים ודחופים בקוד המקור של SBCL, כגון הוספת מנגנוני <code>pseudo-atomic</code> סביב פעולות ה-<code>dynbind</code>. זה נראה כמו Silent Patch מושלם.</p>
         
         <p><strong style="color: #58a6ff; font-size: 1.1em;">אך חוקר אבטחה נמדד ביכולתו להפריך את עצמו.</strong><br>
-        ביצעתי הרצה דיפרנציאלית (Differential Testing) על גרסה ישנה וחדשה. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong> המסקנה (The Pivot): ההתנהגות היא ארכיטקטונית By Design המעוגנת במפרט ה-ANSI. הפאצ'ים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
+        ביצעתי הרצה דיפרנציאלית (Differential Testing) על גרסה ישנה וחדשה. התוצאה הייתה חד-משמעית: <strong>הפגיעות עבדה בשתי הגרסאות ללא דופי.</strong> המסקנה: ההתנהגות היא By Design ומעוגנת במפרט ה-ANSI. הפאצ'ים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה.</p>
 
-        <h2>פרק ג': לסיכום — למה זה Security Issue ולא Feature?</h2>
-        <p>השאלה המתבקשת היא: אם המפרט מתיר זאת, היכן הפגיעות? התשובה היא שהפגיעות אינה פעולת הפקודה עצמה, אלא <strong>היעדר אזהרה והיווצרות תחושת ביטחון שקרית (False Sense of Security).</strong></p>
+        <h2>פרק ג': לסיכום — Compiler Trust Boundary Failure</h2>
+        <p>מנקודת מבט של מפתח המגיע משפות בעלות מודל קומפילציה שמרני יותר, ההתנהגות עלולה ליצור תחושת ביטחון שגויה לגבי גבולות הבידוד בזמן Build. למרות שההתנהגות תואמת את מפרט ANSI Common Lisp ואינה מהווה באג ב-SBCL, היא מדגימה כיצד הרצת קוד בזמן קומפילציה יוצרת משטח תקיפה שאינו זוכה בדרך כלל להתייחסות במודלי אבטחה מסורתיים.</p>
         
-        <p>התגלית האמיתית היא ש-Common Lisp לא מספקת גבול אבטחתי (Trust Boundary) בין קוד הפרויקט לבין קוד המאקרו שרץ בזמן קומפילציה. בסביבות CI/CD מודרניות, מפתח המגיע משפות כמו C# עלול להניח בטעות שהסקופ הלקסיקלי מגן עליו, ולייבא ספריית צד-שלישי תמימה-למראה. המאקרו יכול לנצל את הלוגיקה החוקית כדי לעקוף גבולות לקסיקליים ולחלץ סודות (API Keys) — הכול בזמן ה-Build, מבלי להותיר שום זכר בקוד הבינארי הסופי.</p>
+        <p><strong>Supply Chain Poisoning:</strong><br>
+        בסביבות CI/CD מודרניות, מפתח המייבא ספריית צד-שלישי תמימה-למראה עלול לאפשר למאקרו מורעל לשאוב מפתחות API מקומיים (Hardcoded) בזמן ה-Build, מבלי להותיר זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST.</p>
         
-        <p>הסכנה הזו חומקת לחלוטין מכלי אבטחה מודרניים (DAST/RASP) שבודקים רק את זמן הריצה. בנוסף, התיעוד הרשמי של SBCL חסר כל אזהרת אבטחה בנושא (Failure to Warn). מבחינת סיווג פגיעויות, חוסר האכיפה הארכיטקטוני והיעדר התיעוד נופלים תחת הקטגוריות של <strong>CWE-693 (Protection Mechanism Failure)</strong> ו-<strong>CWE-668 (Exposure of Resource to Wrong Sphere)</strong>.</p>
+        <p>ראוי לציין כי במהלך המחקר לא מצאתי בתיעוד הרשמי של SBCL התייחסות מפורשת למאקרואים כאל Trusted Code Boundary או אזהרה המכוונת למפתחים המגיעים משפות בעלות מודל קומפילציה שונה. התגלית האמיתית פה היא שלא מצאתי פגיעות בקומפיילר, אלא חשפתי הנחת אבטחה שגויה סביב מודל האמון של מאקרואים בעולם ה-Supply Chain.</p>
     </article>
 </body>
 </html>
