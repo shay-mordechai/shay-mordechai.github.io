@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Dive: Linux Internals & Hibernation on Immutable OSTree Systems</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.7; color: #c9d1d9; background: #0d1117; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        h1, h2, h3 { color: #ffffff; }
+        h1 { border-bottom: 2px solid #30363d; padding-bottom: 10px; margin-bottom: 5px; }
+        .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; font-family: monospace; }
+        .abstract { background: #161b22; border-right: 4px solid #58a6ff; padding: 15px 20px; margin: 20px 0; border-radius: 4px; }
+        code { background: #1f2428; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; color: #bc8cff; direction: ltr; display: inline-block;}
+        pre { background: #161b22; padding: 15px; border-radius: 6px; border: 1px solid #30363d; overflow-x: auto; direction: ltr; text-align: left; }
+        pre code { background: none; padding: 0; color: #e6edf3; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #58a6ff; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        
+        /* Blur Effect Styles */
+        .blur-wrapper {
+            position: relative;
+            margin-top: 40px;
+        }
+        .blur-content {
+            filter: blur(6px);
+            opacity: 0.3;
+            pointer-events: none;
+            user-select: none;
+        }
+        .coming-soon-overlay {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0d1117;
+            border: 2px solid #58a6ff;
+            color: #ffffff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            width: 80%;
+            max-width: 500px;
+        }
+        .coming-soon-overlay h2 { margin-top: 0; color: #58a6ff; font-size: 1.8em; }
+        .coming-soon-overlay p { margin-bottom: 0; font-size: 1.1em; color: #c9d1d9; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">← חזרה למאגר המאמרים</a>
+
+    <article>
+        <h1>Linux Internals: Bridging the Hibernation Gap on Immutable OSTree Systems</h1>
+        <div class="meta">מאת: שי מרדכי | תאריך פרסום: 5 ביוני 2026 | קטגוריה: OS Architecture, Linux Internals, AI-Augmented Research</div>
+
+        <div class="abstract">
+            <strong>הקדמה: קוד שעובד זה לא מספיק</strong><br>
+            בדצמבר 2025, לאחר המעבר ללינוקס, התגעגעתי מאוד לפיצ'ר ה-Hibernation (מצב שינה עמוק) המוכר מ-Windows. בעזרת סוכן AI (AI Agent), הרכבתי סקריפט אוטומטי שמאפשר את הפיצ'ר הזה על Fedora Kinoite. הסקריפט עבד בצורה חלקה, אבל כחוקר אבטחה וארכיטקטורה, זה לא סיפק אותי. רציתי להבין <em>למה</em> הפיצ'ר הזה לא מגיע כברירת מחדל בלינוקס מודרני. <br><br>
+            ההחלטה לפרק את הסקריפט (שנכתב בסיוע ה-AI) לגורמים, ללמוד כל שורה בו, ולחקור אילו פערי ארכיטקטורה הוא מגשר, בנתה עבורי קומה חדשה לחלוטין בהבנת ה-Linux Internals. מאמר זה אינו מתיימר להציג כתיבת קוד מאפס, אלא מציג ניתוח הנדסי של ההתנגשויות בין שכבות הליבה של מערכת ההפעלה, וכיצד הן נפתרות.
+        </div>
+
+        <h2>שלושת אתגרי הארכיטקטורה (The Linux Internals Triad)</h2>
+        <p>כדי שמחשב יתעורר מ-Hibernation, ה-Kernel צריך לטעון את הזיכרון חזרה מהדיסק עוד לפני שמערכת הקבצים הראשית עולה. במערכת כמו Fedora Kinoite, הדבר דורש גישור בין שלוש תת-מערכות קריטיות:</p>
+
+        <ol>
+            <li><strong>שכבת מערכת הקבצים (Btrfs CoW):</strong> מנגנון ה-Copy-on-Write גורם לכך שההיסט הפיזי (Physical Offset) של קבצים משתנה. הליבה דורשת מיקום סטטי וקפוא בדיסק.</li>
+            <li><strong>שכבת מערכת ההפעלה (OSTree / Immutable Root):</strong> בניגוד להפצות רגילות, לא ניתן פשוט לערוך את ה-GRUB. יש להזריק פרמטרים ולקמפל מחדש את ה-Initramfs תחת מודל אטומי.</li>
+            <li><strong>שכבת האבטחה (SELinux & Polkit):</strong> הליבה תסרב לגשת לקובץ Swap בשלב ה-Boot ללא תיוגי האבטחה וההרשאות המתאימים.</li>
+        </ol>
+
+        <div class="blur-wrapper">
+            
+            <div class="coming-soon-overlay">
+                <h2>Work in Progress 🚧</h2>
+                <p>הניתוח הטכני המלא ברמת ה-Kernel, הסברי ה-Offset, והסקריפט המלא יעלו בהמשך במסגרת פרסום המחקר המלא.</p>
+            </div>
+
+            <div class="blur-content">
+                <h3>1. ניתוח פתרון ה-Btrfs CoW</h3>
+                <p>הליבה של לינוקס אינה מבינה "קבצים" בשלבי ה-Boot המוקדמים. היא ניגשת לסקטורים פיזיים בדיסק. מנגנון ה-CoW של Btrfs שובר את ההנחה הזו. הסקריפט משתמש ב-<code>chattr +C</code> כדי לבטל את התכונה הזו עבור תת-הנפח (Subvolume) הייעודי, ולאחר מכן מחלץ את הכתובת הפיזית הישירה באמצעות:</p>
+<pre><code>OFFSET=$(btrfs inspect-internal map-swapfile -r "${SWAPFILE}")</code></pre>
+                
+                <h3>2. ניתוח מודל ה-OSTree (למה צריך Double Reboot?)</h3>
+                <p>במערכות אטומיות (Immutable), שינוי פרמטרי ה-Resume של ה-Kernel מחייב יצירת Deployment חדש באמצעות <code>rpm-ostree kargs</code>, ושילוב דרייבר ה-Resume לתוך ה-Initramfs המינימלי. האתחול הכפול נדרש מכיוון שהאתחול הראשון רק פורס את המערכת החדשה, והאתחול השני מבטיח שרכיבי ה-Boot המוקדמים נטענים מתוכה בצורה נקייה.</p>
+
+                <h3>3. הזרקת חוקי SELinux</h3>
+                <p>ללא הגדרת ה-Context המדויק, הגישה לקובץ תיחסם ברמת ה-LSM (Linux Security Module):</p>
+<pre><code>semanage fcontext -a -t swapfile_t "${SWAPFILE}"
+restorecon -v "${SWAPFILE}"</code></pre>
+
+                <h3>הקוד המלא (The Hibernation Setup Script)</h3>
+<pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+# === config ===
+SWAP_DIR="/var/swap"
+SUBVOL="${SWAP_DIR}/swapvolume"
+SWAPFILE="${SUBVOL}/swapfile"
+SWAP_EXTRA_BUFFER_GB=2
+
+# Dynamic RAM Size Calculation
+MEM_TOTAL_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+SWAP_SIZE_GB=$(( (MEM_TOTAL_KB + (SWAP_EXTRA_BUFFER_GB * 1024 * 1024) + 1048575) / 1048576 ))
+
+# [Script Content Truncated for Visual Structure in Blur...]
+echo "Adding kernel args (resume & resume_offset) with rpm-ostree kargs..."
+rpm-ostree kargs --append="resume=UUID=${SWAP_UUID}" --append="resume_offset=${OFFSET}"
+rpm-ostree initramfs --enable --arg='--add=resume'
+</code></pre>
+            </div>
+        </div> </article>
+</body>
+</html>
