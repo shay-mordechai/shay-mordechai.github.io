@@ -22,6 +22,7 @@
         .glossary-box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; margin: 20px 0; }
         .glossary-box dt { font-weight: bold; color: #58a6ff; margin-top: 10px; }
         .glossary-box dd { margin-left: 20px; color: #e6edf3; }
+        .why-looked { font-size: 0.95em; border-left: 3px solid #d2a8ff; padding-left: 15px; margin: 15px 0 30px 0; background: rgba(210, 168, 255, 0.05); padding: 10px 15px; }
     </style>
 </head>
 <body>
@@ -45,19 +46,19 @@
             <p>To understand the mechanics of the isolated vectors, we must clarify the unique vocabulary of Lisp-based environments and runtime systems:</p>
             <dl>
                 <dt>Lexical Variable</dt>
-                <dd>A variable whose visibility is bound to a strict physical layout in the source tree (such as a <code>let</code> block). The compiler translates this to a static memory location on the stack frame (Stack Offset). Modern software engineers intuitively treat this as a solid security barrier.</dd>
+                <dd>A variable whose visibility is bound to a strict physical layout in the source tree (such as a <code>let</code> block). Modern software engineers intuitively treat this as a solid security barrier during compile-time.</dd>
                 
                 <dt>Macro</dt>
-                <dd>Unlike low-level text substitution macros (like in C), a Common Lisp macro is <strong>dynamic code executed by the compiler during compile-time</strong>. It intercepts the Abstract Syntax Tree (AST) and mutates it. Because it evaluates inside the compiler's memory space, it operates as fully privileged Trusted Code.</dd>
+                <dd>A Common Lisp macro is <strong>dynamic code executed by the compiler during compile-time</strong>. It evaluates inside the compiler's memory space, meaning it operates as fully privileged Trusted Code.</dd>
                 
                 <dt><code>proclaim</code></dt>
-                <dd>A global administrative configuration function directed at the compiler. Calling it modifies properties globally across the active compilation tree—such as forcing a symbol's binding model to become dynamic (`special`).</dd>
+                <dd>A global administrative configuration function directed at the compiler.</dd>
                 
                 <dt><code>intern</code></dt>
-                <dd>In Lisp architectures, variables and functions are handled as memory objects called Symbols. The <code>intern</code> function takes a string and retrieves a direct pointer to its global, single-instance object (Singleton) in the system's core Symbol Table.</dd>
+                <dd>A function that takes a string and retrieves a direct pointer to its global, single-instance Symbol object in the system's core Symbol Table.</dd>
                 
                 <dt><code>shadow</code></dt>
-                <dd>An isolation management feature for packages. It forces the environment to override or hide an imported symbol from a different namespace, generating an identical local instance and altering the compiler's default path routing.</dd>
+                <dd>An isolation management feature for packages that forces the environment to override or hide an imported symbol, altering the compiler's default path routing.</dd>
             </dl>
         </div>
 
@@ -87,6 +88,10 @@
      (proclaim '(special ,target))
      (setf ,target ,new-value)))
 </code></pre>
+        <div class="why-looked">
+            <strong>Why It Looked Like a Vulnerability:</strong><br>
+            At first glance, it appears the macro successfully "hijacks" a variable that the compiler has already registered as a local lexical variable. For a developer coming from Java or C#, the very possibility that compile-time code alters the symbol resolution mechanism after the lexical analysis phase seems like a classic isolation breach. In reality, under Lisp's execution model, the macro operates as an integral part of the compilation process and is thus authorized to update the compilation environment.
+        </div>
 
         <h3>2. Global Symbol Table Pollution</h3>
         <p>Using the <code>intern</code> function grants the macro a direct public pointer to the global symbol object representing the local variable, allowing property list (<code>plist</code>) mutation and data exfiltration.</p>
@@ -96,15 +101,23 @@
     (setf (get global-sym 'compromised-leak) t)
     `(quote ,global-sym)))
 </code></pre>
+        <div class="why-looked">
+            <strong>Why It Looked Like a Vulnerability:</strong><br>
+            The ability to acquire a reference to a global Symbol object sharing the same name as a local variable might appear as exfiltrating data from a private Scope to a public space. Upon deeper inspection, the macro is not "breaking into" the lexical variable itself; it simply operates on the global symbol object defined by the Common Lisp data model.
+        </div>
 
         <h3>3. Cross-Package Namespace Confusion</h3>
-        <p>Using the <code>shadow</code> function during Macro Expansion allows altering the symbol resolution environment, potentially creating confusion between a developer's assumptions regarding lexical scope and the actual namespace routing mechanism.</p>
+        <p>Using the <code>shadow</code> command during Macro Expansion allows altering the Package Namespace in a way that may contradict the developer's intuitive assumptions regarding the identity of the symbol being resolved at compile-time.</p>
 <pre><code>;; Vector 3 PoC
 (defmacro hijack-namespace (target-sym)
   (let ((shadow-pkg (make-package "EPHEMERAL-ATTACK-PKG")))
     (shadow (string target-sym) shadow-pkg)
     nil))
 </code></pre>
+        <div class="why-looked">
+            <strong>Why It Looked Like a Vulnerability:</strong><br>
+            Swapping name resolution during compilation creates a state where the exact same name can reference different objects depending on the active namespace. To a developer unfamiliar with Lisp's Package system, this behavior might look like a local variable takeover, when in fact it is standard Namespace mechanics.
+        </div>
 
         <h2>Chapter 2: Reality Check — Trust but Verify</h2>
         <p>At this stage, this looked like a severe CVE. This suspicion was heavily amplified when I discovered a series of urgent commits pushed to the SBCL codebase, implementing <code>pseudo-atomic</code> constraints around <code>dynbind</code> operations. It strongly resembled a classic Silent Patch.</p>
@@ -117,6 +130,8 @@
         <h2>Chapter 3: Conclusion — When Lexical Scope Is Not a Security Boundary</h2>
         <p>From the perspective of a developer coming from languages with a more conservative compilation model, this behavior can create a false sense of security regarding isolation boundaries during the Build phase. Although the behavior conforms to the ANSI Common Lisp specification and does not constitute a bug in SBCL, it demonstrates how executing code at compile-time creates an attack surface that is generally overlooked in traditional security models.</p>
         
+        <p><strong>Important Clarification:</strong> The PoCs in this research do not actually demonstrate stealing live API Keys. They demonstrate that a macro inherently possesses the capability to execute global modifications at compile-time. Since compilation code is implicitly trusted, this capability could theoretically be weaponized within a Supply Chain attack.</p>
+
         <p><strong>Supply Chain Poisoning Risk:</strong><br>
         In modern CI/CD pipelines, a developer importing a seemingly benign third-party library could enable a poisoned macro to exfiltrate hardcoded local API keys during the build phase, leaving no trace in the resulting binary for Dynamic Application Security Testing (DAST) tools to detect.</p>
 
