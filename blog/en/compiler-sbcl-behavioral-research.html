@@ -121,9 +121,11 @@
 
         <h2>Chapter 2: Reality Check — Trust but Verify</h2>
         <p>At this stage, this looked like a severe CVE. This suspicion was heavily amplified when I discovered a series of urgent commits pushed to the SBCL codebase, implementing <code>pseudo-atomic</code> constraints around <code>dynbind</code> operations. It strongly resembled a classic Silent Patch.</p>
+
+        <p>At that point, I came across a post by veteran systems engineer Ira J. Perlow regarding compiler bugs, where he advised: <em>"Trust but Test and Verify!"</em>. That quote gave me the drive to push past my initial suspicions. I decided to give the SBCL developers the benefit of the doubt, challenge my own bias, and investigate the anomaly to its absolute core.</p>
         
-        <p><strong style="color: #58a6ff; font-size: 1.1em;">However, a security researcher is measured by their ability to falsify their own theories.</strong><br>
-        I conducted Differential Testing, running the exact Proof-of-Concepts on both a legacy baseline and the most modern master branch. The result was unequivocal: <strong>The PoC successfully bypassed the scope on both versions.</strong></p>
+        <p><strong style="color: #58a6ff; font-size: 1.1em;">After all, a security researcher is measured by their ability to falsify their own theories.</strong><br>
+        Taking my original PoC (initially tested on Windows OS), I conducted rigorous Differential Testing in a modern Linux environment against the latest release at the time (July 31, 2025), and again against the versions following the "suspicious" commits. The result was unequivocal: <strong>The PoC successfully bypassed the scope on both versions.</strong></p>
         
         <p><strong>The Architectural Pivot:</strong> The behavior is an Architectural By-Design feature dictated by the ANSI Common Lisp Specification. The suspicious historical patches were actually engineered to resolve Thread Safety synchronization issues, not to construct a security sandbox. In other words, Lexical Scope in Common Lisp is a semantic mechanism for the program, but it does not constitute a security boundary against macro code executing at compile-time.</p>
 
