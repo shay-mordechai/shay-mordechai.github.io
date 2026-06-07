@@ -136,6 +136,10 @@
         In modern CI/CD pipelines, a developer importing a seemingly benign third-party library could enable a poisoned macro to exfiltrate hardcoded local API keys during the build phase, leaving no trace in the resulting binary for Dynamic Application Security Testing (DAST) tools to detect.</p>
 
         <p>This research did not expose an implementation flaw in SBCL, but rather a gap between the expectations developers bring from modern languages with conservative compilation models and the actual trust model of Common Lisp. For those coming from Java, C#, or Rust, the fact that a macro can execute code with global implications at compile-time is highly counterintuitive. The research value here lies not in proving a CVE, but in clarifying the exact boundary where Lexical Scope ceases to be an isolation mechanism and becomes merely a semantic concept.</p>
+        <hr style="border: 0; border-top: 1px solid #30363d; margin: 40px 0;">
+        <h3 style="color: #58a6ff;">🔗 Research Resources & Source Code</h3>
+        <p>The complete empirical pipeline is fully open-sourced for educational and verification purposes. The repository contains the semantic fuzzer pipeline, dynamic exploration harnesses, and the audited upstream differentials:</p>
+        <p>📂 <strong>Official GitHub Repository:</strong> <a href="https://github.com/shay-mordechai/sbcl-compiler-research" style="color: #58a6ff; text-decoration: none; font-weight: bold;">AI-Augmented-SBCL-Vulnerability-Research</a></p>
     </article>
 
 </body>
