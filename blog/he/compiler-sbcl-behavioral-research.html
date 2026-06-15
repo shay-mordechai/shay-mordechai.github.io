@@ -68,19 +68,19 @@
         <h3>1. שינוי מאפייני קישור דינמי (Dynamic Binding Modification)</h3>
         <p>שימוש בפקודה <code>proclaim</code> בתוך המאקרו כדי לשנות את המטא-דאטה הגלובלי של הסמל, וכפייה על הקומפיילר לייצר קריאה דינמית (Dynamic Runtime Lookup) במקום הפניה מוגנת למחסנית.</p>
 <div style="background: #161b22; padding: 20px; border-radius: 6px; border: 1px solid #30363d; font-family: monospace; font-size: 0.95em; color: #e6edf3; line-height: 1.5; margin: 20px 0; direction: ltr; text-align: left;">
- [Step 1: Front-End] Read & Parse (AST Generation)<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
- [Step 2: Lexical Analysis] Register "secret-token" as LOCAL in LEXENV<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
- <span style="color: #ff7b72; font-weight: bold;">[Step 3: Macro Expansion] -> Runs macro modifying global state</span><br>
- <span style="color: #ff7b72; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Evaluates: (proclaim '(special secret-token))</span><br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v<br>
- [Step 4: Code Generation]<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Compiler resolves the symbol according to<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the updated compilation environment.<br>
+ /* Step 1: Front-End */ Read & Parse (AST Generation)
+                       |
+                       v
+ /* Step 2: Lexical Analysis */ Register "secret-token" as LOCAL in LEXENV
+                       |
+                       v
+ <span style="color: #ff7b72; font-weight: bold;">/* Step 3: Macro Expansion */ -> Runs macro modifying global state</span>
+ <span style="color: #ff7b72; font-weight: bold;">                            * Evaluates: (proclaim '(special secret-token))</span>
+                       |
+                       v
+ /* Step 4: Code Generation */
+                             * Compiler resolves the symbol according to
+                               the updated compilation environment.
 </div>
 <pre><code>;; Vector 1 PoC
 (defmacro isolation-bypass-attack (target new-value)
@@ -129,15 +129,19 @@
 
         <p><strong>המסקנה (The Pivot):</strong> ההתנהגות היא By Design ומעוגנת במפרט ה-ANSI. הפאצ'ים ב-<code>cell.lisp</code> נועדו לפתור בעיות סנכרון (Thread Safety), ולא ליצור Sandbox אבטחתי שאינו קיים בשפה. במילים אחרות, ה-Lexical Scope ב-Common Lisp הוא מנגנון סמנטי עבור התוכנית, אך אינו מהווה גבול אבטחתי מול קוד מאקרו שרץ בזמן קומפילציה.</p>
 
-        <h2>פרק ג': לסיכום — When Lexical Scope Is Not a Security Boundary</h2>
-        <p>מנקודת מבט של מפתח המגיע משפות בעלות מודל קומפילציה שמרני יותר, ההתנהגות עלולה ליצור תחושת ביטחון שגויה לגבי גבולות הבידוד בזמן Build. למרות שההתנהגות תואמת את מפרט ANSI Common Lisp ואינה מהווה באג ב-SBCL, היא מדגימה כיצד הרצת קוד בזמן קומפילציה יוצרת משטח תקיפה שאינו זוכה בדרך כלל להתייחסות במודלי אבטחה מסורתיים.</p>
+        <h2>פרק ג': לסיכום — מפרט ישן מול איומים מודרניים</h2>
         
-        <p><strong>חשוב להדגיש:</strong> ה-PoCs במחקר אינם מדגימים גניבת API Keys בפועל. הם מדגימים שלמאקרו קיימת היכולת לבצע שינויים גלובליים בזמן קומפילציה. מרגע שקוד קומפילציה נחשב לקוד מהימן, ניתן תאורטית להשתמש ביכולת זו גם למטרות זדוניות במסגרת מתקפת Supply Chain.</p>
+        <p><strong>מה שהמפרט אומר — ומה שהוא חסר:</strong><br>
+        קומפיילר ה-SBCL מתנהג בדיוק כפי שמפרט ANSI Common Lisp מגדיר לגבי Macro Expansion. המפרט מעניק למאקרו גישה מלאה לסביבת הקימפול (Environment) ואף אינו אוסר על שינוי מצב גלובלי (Global State). אולם, <strong>המפרט נכתב בשנות ה-90, ללא כל התייחסות למודל איומים של Supply Chain Attack</strong>. הממצא שלי אינו באג בקוד SBCL, אלא חשיפת פער ארכיטקטוני עמוק בין מה שהמפרט ההיסטורי מתיר לבין ציפיות האבטחה של פיתוח תוכנה מודרני.</p>
 
         <p><strong>Supply Chain Poisoning Risk:</strong><br>
-        בסביבות CI/CD מודרניות, מפתח המייבא ספריית צד-שלישי תמימה-למראה עלול לאפשר למאקרו מורעל לשאוב מפתחות API מקומיים (Hardcoded) בזמן ה-Build, מבלי להותיר זכר בקוד הבינארי הסופי שיזוהה על ידי כלי DAST.</p>
+        בסביבות CI/CD מודרניות, מפתח המייבא ספריית צד-שלישי תמימה-למראה עלול לאפשר למאקרו מורעל לשאוב מפתחות API מקומיים (Hardcoded) בזמן ה-Build, או לשנות התנהגות קומפילציה, מבלי להותיר זכר בקוד הבינארי הסופי שיזוהה על ידי כלי סריקה (DAST).</p>
         
-        <p>המחקר לא חשף חולשת מימוש ב-SBCL, אלא פער בין הציפיות שמפתחים מביאים משפות מודרניות בעלות מודל קומפילציה שמרני לבין מודל האמון של Common Lisp. עבור מי שמגיע מעולמות Java, C# או Rust, עצם העובדה שמאקרו יכול להריץ קוד בעל השפעה גלובלית בזמן קומפילציה אינה אינטואיטיבית. הערך המחקרי כאן אינו בהוכחת CVE, אלא בהבהרת הגבול שבו Lexical Scope מפסיק להיות מנגנון בידוד והופך להיות מושג סמנטי בלבד.</p>
+        <p><strong>שאלת ה-CVE וערך התיעוד:</strong><br>
+        האם על ממצא כזה מקבלים נקודת חולשה מוכרת (CVE)? התשובה היא לא, וזהו כנראה הלקח החשוב ביותר מהמחקר. מזהה CVE מוענק בדרך כלל על חולשת מימוש (קוד שחורג מהמפרט) או חולשה מוכרת במפרט עצמו. במקרה שלנו, מדובר בהחלטת תכנון (Design Decision) עם השלכות אבטחה כבדות שפשוט לא תועדו מעולם תחת פריזמה של תקיפת שרשרת אספקה.</p>
+
+        <p>אף על פי שלא הונפק CVE, הממצא הועבר ו<strong>תועד רשמית על ידי מערך הסייבר הלאומי (CERT-IL תחת זיהוי #11265)</strong>, וכן נבחן על ידי MITRE. המסקנה ברורה: לא כל ממצא אבטחתי מתרגם ל-CVE, אך כל פער ארכיטקטוני שחושף משטח תקיפה (Attack Surface) חדש שווה חקירה, פרסום ותיעוד. זהו השלב שבו Lexical Scope מפסיק להיות מנגנון בידוד והופך להיות מושג סמנטי בלבד.</p>
+
         <hr style="border: 0; border-top: 1px solid #30363d; margin: 40px 0;">
         <h3 style="color: #58a6ff;">🔗 משאבי מחקר וקוד מקור</h3>
         <p>הפרויקט המלא זמין לציבור למטרות מחקר ולימוד. המאגר מכיל את ה-Semantic Fuzzer, סקריפטים לניתוח דינמי, וקובצי ה-Patches ההיסטוריים שנבחנו:</p>
