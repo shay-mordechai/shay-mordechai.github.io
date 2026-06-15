@@ -6,36 +6,46 @@
     <title>The Permission Paradox - Sneak Peek</title>
     <style>
         .draft-container { position: relative; margin-top: 20px; }
-        .draft-content { filter: blur(4px); opacity: 0.6; pointer-events: none; user-select: none; }
-
-        /* חלונית הצצה */
-        .draft-overlay {
-            position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
-            background-color: rgba(22, 27, 34, 0.98);
-            border: 2px solid var(--accent-color);
-            padding: 30px; border-radius: 12px;
-            text-align: center; z-index: 10;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        
+        /* התוכן כעת חשוף לקריאה - הוסרו הטשטוש וחסימת הלחיצות */
+        .draft-content { 
+            opacity: 1; 
         }
-        .draft-overlay h2 { color: var(--accent-color); margin-top: 0; }
-        .draft-overlay p { color: #fff; font-size: 1.2rem; }
+
+        /* חלונית הצצה - עודכנה למיקום שמאפשר קריאה (פינה או צפה מעל) */
+        .draft-overlay {
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background-color: rgba(22, 27, 34, 0.95);
+            border: 2px solid var(--accent-color, #58a6ff);
+            padding: 20px; 
+            border-radius: 12px;
+            text-align: center; 
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            max-width: 300px;
+        }
+        .draft-overlay h2 { color: var(--accent-color, #58a6ff); margin-top: 0; font-size: 1.2rem;}
+        .draft-overlay p { color: #fff; font-size: 1rem; margin-bottom: 0; }
 
         /* הגדרות קריאות לקוד וטבלאות */
         pre, code { direction: ltr; text-align: left; background-color: #1e1e1e; padding: 10px; border-radius: 5px; display: block; overflow-x: auto; color: #d4d4d4;}
+        p code { display: inline; padding: 2px 5px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 20px; text-align: right; }
-        th, td { border: 1px solid #ddd; padding: 12px; }
-        th { background-color: #333; color: white; }
+        th, td { border: 1px solid #30363d; padding: 12px; }
+        th { background-color: #21262d; color: white; }
     </style>
 </head>
 <body>
 <div id="content">
-    <a href="index.html" style="color: var(--accent-color);">← חזרה לבלוג</a>
+    <a href="index.html" style="color: var(--accent-color, #58a6ff);">← חזרה לבלוג</a>
 
     <div class="draft-container">
+        
         <div class="draft-overlay">
-            <h2>🔍 הצצה למחקר: The Permission Paradox</h2>
-            <p><strong>סטטוס מחקר:</strong> מיפוי שרשרת האכיפה (שלבים ז' עד י"א).<br>
-            <i>"ה-WMS הוא השומר הראשון בשרשרת – האם נוכל לעקוף אותו ברמת ה-Native?"</i></p>
+            <h2>🚧 מחקר בתהליך</h2>
+            <p>המאמר חשוף כעת לקריאה, אך המחקר עדיין מתבצע ונכתב בימים אלו.</p>
         </div>
 
         <div class="draft-content">
@@ -43,55 +53,65 @@
             <h1>The Permission Paradox</h1>
             <p>מאת שי מרדכי</p>
 
-            <h2>הקדמה</h2>
-            <p>במאמר הקודם (Android Bootstrap Hijacking), ניתחנו כיצד נוזקות כמו Anatsa מצליחות להריץ קוד בשלב מוקדם מאוד במרחב התהליך (attachBaseContext ו-ContentProvider.onCreate), עוד לפני שה-UI Thread הקצה חלון גרפי (Graphical window) כלשהו. ראינו כיצד היא כבר "חיה" בזיכרון ומחזיקה בתהליך משלה (UI Thread), וגילינו שחוקרי אבטחה ונוזקות לא חייבים להמתין ל-Entry Point הקלאסי של Activity.onCreate.</p>
+            <h2>תקציר מנהלים</h2>
+            <p>במאמר הקודם (Android Bootstrap Hijacking), ניתחנו כיצד נוזקות כמו Anatsa מצליחות להריץ קוד בשלב מוקדם מאוד במרחב התהליך (<code>attachBaseContext</code> ו-<code>ContentProvider.onCreate</code>), עוד לפני שה-UI Thread הקצה חלון גרפי (Graphical window) כלשהו. ראינו כיצד היא כבר "חיה" בזיכרון ומחזיקה בתהליך משלה (UI Thread), וגילינו שחוקרי אבטחה ונוזקות לא חייבים להמתין ל-Entry Point הקלאסי של <code>Activity.onCreate</code>.</p>
             <p>למעשה, ניתן להזריק ולהריץ קוד בשלבים מוקדמים בהרבה:</p>
             <ul>
-                <li>Application.attachBaseContex()</li>
-                <li>ContentProvider.onCreate</li>
-                <li>Application.onCreate</li>
+                <li><code>Application.attachBaseContext()</code></li>
+                <li><code>ContentProvider.onCreate</code></li>
+                <li><code>Application.onCreate</code></li>
             </ul>
             <p>בכל התחנות הללו, לאפליקציה כבר יש תהליך ויש זיכרון, אך עבור המשתמש – המסך נותר שחור לחלוטין.</p>
             <p>זה עורר בי שאלה: האם ניתן להריץ חלון UI בשלב הזה, כשעדיין ה-UI לא עלה?</p>
             <p>כדי לגשת לשאלה, אנחנו צריכים להבין טוב יותר מה גורם לחלון UI לעלות, או יותר נכון, מה קורה מאחורי הקלעים כאשר מתכנת מבקש להריץ UI דרך JAVA API. במאמר זה נחקור את תהליך יצירת חלון UI, דרך משקפיים של JAVA API ודרך משקפיים של Native, וננסה "לפרוץ את הגבולות".</p>
 
-            <h2>פרק א - רקע ומושגים</h2>
+            <h2>רקע ומושגים</h2>
+            <h3>תהליך יצירת חלון UI באפליקציית אנדרואיד:</h3>
             <p>במאמר הקודם, סקרנו את שלבים א' - ה' של הרצת האפליקציה באנדרואיד, החל מ-Zygote Fork וכלה ביצירת Activity, אך לעת עתה הוא עדיין ריק מ-UI.</p>
-            <p>נמשיך בשלב ו' - האתחול הלוגי והטעינה ל-RAM:</p>
 
-            <p><strong>חלק א' (המערכת):</strong><br>
-            ActivityThread בתור "סוכן" של System Server בתוך האפליקציה, מתחיל להזרים נתונים לוגיים שיאפשרו יצירת חלוןן.<br>
-            הוא מתחיל ביצירת אובייקט ה-Activity (כמו שכבר ראינו), וכעת מקצה לה PhoneWindow (חלון לוגי ריק) ו-Activity Token (הדרכון).</p>
+            <p><strong>נמשיך בשלב ו' - האתחול הלוגי והטעינה ל-RAM:</strong></p>
+            
+            <p><strong>שלב ו' - חלק א' (המערכת):</strong><br>
+            זהו השלב הבירוקרטי. ה-OS מבצעת רישום:</p>
+            <ul>
+                <li><strong>Activity Token</strong> - איזו אפליקציה מנסה להציג חלון.</li>
+                <li><strong>Window Token</strong> - האם היא מורשית לכך.</li>
+                <li><strong>PhoneWindow</strong> - איזה סוג חלון זה.</li>
+            </ul>
+            <p>רגע לפני שלב ו', AMS לוקח "מזוודה" מ-PMS. המזוודה הזו הכילה את כל מאפייני ה-UI ש-PMS אסף בשלב ה-BOOT מה-Manifest של האפליקציה, כמו שראינו במאמר הקודם. כרגע הם עדיין ב-RAM.</p>
+            <p><strong>setContentView</strong> - מהו התוכן הלוגי שהיא רוצה להציג.<br>
+            הפקודה ליצירת חלון: <code>setContentView</code>. המתכנת חייב להשתמש ב-Content כדי לתקשר עם System Server שיאפשר לו יצירת חלון מבעד ל-Sandbox. ה-XML הופך לעץ אובייקטים בזיכרון (DecorView) ונשמר בתוך ה-PhoneWindow.</p>
+            <p>כמו כל ישראלי טוב, שאלתי <em>"איך אפשר לעקוף את הבירוקרטיה הזו?"</em>.</p>
+            <p><code>ActivityThread</code>, ה"סוכן" של System Server בתוך האפליקציה, מתחיל להזרים נתונים לוגיים שיאפשרו יצירת חלון. הוא מתחיל ביצירת אובייקט ה-Activity (כמו שכבר ראינו), וכעת מקצה לו PhoneWindow (חלון לוגי ריק) ו-Activity Token (הדרכון).</p>
+            <p><strong>הערה:</strong> מכאן אפשר להבין את מטרת יצירת אובייקט ה-Activity. כדי שיהיה רישום של האפליקציה ב-OS וכל מה שהיא עושה יהיה מתועד. שכל דבר שהאפליקציה רוצה לעשות, יתבצע דרך <code>ActivityThread</code> ש"ידליף" ל-SYSTEM SERVER.</p>
 
-            <p><strong>חלק ב' (המתכנת) Activity.onCreate:</strong><br>
-            כמו שראינו במאמר הקודם, שהנוזקה מימשה את Application.onCreate כדי להריץ קוד מוקדם, כך מתכנת האפליקציה מריץ קוד בפעם הראשונה ע"י מימוש של Activity.onCreate, ואח"כ Activity.onStart.</p>
-            <p>Activity.onCreate הפקודה ליצירת חלון: setContentView. המתכנת חייב להשתמש בContent כדי לתקשר עם System Server שיאפשר לו יצירת חלון מבעד ל-Sandbox.<br>
-            ה-XML הופך לעץ אובייקטים בזיכרון (DecorView) ונשמר בתוך ה-PhoneWindow.</p>
+            <p><strong>שלב ו' - חלק ב' (המתכנת) Activity.onCreate:</strong><br>
+            כמו שראינו במאמר הקודם, שהנוזקה מימשה את <code>Application.onCreate</code> כדי להריץ קוד מוקדם, כך מתכנת האפליקציה מריץ קוד בפעם הראשונה ע"י מימוש של <code>Activity.onCreate</code>.<br>
+            הוא משתמש באובייקט Context (שנועד לאפשר גישה מבוקרת דרך ה-SANDBOX של האפליקציה לרכיבי החומרה ותקשורת בין תהליכים אחרים), כדי לגשת לקובץ: the developer uses <code>setContentView(R.layout.main)</code> to read the Layout XML (the UI file containing buttons, text, etc.). The API turns this UI Layout XML into a memory object called DecorView.</p>
 
-            <p><strong>חלק ג' (המערכת) Activity.onStart:</strong><br>
-            המערכת מריצה את onStart. ה-AMS מסמן שהחלון מוגדר לוגית כראוי, אבל המסך עדיין שחור.</p>
+            <p><strong>שלב ו' - חלק ג' (המערכת) Activity.onStart:</strong><br>
+            המערכת מריצה את <code>onStart</code>. ה-AMS מסמן שהחלון מוגדר לוגית כראוי, אבל המסך עדיין שחור. זה השלב שבו <code>ActivityThread</code> מדליף באמצעות Callback ל-AMS דרך BINDER.</p>
 
             <p><strong>שלב ז' (ההרמה לחזית - Activity.onResume):</strong><br>
-            ה-AMS שולח הודעה ל-ActivityThread להריץ את handleResumeActivity, שמפעילה את Activity.onResume. האפליקציה מוכנה לעלות לחזית (Foreground).</p>
-
-            <p><strong>שלב ח' וצפונה (הדרישה הגרפית והירידה ל-Native):</strong><br>
-            מיד בתוך handleResumeActivity (שלב ח'), המערכת קוראת אוטומטית ל-WindowManager.addView(). כאן נוצר ה-ViewRootImpl (שלב ט') שחוצה את הגבול (שלב י').</p>
+            ה-AMS שולח הודעה ל-ActivityThread להריץ את <code>handleResumeActivity</code>, שמפעילה את <code>Activity.onResume</code>. האפליקציה מוכנה לעלות לחזית (Foreground).<br>
+            מיד לאחר מכן, מתרחשת הפנייה הראשונה לניהול התצוגה. האפליקציה לוקחת את ה"מזוודה" משלב ו' - DecorView, מצרפת לו Window Token ושולחת אותו מה-RAM דרך גבולות ה-Sandbox אל עבר ה-WMS כדי לדרוש ייצוג גרפי פיזי על המסך.</p>
 
             <p><strong>שלב ח' — האפליקציה דורשת ייצוג גרפי</strong><br>
-            בתוך handleResumeActivity, מתרחשת הפנייה הראשונה לניהול התצוגה. האפליקציה לוקחת את ה-DecorView (עץ ה-UI שנבנה בזיכרון בשלב ו') וקוראת:</p>
-<pre><code class="language-java">WindowManager.addView(decorView, params)</code></pre>
-            <p>זהו הרגע שבו האפליקציה הלוגית דורשת ייצוג גרפי פיזי — ובדיוק כאן שאלת המחקר שלנו מתחדדת: מה יקרה אם נקרא ל-addView מוקדם יותר, עוד בשלב ה-Bootstrap?</p>
+            בתוך <code>handleResumeActivity</code>, מתרחשת הפנייה הראשונה לניהול התצוגה. האפליקציה לוקחת את ה-DecorView (עץ ה-UI שנבנה בזיכרון בשלב ו') וקוראת:</p>
+            <pre><code class="language-java">WindowManager.addView(decorView, params)</code></pre>
+            <p>זהו הרגע שבו האפליקציה הלוגית דורשת ייצוג גרפי פיזי — ובדיוק כאן שאלת המחקר שלנו מתחדדת: <strong>מה יקרה אם נקרא ל-addView מוקדם יותר, עוד בשלב ה-Bootstrap?</strong></p>
+
+            <p>מיד בתוך <code>handleResumeActivity</code> (שלב ח'), המערכת קוראת אוטומטית ל-<code>WindowManager.addView()</code>. כאן נוצר ה-ViewRootImpl (שלב ט') שחוצה את הגבול (שלב י').</p>
 
             <p><strong>שלב ט' — ViewRootImpl: הגשר הסמוי</strong><br>
-            הקריאה ל-addView מייצרת אובייקט שרוב המפתחים לא מכירים: ViewRootImpl. הוא הגשר הבלעדי בין ה-UI Thread של האפליקציה לבין שירותי המערכת.</p>
+            הקריאה ל-addView מייצרת אובייקט שרוב המפתחים לא מכירים: <code>ViewRootImpl</code>. הוא הגשר הבלעדי בין ה-UI Thread של האפליקציה לבין שירותי המערכת.</p>
 
             <p><strong>שלב י' — חציית הגבול אל ה-System Server</strong><br>
-            ה-ViewRootImpl פותח ערוץ Binder דרך IWindowSession אל ה-WMS. הוא שולח:<br>
-            "הקצה לי חלון חוקי (Window Token) ומשטח ציור."<br>
+            ה-<code>ViewRootImpl</code> פותח ערוץ Binder דרך <code>IWindowSession</code> אל ה-WMS. הוא שולח:<br>
+            <em>"הקצה לי חלון חוקי (Window Token) ומשטח ציור."</em><br>
             וכאן — ה-WMS עושה בדיוק את מה שנלמד עליו בפרק הבא.</p>
 
             <h2>מושגים</h2>
-
             <h3>1. Android Sandbox: הצורך בתקשורת (IPC)</h3>
             <p>באנדרואיד, כל אפליקציה פועלת בתוך Sandbox משלה. מנגנון זה, המיושם על ידי ה-Zygote מיד לאחר ה-fork(), מבודד את האפליקציה מתהליכים אחרים באמצעות מזהים ייחודיים (UID/GID) וחוקי הרשאות קשוחים (SELinux).</p>
             <p>מנגד, ניהול המסך והחלונות במכשיר מתבצע באופן בלעדי על ידי ה-WindowManagerService (WMS), שירות מערכת בעל הרשאות גבוהות היושב בתוך תהליך ה-system_server. מכיוון שהאפליקציה חסומה בתוך ה-Sandbox שלה, היא אינה יכולה לייצר חלונות בעצמה. עליה לתקשר עם ה-WMS ולבקש ממנו לעשות זאת עבורה. תקשורת זו בין תהליכים מבודדים מחייבת מנגנון Inter-Process Communication (IPC).</p>
@@ -126,64 +146,60 @@
                 </tbody>
             </table>
 
-            <p>מדוע ה-Zygote חריג ומשתמש ב-Socket? &gt; הסיבה נעוצה באילוץ קרנל: פעולת fork() משכפלת רק את ה-Thread שקרא לה — שאר ה-Threads של ה-Binder Thread Pool ממרחב הזיכרון של האב "נעלמים". מבני הנתונים של ה-Binder נשארים רשומים תחת ה-PID של ה-Zygote האב, מה שיגרום ל-State Inconsistency ו-Deadlock בתהליך הבן. Local Socket, לעומת זאת, הוא צינור פסיבי שאפשר לסגור בקריאת close() אחת נקייה מיד לאחר הפיצול.</p>
+            <p><strong>מדוע ה-Zygote חריג ומשתמש ב-Socket?</strong> הסיבה נעוצה באילוץ קרנל: פעולת <code>fork()</code> משכפלת רק את ה-Thread שקרא לה — שאר ה-Threads של ה-Binder Thread Pool ממרחב הזיכרון של האב "נעלמים". מבני הנתונים של ה-Binder נשארים רשומים תחת ה-PID של ה-Zygote האב, מה שיגרום ל-State Inconsistency ו-Deadlock בתהליך הבן. Local Socket, לעומת זאת, הוא צינור פסיבי שאפשר לסגור בקריאת <code>close()</code> אחת נקייה מיד לאחר הפיצול.</p>
 
-            <p>מנגנון ה-Single-Copy:<br>
-            בניגוד ל-Socket שבו הקרנל פסיבי (והמידע מועתק פעמיים), ב-Binder הקרנל פעיל. הוא ממפה מראש את הזיכרון הפיזי של תהליך היעד (mmap), ומבצע copy_from_user אחת בלבד — ישירות ממרחב השולח לתוך מרחב הזיכרון של המקבל, ללא תיווך כפול.</p>
-
-            <p>המידע המועבר נארז לתוך מיכל נתונים בינארי הנקרא Parcel. ישנן שתי דרכים לתקשר עם ה-Binder:<br>
-            דרך ה-Java API: שכבת קוד שעוטפת את ה-Parcel ומסתירה את המורכבות. היתרון הוא נוחות המתכנת, אך זה מונע שליטה מלאה על מבנה הנתונים הנשלח.<br>
-            דרך ה-Native (C/C++): ירידה לשכבת הנייטיב (libbinder.so) מאפשרת לעקוף את חסמי ה-Java. כאן, ניתן להרכיב את ה-Parcel באופן ידני (Byte-by-Byte) ולשלוח אותו ישירות לקרנל באמצעות קריאת ioctl(), מה שמעניק כוח אבסולוטי בתקשורת מול שירותי המערכת.</p>
+            <p><strong>מנגנון ה-Single-Copy:</strong><br>
+            בניגוד ל-Socket שבו הקרנל פסיבי (והמידע מועתק פעמיים), ב-Binder הקרנל פעיל. הוא ממפה מראש את הזיכרון הפיזי של תהליך היעד (mmap), ומבצע <code>copy_from_user</code> אחת בלבד — ישירות ממרחב השולח לתוך מרחב הזיכרון של המקבל, ללא תיווך כפול.</p>
+            <p>המידע המועבר נארז לתוך מיכל נתונים בינארי הנקרא <strong>Parcel</strong>. ישנן שתי דרכים לתקשר עם ה-Binder:</p>
+            <ul>
+                <li><strong>דרך ה-Java API:</strong> שכבת קוד שעוטפת את ה-Parcel ומסתירה את המורכבות. היתרון הוא נוחות המתכנת, אך זה מונע שליטה מלאה על מבנה הנתונים הנשלח.</li>
+                <li><strong>דרך ה-Native (C/C++):</strong> ירידה לשכבת הנייטיב (libbinder.so) מאפשרת לעקוף את חסמי ה-Java. כאן, ניתן להרכיב את ה-Parcel באופן ידני (Byte-by-Byte) ולשלוח אותו ישירות לקרנל באמצעות קריאת <code>ioctl()</code>, מה שמעניק כוח אבסולוטי בתקשורת מול שירותי המערכת.</li>
+            </ul>
 
             <h3>3. Window Token: חומת ההרשאות</h3>
             <p>כאשר בקשה מגיעה מה-Binder אל ה-WMS, השירות חייב לוודא שהבקשה חוקית ומוסמכת. לשם כך, אנדרואיד משתמשת במנגנון הנקרא Window Token. זהו אובייקט ומזהה פנימי המייצג חלון UI חוקי, המשויך בדרך כלל למחזור החיים של Activity.</p>
+            <p>כאשר אפליקציה מבקשת לצייר חלון חדש, היא חייבת לצרף לתוך ה-Parcel את ה-Window Token שלה. ה-WMS מחלץ את ה-Token ובודק את תקינותו. בשלבי הריצה המוקדמים של האפליקציה (כדוגמת <code>attachBaseContext</code>), ה-Token הזה טרם נוצר והוקצה לתהליך. כתוצאה מכך, כל ניסיון לגיטימי להציג חלון בשלב זה יידחה מיד על ידי ה-WMS.</p>
 
-            <p>כאשר אפליקציה מבקשת לצייר חלון חדש, היא חייבת לצרף לתוך ה-Parcel את ה-Window Token שלה. ה-WMS מחלץ את ה-Token ובודק את תקינותו. בשלבי הריצה המוקדמים של האפליקציה (כדוגמת attachBaseContext), ה-Token הזה טרם נוצר והוקצה לתהליך. כתוצאה מכך, כל ניסיון לגיטימי להציג חלון בשלב זה יידחה מיד על ידי ה-WMS.</p>
+            <h2>ניסוי 1: מחסום ה-Window Token בשכבת ה-Java</h2>
+            <p>בצד ה-Java API, כשתהליך רוצה לתקשר עם תהליכי החומרה - הדרייברים, הוא עושה זאת בעזרת אובייקט Context.<br>
+            בשילוב ה-Context הבסיסי שהתהליך מחזיק כרגע, הוא עדיין טרם קיבל את אובייקטי ה-Lifecycle וה-Window Tokens הנדרשים לצורך הקצאת חלונות גרפיים דרך שכבת ה-Framework.</p>
 
-            <h2>פרק ב' – ניסוי 1: מחסום ה-Window Token בשכבת ה-Java</h2>
-            <p>בצד הJava API, כשתהליך רוצה לתקשר עם תהליכי החומרה - הדרייברים, הוא עושה זאת בעזרת אובייקט Context.</p>
-            <p>בשילוב ה-Context הבסיסי שהתהליך מחזיק כרגע, הוא עדיין טרם קיבל את אובייקטי ה-Lifecycle וה-Window Tokens הנדרשים לצורך הקצאת חלונות גרפיים דרך שכבת ה-Framework.</p>
+            <p><strong>הרשאת SYSTEM_ALERT_WINDOW</strong> (informally "Draw on Top"): מאפשרת לאפליקציה לצייר שכבות (Overlays) מותאמות אישית מעל כל מסך אחר במכשיר. השכבות יכולות להיות שקופות, clickable (קולטות לחיצות) או pass-through (הלחיצות עוברות דרכן אל האפליקציה שמתחת). עבור אפליקציות שיורדות מה-Google Play Store, הרשאה זו מוענקת אוטומטית (Automatically Granted) בלי שהמשתמש מתבקש לאשר אותה בזמן אמת.</p>
 
-            <p>הרשאת SYSTEM_ALERT_WINDOW (informally "Draw on Top"): מאפשרת לאפליקציה לצייר שכבות (Overlays) מותאמות אישית מעל כל מסך אחר במכשיר. השכבות יכולות להיות שקופות, clickable (קולטות לחיצות) או pass-through (הלחיצות עוברות דרכן אל האפליקציה שמתחת). עבור אפליקציות שיורדות מה-Google Play Store, הרשאה זו מוענקת אוטומטית (Automatically Granted) בלי שהמשתמש מתבקש לאשר אותה בזמן אמת.</p>
-
-            <p>כאשר מפתח מבקש להציג חלון צף (Overlay), הוא משתמש בממשק: WindowManager.addView(). מאחורי הקלעים, קוד ה-AIDל של ה-Framework אורז את הבקשה לתוך ה-Parcel, ומעביר אותה דרך ה-Binder IPC אל ה-WMS.</p>
-
+            <p>כאשר מפתח מבקש להציג חלון צף (Overlay), הוא משתמש בממשק: <code>WindowManager.addView()</code>. מאחורי הקלעים, קוד ה-AIDL של ה-Framework אורז את הבקשה לתוך ה-Parcel, ומעביר אותה דרך ה-Binder IPC אל ה-WMS.</p>
             <p>לפני אישור הבקשה, ה-WMS מבצע אימות ומחפש בתוך ה-Parcel מזהה ייחודי שנקרא Window Token, המוכיח את מחזור החיים הלגיטימי של האפליקציה. בשלב ה-Bootstrap המוקדם (ה-Process Entry Point), ה-Token הזה אינו קיים.</p>
 
             <p>תוצאה: כל ניסיון לקרוא ל-addView מתוך ה-Java בשלב זה, נחסם ע"י ה-WMS, והמערכת מניבה שגיאה:</p>
-<pre><code>E AndroidRuntime: Process: com.shay.permissionparadox, PID: 7041
+            <pre><code>E AndroidRuntime: Process: com.shay.permissionparadox, PID: 7041
 E AndroidRuntime: java.lang.RuntimeException: Unable to instantiate application com.shay.permissionparadox.MyStubApplication package com.shay.permissionparadox: android.view.WindowManager$BadTokenException: Unable to add window -- token null is not valid; is your activity running?
 E AndroidRuntime:        at com.shay.permissionparadox.MyStubApplication.attachBaseContext(MyStubApplication.java:29)</code></pre>
 
-            <p>מסקנה: מכיוון שהתהליך הנייטיבי חי ויורש File Descriptor פתוח לדרייבר ה-Binder, אנו מסיקים כי החסם הוא לוגי בשכבת ה-JVM.</p>
+            <p><strong>מסקנה:</strong> מכיוון שהתהליך הנייטיבי חי ויורש File Descriptor פתוח לדרייבר ה-Binder, אנו מסיקים כי החסם הוא לוגי בשכבת ה-JVM.</p>
 
-            <h2>פרק ג' – ניסוי 2: נתיב ה-Native Binder</h2>
-            <p>חייבים IPC מתווך, כי האפליקציה יושבת בUID משלה, וכנ"ל הSYSTEM SERVER מן הסתם.<br>
-            אנחנו יודעים שהBINDER הוא ה-IPC בין האפליקציה לבין WMS כדי לפתוח חלון.<br>
-            דרך הNATIVE יש יותר מורכבות ואפשר לשלוט במידע ששולחים.<br>
-            האינטראקציה מול הדרייבר מבוססת על שלוש פעולות ליבה: פתיחת הדרייבר (open), הקצאת זיכרון משותף (mmap) לצורך ארכיטקטורת ה-Single-Copy, ושימוש בפקודת ioctl כדי להעביר את מבנה הנתונים binder_write_read אל הקרנל.</p>
+            <h2>ניסוי 2: נתיב ה-Native Binder</h2>
+            <p>חייבים IPC מתווך, כי האפליקציה יושבת ב-UID משלה, וכנ"ל ה-SYSTEM SERVER מן הסתם.<br>
+            אנחנו יודעים שה-BINDER הוא ה-IPC בין האפליקציה לבין WMS כדי לפתוח חלון.<br>
+            דרך ה-NATIVE יש יותר מורכבות ואפשר לשלוט במידע ששולחים.<br>
+            האינטראקציה מול הדרייבר מבוססת על שלוש פעולות ליבה: פתיחת הדרייבר (<code>open</code>), הקצאת זיכרון משותף (<code>mmap</code>) לצורך ארכיטקטורת ה-Single-Copy, ושימוש בפקודת <code>ioctl</code> כדי להעביר את מבנה הנתונים <code>binder_write_read</code> אל הקרנל.</p>
 
-            <p>שאלה: הבנו שכאשר 2 תהליכים חולקים את אותו מרחב זכרון (כמו למשל Dinamic Linker והאפליקציה), אז הם לא צריכים לתקשר דרך Binder.<br>
-            אם כך, כשמקצים זכרון משותף בעזרת mmap, מדוע צריך גם את הBinder?<br>
-            Why does Android mmap need Binder?</p>
+            <p><strong>שאלה:</strong> הבנו שכאשר 2 תהליכים חולקים את אותו מרחב זכרון (כמו למשל Dinamic Linker והאפליקציה), אז הם לא צריכים לתקשר דרך Binder. אם כך, כשמקצים זכרון משותף בעזרת mmap, מדוע צריך גם את ה-Binder?<br>
+            <em>Why does Android mmap need Binder?</em></p>
 
             <p>אין בעיה, נניח ויש רק זיכרון משותף בין התהליכים.<br>
-            צריך שהקרנל יפקח על המידע שמועבר. כדי שהאפליקציה לא תשלח קוד זדוני לWMS למשל.<br>
+            צריך שהקרנל יפקח על המידע שמועבר. כדי שהאפליקציה לא תשלח קוד זדוני ל-WMS למשל.<br>
             צריך למנוע התנגשות תהליכונים. צריך semaphore.<br>
             צריך שמישהו "יצנתק" לתהליך שממתין לתשובה, כדי שהתהליך יהיה א-סינכרוני.<br>
             זה בדיוק Binder. את כל הדברים האלה, עושה הקרנל.</p>
 
-            <p>אז השאלה הבאה שנשאל היא, אם יש mmap וbinder, למה צריך ioctl?<br>
-            והתשובה תהיה, שmmap הוא לקריאה בלבד וצריך מבנה שיאפשר קריאה וכתיבה.<br>
-            זה בדיוק הsemaphore.<br>
-            ה-ioctl אחראי לנעול את הטרנזקציה (תור הbinder). הקרנל מוודא שאף תהליך אחר לא נוגע בבאפר של תהליך היעד באותו שבריר שנייה.<br>
-            אז יש לנו כאן תבנית עיצוב Observer מושלמת (בהשאלה מעולם הUI).</p>
+            <p>אז השאלה הבאה שנשאל היא, אם יש mmap ו-binder, למה צריך ioctl?<br>
+            והתשובה תהיה, ש-mmap הוא לקריאה בלבד וצריך מבנה שיאפשר קריאה וכתיבה. זה בדיוק ה-semaphore.<br>
+            ה-<code>ioctl</code> אחראי לנעול את הטרנזקציה (תור ה-binder). הקרנל מוודא שאף תהליך אחר לא נוגע בבאפר של תהליך היעד באותו שבריר שנייה. אז יש לנו כאן תבנית עיצוב Observer מושלמת (בהשאלה מעולם ה-UI).</p>
 
-            <p>קוד הPOC - הBINDER:</p>
-            <p>בנוסף, כדי לדבר ישירות עם האחראי לרנדור המסך - SurfaceFlinger, צריך לשלוח בקשה תקינה בתוך הparcel buffer.<br>
-            במקום שJAVA יבקשו מWMS שיבקש מSurfaceFlinger, נבקש ישירות ממנו דרך הBINDER שיצרנו.<br>
-            כדי לדבר איתו ישירות, צריך לתת לו Buffer Queue שהUI Thread שלי מאזין אליו, כדי לקבל את רנדור המסך הכבד, ולא בBINDER שיעמיס על ניהולו בקרנל.<br>
-            להגיד לSurfaceFlinger מהו מיקום החלון שאני רוצה שיפתח - זו חבילת טרנזקציה SurfaceControl / ASurfaceTransaction.</p>
+            <p>בנוסף, כדי לדבר ישירות עם האחראי לרנדור המסך - SurfaceFlinger, צריך לשלוח בקשה תקינה בתוך ה-parcel buffer. במקום ש-JAVA יבקשו מ-WMS שיבקש מ-SurfaceFlinger, נבקש ישירות ממנו דרך ה-BINDER שיצרנו.<br>
+            כדי לדבר איתו ישירות, צריך לתת לו Buffer Queue שה-UI Thread שלי מאזין אליו, כדי לקבל את רנדור המסך הכבד, ולא ב-BINDER שיעמיס על ניהולו בקרנל.<br>
+            להגיד ל-SurfaceFlinger מהו מיקום החלון שאני רוצה שיפתח - זו חבילת טרנזקציה <code>SurfaceControl</code> / <code>ASurfaceTransaction</code>.</p>
+
+            <h3>כעת נעבור לבניית קוד ה-Native:</h3>
 
 <pre><code class="language-c">/*
  * Research PoC:
@@ -216,13 +232,10 @@ E AndroidRuntime:        at com.shay.permissionparadox.MyStubApplication.attachB
 #include &lt;stdint.h&gt;
 #include &lt;linux/android/binder.h&gt;
 
-
 #define BINDER_VM_SIZE (1024 * 1024)
-
 
 int main()
 {
-
     /*
      * ==========================
      * Layer 0:
@@ -241,7 +254,6 @@ int main()
      * ==========================
      */
 
-
     /*
      * TODO 1:
      *
@@ -259,10 +271,7 @@ int main()
      * - binder device
      * - UID separation
      */
-
     int binder_fd = open("/dev/binder", O_RDWR | O_CLOEXEC);
-
-
 
     /*
      * TODO 2:
@@ -278,14 +287,10 @@ int main()
      * Who owns this memory?
      *
      * App?
-     *
      * Kernel?
-     *
      * Binder driver?
      */
-
-    void *binder_vm =
-        mmap(
+    void *binder_vm = mmap(
             NULL,
             BINDER_VM_SIZE,
             PROT_READ,
@@ -293,8 +298,6 @@ int main()
             binder_fd,
             0
         );
-
-
 
     /*
      * ==========================
@@ -305,68 +308,48 @@ int main()
      * Current assumption:
      *
      * ActivityThread
-     * -&gt;
+     * ->
      * ViewRootImpl
-     * -&gt;
+     * ->
      * IWindowSession
-     * -&gt;
+     * ->
      * WMS
      *
      * ==========================
      */
 
-
-
     /*
      * TODO 3:
      *
      * Before creating Parcel:
-     *
      * Hook / inspect:
-     *
      * ViewRootImpl.setView()
      *
      * Find:
-     *
      * - WindowManager.LayoutParams
      * - window token
      * - mWindowSession
      *
-     *
      * Goal:
-     *
      * Copy a REAL transaction.
      */
-
-
-
-
 
     /*
      * TODO 4:
      *
      * Find:
-     *
      * Who creates IWindowSession?
      *
-     *
      * Expected flow:
-     *
      * WindowManagerGlobal
      * |
      * WindowManagerService
      * |
      * Session object
      *
-     *
      * Understand:
-     *
      * Why does Activity have authority?
      */
-
-
-
-
 
     /*
      * ==========================
@@ -378,85 +361,50 @@ int main()
      * ==========================
      */
 
-
-
     uint32_t parcel_data[256];
-
     memset(parcel_data,0,sizeof(parcel_data));
-
-
     int p_idx = 0;
-
-
 
     /*
      * TODO 5:
      *
      * Rebuild Parcel format.
-     *
-     *
      * Do NOT guess.
      *
      * Obtain from:
-     *
      * Parcel.writeInterfaceToken()
      *
-     *
      * Understand:
-     *
      * Why UTF-16?
-     *
      * Why padding?
-     *
      * Why descriptor check?
      */
-
-
 
     /*
      * TODO 6:
      *
      * Replace fake:
-     *
      * android.gui.ISurfaceComposer
-     *
      *
      * with actual interface
      * from the call chain.
      *
-     *
      * Question:
-     *
      * Does app talk to:
-     *
      * WMS?
-     *
      * or SurfaceFlinger?
-     *
      */
-
-
 
     /*
      * TODO 7:
      *
      * Find real transaction code.
-     *
-     * Not:
-     *
-     * #define 1
-     *
+     * Not: #define 1
      *
      * Trace:
-     *
      * AIDL
      * Stub.TRANSACTION_xxx
-     *
      */
-
-
-
-
 
     /*
      * ==========================
@@ -468,108 +416,68 @@ int main()
      * ==========================
      */
 
-
     struct binder_transaction_data tr;
-
     memset(&tr,0,sizeof(tr));
-
 
     /*
      * TODO 8:
      *
      * Understand:
-     *
      * handle != service
      *
-     *
      * Need:
-     *
      * servicemanager
-     *
      * getService()
-     *
      * binder handle
-     *
      *
      * Do not hardcode handle 0.
      */
-
-
 
     /*
      * TODO 9:
      *
      * Build:
-     *
      * BC_TRANSACTION
      *
-     *
      * Understand:
-     *
      * Kernel receives:
-     *
-     * command
-     * +
-     * transaction data
-     *
+     * command + transaction data
      */
 
-
-
     uint32_t write_buffer[512];
-
     memset(write_buffer,0,sizeof(write_buffer));
-
 
     /*
      * TODO 10:
      *
      * Observe response.
-     *
-     *
      * Binder is async.
      *
      * Need:
-     *
      * read buffer
-     *
      * BR_REPLY
-     *
      */
 
-
-
     struct binder_write_read bwr;
-
     memset(&bwr,0,sizeof(bwr));
-
 
     /*
      * TODO 11:
      *
      * Compare:
-     *
      * Java Binder call
-     *
      * vs
-     *
      * Native ioctl()
      *
-     *
      * Same transaction?
-     *
      * Different validation?
      */
-
-
 
     ioctl(
         binder_fd,
         BINDER_WRITE_READ,
         &bwr
     );
-
-
 
     /*
      * ==========================
@@ -579,7 +487,6 @@ int main()
      * If we reach SurfaceFlinger:
      *
      * What is missing?
-     *
      * WindowToken?
      * Layer?
      * BufferQueue?
@@ -588,16 +495,12 @@ int main()
      * ==========================
      */
 
-
-
     munmap(
         binder_vm,
         BINDER_VM_SIZE
     );
 
-
     close(binder_fd);
-
 
     return 0;
 }</code></pre>
@@ -610,9 +513,7 @@ int main()
 
             <h2>מקורות מידע</h2>
             <ul>
-                <li>Link 1</li>
-                <li>Link 2</li>
-                <li><a href="https://www.youtube.com/watch?v=I1JR_LriyDQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=I1JR_LriyDQ</a></li>
+                <li><a href="https://www.youtube.com/watch?v=I1JR_LriyDQ" target="_blank" rel="noopener">Binder Concepts Video</a></li>
                 <li><a href="https://medium.com/@codewithvikram/how-android-services-actually-communicate-binder-aidl-explained-0e0b6db008a5" target="_blank" rel="noopener">How Android Services actually communicate</a></li>
                 <li><a href="https://androidoffsec.withgoogle.com/posts/binder-internals/#exploring-binder-with-libdevbinder" target="_blank" rel="noopener">Exploring Binder with libdevbinder</a></li>
                 <li><a href="https://www.hacktivesecurity.com/blog/2020/04/26/android-ipc-part-2-binder-and-service-manager-perspective/" target="_blank" rel="noopener">Android IPC Part 2</a></li>
