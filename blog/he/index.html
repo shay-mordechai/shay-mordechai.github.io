@@ -15,12 +15,12 @@
         .timeline-title { font-size: 0.85rem; color: #c9d1d9; margin-top: 5px; max-width: 160px; text-align: center; line-height: 1.3; }
         .timeline-node:hover .timeline-title { color: #fff; }
         
-        /* New Styles for Highlights Section */
-        .highlights-section { max-width: 1200px; margin: 0 auto 40px auto; padding: 30px; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; border-left: 4px solid #58a6ff; color: #c9d1d9; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        /* Styles for Highlights Section - Adjusted for RTL */
+        .highlights-section { max-width: 1200px; margin: 0 auto 40px auto; padding: 30px; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; border-right: 4px solid #58a6ff; color: #c9d1d9; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: right; }
         .highlights-section h2 { color: #58a6ff; margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; font-size: 1.5rem; }
         .highlights-list { list-style-type: none; padding: 0; margin: 0; }
-        .highlights-list li { margin-bottom: 15px; line-height: 1.6; position: relative; padding-left: 20px; }
-        .highlights-list li::before { content: '▹'; position: absolute; left: 0; color: #58a6ff; font-weight: bold; }
+        .highlights-list li { margin-bottom: 15px; line-height: 1.6; position: relative; padding-right: 20px; }
+        .highlights-list li::before { content: '■'; font-size: 0.8em; position: absolute; right: 0; top: 5px; color: #58a6ff; }
         .highlight-title { color: #fff; font-weight: bold; }
 
         .categories-container { display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -36,15 +36,15 @@
     <h1 style="text-align: center; margin: 40px 0 10px 0;">מאגר הפרויקטים והמחקרים</h1>
     <p style="text-align: center; color: #8b949e; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.5;">חוקר אבטחה ומפתח תוכנה, מתמקד ב-Vulnerability Research ו-Reverse Engineering בשכבות ה-Low-Level.</p>
 
-    <!-- Core Findings Section (English/LTR) -->
-    <div class="highlights-section" dir="ltr" style="text-align: left;">
-        <h2>Breaking Trust Boundaries: Core Research Findings</h2>
-        <p style="margin-bottom: 20px; color: #8b949e;">As a Security Researcher, my focus is on identifying logical flaws where execution environments (סביבות ריצה) and trust boundaries meet. Below are the key architectural flaws I have recently uncovered:</p>
+    <!-- Core Findings Section (Hebrew/RTL) -->
+    <div class="highlights-section">
+        <h2>שבירת גבולות אמון (Trust Boundaries): ממצאי מחקר מרכזיים</h2>
+        <p style="margin-bottom: 20px; color: #8b949e;">כחוקר אבטחה, המיקוד שלי הוא בזיהוי כשלים לוגיים בנקודות ההשקה שבין סביבות ריצה (Execution Environments) לגבולות אמון. להלן פגמי הארכיטקטורה המרכזיים שחשפתי לאחרונה:</p>
         <ul class="highlights-list">
-            <li><span class="highlight-title">Android OS & Native Boundaries:</span> Mapped 3 early-stage entry points used by malware to execute code before UI initialization, traced via Frida. Analyzed how JNI acts as an unsafe bridge, stripping protections when crossing to Native layers. <strong>Current Research:</strong> Hunting a logical flaw to create a UI window during the <code>Application</code> phase, bypassing OS permissions strictly enforced at the <code>Activity</code> phase.</li>
-            <li><span class="highlight-title">AI Agents & Web Isolation:</span> Discovered a logical flaw allowing an Anthropic AI agent to run in the browser without a proper sandbox (ארגז חול), which was patched a month after discovery. Additionally, identified a communication breakdown between a browser extension (תוסף לדפדפן) and a Desktop application.</li>
-            <li><span class="highlight-title">Cloud Architecture & Networking:</span> Mitigated a Backend-to-Frontend logical data leak in a SaaS product by implementing a Rust-based Envoy Tunnel to filter incoming backend variables. Also uncovered a router configuration logical error (TTL=64) that facilitates DNS Rebinding attacks.</li>
-            <li><span class="highlight-title">Compilers & V8 Engine:</span> Identified 3 compile-time logical errors in SBCL's lexical scope (טווח הכרה של משתנים). In the V8 engine, investigated a paradox where standard data inputs unexpectedly transform into executable code (קוד בר-הרצה) during runtime.</li>
+            <li><span class="highlight-title">מערכת ההפעלה Android וגבולות Native:</span> מיפוי 3 נקודות כניסה מוקדמות (Entry Points) המשמשות נוזקות להרצת קוד בטרם טעינת ה-UI, תוך מעקב דינאמי באמצעות Frida. בנוסף, ניתוח של מנגנון ה-JNI כגשר לא בטוח המסיר הגנות במעבר לשכבת ה-Native. <strong>מחקר נוכחי:</strong> איתור שגיאה לוגית ב-Bootstrap המאפשרת יצירת חלון UI בשלב ה-<code>Application</code>, תוך עקיפה מוחלטת של הרשאות מערכת ההפעלה הנאכפות רק בשלב ה-<code>Activity</code>.</li>
+            <li><span class="highlight-title">סוכני AI ובידוד בדפדפן (Web Isolation):</span> חשיפת שגיאה לוגית שאפשרה ל-AI Agent של Anthropic לרוץ על הדפדפן ללא ארגז חול (Sandbox) מתאים, חולשה שנסגרה על ידי החברה חודש לאחר מכן. בנוסף, זיהוי כשל לוגי בתקשורת ואכיפת הרשאות בין תוסף דפדפן לאפליקציית Desktop.</li>
+            <li><span class="highlight-title">ארכיטקטורת ענן ותקשורת:</span> מניעת דלף מידע לוגי בין ה-Backend ל-Frontend במוצר SaaS, על ידי מימוש מנהרת תקשורת (Envoy Tunnel) מבוססת Rust לסינון משתנים. כמו כן, חשיפת שגיאה לוגית בהגדרות נתבים (TTL=64) המאפשרת מתקפות DNS Rebinding.</li>
+            <li><span class="highlight-title">קומפיילרים ומנוע V8:</span> זיהוי 3 שגיאות לוגיות בזמן קומפילציה בטווח ההכרה של משתנים (Lexical Scope) בקומפיילר SBCL. במנוע V8, חקירת פרדוקס שבו קלט נתונים סטנדרטי הופך באופן בלתי צפוי לפקודות קוד בר-הרצה במהלך זמן הריצה.</li>
         </ul>
     </div>
 
@@ -80,7 +80,6 @@
     </div>
 
     <div class="categories-container">
-        <!-- Categories content remains identical to your original HTML -->
         <div class='category-column'>
             <h2>Articles</h2>
             <a href="permission-paradox.html" class="article-card">
