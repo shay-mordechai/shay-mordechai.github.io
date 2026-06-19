@@ -1,68 +1,68 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project MyLeads: Secure-by-Design SaaS Architecture</title>
+    <title>פרויקט MyLeads: ארכיטקטורת SaaS מאובטחת by Design</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
-<div id="content" style="direction: ltr; text-align: left;">
-    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&larr; Back to Articles & Projects</a>
+<div id="content" style="direction: rtl; text-align: right;">
+    <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
     
-    <h1>Project MyLeads AI: Secure-by-Design SaaS Architecture</h1>
-    <p><em>By Shay Mordechai | March 9, 2026</em></p>
+    <h1>פרויקט MyLeads AI: ארכיטקטורת SaaS מאובטחת by Design</h1>
+    <p><em>מאת שי מרדכי | 9 במרץ 2026</em></p>
 
-    <p>When engineering a modern SaaS platform that handles sensitive customer inquiries and AI interactions, security cannot be an afterthought. This case study outlines the architectural decisions and DevSecOps pipelines behind <strong>MyLeads AI</strong>, a platform I designed with a strict "Secure-by-Design" philosophy.</p>
+    <p>כשמפתחים פלטפורמת SaaS מודרנית שמטפלת בפניות לקוחות רגישות ובאינטראקציות AI, אבטחה לא יכולה להיות מחשבה שניה. מאמר זה מתאר את ההחלטות הארכיטקטוניות ואת צינורות ה-DevSecOps מאחורי <strong>MyLeads AI</strong> — פלטפורמה שתכננתי לפי פילוסופיית "Secure-by-Design" קפדנית.</p>
 
-    <p>The goal was to eliminate external attack surfaces while providing a high-performance User Experience (UX), heavily utilizing AI for development velocity so I could focus entirely on <strong>Infrastructure Hardening and Threat Modeling</strong>.</p>
+    <p>המטרה הייתה לחסל משטחי תקיפה חיצוניים תוך מתן חוויית משתמש בעלת ביצועים גבוהים, תוך שימוש אינטנסיבי ב-AI לצורך מהירות פיתוח — כדי שאוכל להתמקד לחלוטין ב<strong>הקשחת תשתיות ומידול איומים</strong>.</p>
 
     <div style="text-align: center; margin: 40px 0;">
-        <img src="../../assets/images/image_ac7aca.png" alt="MyLeads AI Security Architecture Diagram" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155; background-color: white; padding: 10px;">
-        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">Figure 1: The Zero Trust Production Architecture</p>
+        <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת האבטחה של MyLeads AI" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155; background-color: white; padding: 10px;">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור Zero Trust</p>
     </div>
 
-    <h2>0. How This Was Built: AI-First Development</h2>
-    <p>Before diving into the architecture, it's worth being transparent about the development approach — because it's inseparable from what made this project possible.</p>
+    <h2>0. איך זה נבנה: פיתוח AI-First</h2>
+    <p>לפני שנצלול לארכיטקטורה, חשוב להיות שקופים לגבי גישת הפיתוח — כי היא חלק בלתי נפרד ממה שהפך את הפרויקט הזה לאפשרי.</p>
 
-    <p>MyLeads AI was built entirely through <strong>AI-assisted development</strong>, across three distinct phases that mirror how the product itself evolved:</p>
+    <p>MyLeads AI נבנתה כולה דרך <strong>פיתוח בסיוע AI</strong>, בשלושה שלבים מובחנים שמשקפים את ההתפתחות של המוצר עצמו:</p>
 
-    <p><strong>Phase 1 — GitHub Copilot (VS Code):</strong> The initial version of the platform was scaffolded using GitHub Copilot inside VS Code. At this stage, the product was a prototype: basic lead capture, simple auth, and a rudimentary chat interface. Copilot accelerated the boilerplate-heavy early work — routing, models, API endpoints — while I focused on the architecture and security decisions.</p>
+    <p><strong>שלב 1 — GitHub Copilot (VS Code):</strong> הגרסה הראשונית של הפלטפורמה נבנתה עם GitHub Copilot בתוך VS Code. בשלב זה המוצר היה פרוטוטיפ: לכידת לידים בסיסית, אותנטיקציה פשוטה, וממשק צ'אט ראשוני. Copilot האיץ את העבודה הכבדה בשלבים המוקדמים — ניתוב, מודלים, נקודות API — בעוד שאני התמקדתי בהחלטות הארכיטקטורה והאבטחה.</p>
 
-    <p><strong>Phase 2 — Cursor:</strong> After roughly a year, I made a deliberate decision to upgrade the entire development workflow to Cursor. This unlocked a fundamentally different mode of working: instead of autocomplete, I was now conducting full architectural conversations with the codebase. Cursor allowed me to refactor the monolith into a clean Next.js + Python monorepo, implement the WASM DLP firewall, and migrate the database layer to Alembic — all at a pace that would have been impossible working line-by-line.</p>
+    <p><strong>שלב 2 — Cursor:</strong> אחרי כשנה, קיבלתי החלטה מכוונת לשדרג את כל תהליך הפיתוח ל-Cursor. זה פתח מצב עבודה שונה מהיסוד: במקום השלמה אוטומטית, ניהלתי שיחות ארכיטקטוניות מלאות עם הקוד. Cursor אפשר לי לבצע refactor ממונוליט למונו-ריפו נקי של Next.js + Python, לממש את ה-WASM DLP Firewall, ולהגר את שכבת מסד הנתונים ל-Alembic — הכל בקצב שלא היה אפשרי בעבודה שורה אחר שורה.</p>
 
-    <p><strong>Phase 3 — Iterative AI Studio (Client-Driven Features):</strong> The final phase was product-driven. I was working directly with a real client — a coaching business owner — co-designing requirements in real time. Each new feature (voice broadcasts, AI lead qualification, the agency partner portal) was specified through a client conversation, translated into a precise prompt, and implemented via AI. Google AI Studio became the tool of choice for rapid prototyping of the Gemini-powered agentic flows.</p>
+    <p><strong>שלב 3 — AI Studio (פיצ'רים מונחי לקוח):</strong> השלב האחרון היה מונע על ידי המוצר. עבדתי ישירות מול לקוח אמיתי — בעל עסק קואצ'ינג — ותכננתי דרישות בזמן אמת. כל פיצ'ר חדש (שידורי קול, כישורי AI לאיכות לידים, פורטל שותפי סוכנות) הוגדר בשיחה עם הלקוח, תורגם לפרומפט מדויק, ומומש דרך AI. Google AI Studio הפך לכלי הבחירה לפרוטוטייפינג מהיר של ה-flows האג'נטיים מבוססי Gemini.</p>
 
-    <div class="insight-box" style="border-color: var(--accent-color); text-align: left; margin: 30px 0;">
-        <strong style="color: var(--accent-color);">Development Takeaway:</strong> The real skill in AI-assisted development is not typing less — it's knowing exactly what to ask for, catching when the output is wrong, and making architecture decisions that no AI will make for you. Every security decision in this codebase was made by a human. The AI wrote the code.
+    <div class="insight-box" style="border-color: var(--accent-color); text-align: right; margin: 30px 0;">
+        <strong style="color: var(--accent-color);">תובנת פיתוח:</strong> המיומנות האמיתית בפיתוח בסיוע AI היא לא לכתוב פחות — אלא לדעת בדיוק מה לבקש, לזהות מתי הפלט שגוי, ולקבל החלטות ארכיטקטוניות שאף AI לא יקבל במקומך. כל החלטת אבטחה בקוד הזה התקבלה על ידי בן אדם. ה-AI כתב את הקוד.
     </div>
 
-    <h2>1. The "Dark Server" Infrastructure</h2>
-    <p>The core concept of the production environment is invisibility. The AWS EC2 server exposes <strong>zero inbound ports (0.0.0.0/0 blocked)</strong> to the public internet. All ingress traffic is strictly tunneled and inspected via Cloudflare's Edge Network.</p>
+    <h2>1. תשתית "השרת האפל"</h2>
+    <p>הרעיון המרכזי של סביבת הייצור הוא אי-נראות. שרת ה-AWS EC2 חושף <strong>אפס פורטים נכנסים (0.0.0.0/0 חסום)</strong> לאינטרנט הציבורי. כל תעבורת הכניסה מנותבת ומבוקרת אך ורק דרך רשת ה-Edge של Cloudflare.</p>
     <ul>
-        <li><strong>Identity-Aware Proxy (IAP):</strong> SSH access is exclusively proxied via <code>cloudflared</code> and requires hardware-key authentication.</li>
-        <li><strong>Container Isolation:</strong> The application stack runs on Red Hat Enterprise Linux (RHEL 10.1) using rootless Podman managed by user-space Systemd, significantly reducing the blast radius of any container compromise.</li>
+        <li><strong>Identity-Aware Proxy (IAP):</strong> גישת SSH מתבצעת אך ורק דרך פרוקסי של <code>cloudflared</code> ומחייבת אימות עם מפתח חומרה.</li>
+        <li><strong>בידוד קונטיינרים:</strong> סטק האפליקציה רץ על Red Hat Enterprise Linux (RHEL 10.1) עם Rootless Podman מנוהל על ידי Systemd במרחב המשתמש, מה שמצמצם משמעותית את רדיוס הפיצוץ במקרה של פריצת קונטיינר.</li>
     </ul>
 
-    <h2>2. WASM Data Loss Prevention (DLP) Firewall</h2>
-    <p>To mitigate API Over-fetching and Application-Layer Information Disclosure (CWE-209), I implemented a custom WebAssembly (WASM) filter written in Rust, running directly inside the Envoy Proxy.</p>
-    <p>This firewall uses a <strong>Fail-Closed</strong> architecture. It inspects outbound JSON payloads and redacts sensitive credentials (like internal tokens) in real-time, ensuring that data bleed is stopped at the network edge before reaching the Next.js Frontend.</p>
+    <h2>2. חומת אש WASM למניעת דליפת מידע (DLP)</h2>
+    <p>כדי למנוע API Over-fetching וחשיפת מידע ברמת האפליקציה (CWE-209), מימשתי פילטר WebAssembly (WASM) מותאם אישית שנכתב ב-Rust, שרץ ישירות בתוך Envoy Proxy.</p>
+    <p>חומת האש הזו משתמשת בארכיטקטורת <strong>Fail-Closed</strong>. היא בוחנת payloads של JSON יוצאים ומעמעמת בזמן אמת אישורים רגישים (כמו טוקנים פנימיים), כדי להבטיח שדליפת מידע נעצרת בקצה הרשת לפני שמגיעה ל-Frontend של Next.js.</p>
 
-    <h2>3. Out-of-Band Management & The "Airbag"</h2>
-    <p>Admin panels are notorious targets for web exploits. To mitigate this:</p>
+    <h2>3. ניהול Out-of-Band וה"כרית האוויר"</h2>
+    <p>פאנלי ניהול הם יעדים ידועים לפרצות אינטרנט. כדי לצמצם את הסיכון:</p>
     <ul>
-        <li><strong>CLI-Only Administration:</strong> Admin actions are disabled in the web UI. They are moved to a secure, unified CLI tool accessed only via SSH.</li>
-        <li><strong>Global Exception Handler:</strong> The system intercepts 500 Internal Server Errors globally, strips stack traces to prevent leakage, renders a localized generic message, and dispatches an out-of-band HTML crash report directly to the engineering team.</li>
+        <li><strong>ניהול דרך CLI בלבד:</strong> פעולות אדמין מושבתות בממשק האינטרנט ומועברות לכלי CLI מאוחד ומאובטח שנגיש רק דרך SSH.</li>
+        <li><strong>Global Exception Handler:</strong> המערכת מיירטת שגיאות 500 Internal Server Error, מסירה stack traces למניעת דליפה, מציגה הודעה גנרית ומקומית, ושולחת דוח תקלות HTML מפורט לצוות ההנדסה מחוץ לערוץ הרגיל.</li>
     </ul>
 
-    <h2>4. Data Integrity & Concurrency</h2>
-    <p>Handling highly concurrent webhook events from platforms like Meta requires transactional safety. I configured SQLite with Write-Ahead Logging (WAL) to prevent lock errors. Furthermore, a <strong>Dead Letter Queue (DLQ)</strong> ensures that failed payloads (e.g., due to AI API timeouts) are safely routed for manual recovery, guaranteeing 0% data loss during Retry Storms.</p>
+    <h2>4. שלמות נתונים ועבודה מקבילית</h2>
+    <p>טיפול באירועי webhook מקבילים בהיקף גבוה מפלטפורמות כמו Meta מחייב בטיחות טרנזקציונית. הגדרתי SQLite עם Write-Ahead Logging (WAL) למניעת שגיאות נעילה. בנוסף, <strong>Dead Letter Queue (DLQ)</strong> מבטיח שפayloads כושלים (למשל בגלל timeout של API ל-AI) מנותבים בבטחה לשחזור ידני — ומבטיח 0% אובדן מידע במהלך Retry Storms.</p>
 
-    <h2>5. AI Integration: Local vs. Cloud</h2>
-    <p>The platform features a Hybrid AI Engine. Sensitive audio components (like coaching voice notes) are processed completely offline using a locally hosted <strong>Faster-Whisper</strong> model and natively compiled FFmpeg. Public-facing agentic tasks (conversational memory, lead qualification) are securely offloaded to Google Gemini 2.0 Flash with semantic Redis caching to minimize latency.</p>
+    <h2>5. אינטגרציית AI: מקומי מול ענן</h2>
+    <p>הפלטפורמה כוללת מנוע AI היברידי. רכיבי שמע רגישים (כמו הקלטות קואצ'ינג) מעובדים לחלוטין אופליין באמצעות מודל <strong>Faster-Whisper</strong> מקומי ו-FFmpeg מקומפל נטיבי. משימות אג'נטיות פונות לציבור (זיכרון שיחה, כישורי לידים) מועברות בצורה מאובטחת ל-Google Gemini 2.0 Flash עם מטמון Redis סמנטי למזעור זמן תגובה.</p>
 
-    <div class="insight-box" style="border-color: var(--accent-purple); text-align: left; margin-top: 30px;">
-        <strong style="color: var(--accent-purple);">Architectural Takeaway:</strong> Modern development is no longer just about writing business logic. By leveraging AI tools — Copilot, Cursor, and AI Studio — to handle code generation at every stage, I was able to dedicate my engineering resources to what truly matters: designing a robust, resilient, and enterprise-grade secure infrastructure. The AI wrote the implementation. I designed the system.
+    <div class="insight-box" style="border-color: var(--accent-purple); text-align: right; margin-top: 30px;">
+        <strong style="color: var(--accent-purple);">תובנה ארכיטקטונית:</strong> פיתוח מודרני כבר לא עוסק רק בכתיבת לוגיקה עסקית. על ידי שימוש בכלי AI — Copilot, Cursor, ו-AI Studio — לטיפול בייצור הקוד בכל שלב, הצלחתי להקדיש את משאבי ההנדסה שלי למה שבאמת חשוב: תכנון תשתית חזקה, עמידה בפני תקלות, ומאובטחת ברמה ארגונית. ה-AI כתב את המימוש. אני תכננתי את המערכת.
     </div>
 </div>
 </body>
