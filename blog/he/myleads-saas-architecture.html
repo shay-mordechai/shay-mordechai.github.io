@@ -9,13 +9,13 @@
 <body>
 <div id="content" style="direction: rtl; text-align: right;">
     <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
-    
+
     <h1>פרויקט MyLeads AI: ארכיטקטורת SaaS מאובטחת by Design</h1>
     <p><em>מאת שי מרדכי | 9 במרץ 2026</em></p>
 
     <p>כשמפתחים פלטפורמת SaaS מודרנית שמטפלת בפניות לקוחות רגישות ובאינטראקציות AI, אבטחה לא יכולה להיות מחשבה שניה. מאמר זה מתאר את ההחלטות הארכיטקטוניות ואת צינורות ה-DevSecOps מאחורי <strong>MyLeads AI</strong> — פלטפורמה שתכננתי לפי פילוסופיית "Secure-by-Design" קפדנית.</p>
 
-    <p>המטרה הייתה לחסל משטחי תקיפה חיצוניים תוך מתן חוויית משתמש בעלת ביצועים גבוהים, תוך שימוש אינטנסיבי ב-AI לצורך מהירות פיתוח — כדי שאוכל להתמקד לחלוטין ב<strong>הקשחת תשתיות ומידול איומים</strong>.</p>
+    <p>המטרה הייתה לחסל משטחי תקיפה חיצוניים תוך מתן חוויית משתמש בעלת ביצועים גבוהים — תוך שימוש אינטנסיבי ב-AI לצורך מהירות פיתוח, כדי שאוכל להתמקד לחלוטין ב<strong>הקשחת תשתיות, Threat Modeling, ו-Code Review עצמי</strong>.</p>
 
     <div style="text-align: center; margin: 40px 0;">
         <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת האבטחה של MyLeads AI" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155; background-color: white; padding: 10px;">
@@ -25,44 +25,55 @@
     <h2>0. איך זה נבנה: פיתוח AI-First</h2>
     <p>לפני שנצלול לארכיטקטורה, חשוב להיות שקופים לגבי גישת הפיתוח — כי היא חלק בלתי נפרד ממה שהפך את הפרויקט הזה לאפשרי.</p>
 
-    <p>MyLeads AI נבנתה כולה דרך <strong>פיתוח בסיוע AI</strong>, בשלושה שלבים מובחנים שמשקפים את ההתפתחות של המוצר עצמו:</p>
+    <p>MyLeads AI נבנתה כולה דרך <strong>פיתוח בסיוע AI</strong>, בשלושה שלבים מובחנים:</p>
 
-    <p><strong>שלב 1 — GitHub Copilot (VS Code):</strong> הגרסה הראשונית של הפלטפורמה נבנתה עם GitHub Copilot בתוך VS Code. בשלב זה המוצר היה פרוטוטיפ: לכידת לידים בסיסית, אותנטיקציה פשוטה, וממשק צ'אט ראשוני. Copilot האיץ את העבודה הכבדה בשלבים המוקדמים — ניתוב, מודלים, נקודות API — בעוד שאני התמקדתי בהחלטות הארכיטקטורה והאבטחה.</p>
+    <p><strong>שלב 1 — GitHub Copilot (VS Code):</strong> הגרסה הראשונית נבנתה עם Copilot. בשלב זה המוצר היה פרוטוטיפ — לכידת לידים בסיסית, אותנטיקציה, וממשק צ'אט ראשוני. Copilot האיץ את העבודה הכבדה בשלבים המוקדמים בעוד שהתמקדתי בהחלטות הארכיטקטורה והאבטחה.</p>
 
-    <p><strong>שלב 2 — Cursor:</strong> אחרי כשנה, קיבלתי החלטה מכוונת לשדרג את כל תהליך הפיתוח ל-Cursor. זה פתח מצב עבודה שונה מהיסוד: במקום השלמה אוטומטית, ניהלתי שיחות ארכיטקטוניות מלאות עם הקוד. Cursor אפשר לי לבצע refactor ממונוליט למונו-ריפו נקי של Next.js + Python, לממש את ה-WASM DLP Firewall, ולהגר את שכבת מסד הנתונים ל-Alembic — הכל בקצב שלא היה אפשרי בעבודה שורה אחר שורה.</p>
+    <p><strong>שלב 2 — Cursor:</strong> אחרי כשנה, שדרגתי את כל תהליך הפיתוח ל-Cursor. זה פתח מצב עבודה שונה מהיסוד: שיחות ארכיטקטוניות מלאות עם הקוד, refactor ממונוליט למונו-ריפו נקי של Next.js + Python, מימוש ה-WASM DLP Firewall, והגירת שכבת מסד הנתונים ל-Alembic.</p>
 
-    <p><strong>שלב 3 — AI Studio (פיצ'רים מונחי לקוח):</strong> השלב האחרון היה מונע על ידי המוצר. עבדתי ישירות מול לקוח אמיתי — בעל עסק קואצ'ינג — ותכננתי דרישות בזמן אמת. כל פיצ'ר חדש (שידורי קול, כישורי AI לאיכות לידים, פורטל שותפי סוכנות) הוגדר בשיחה עם הלקוח, תורגם לפרומפט מדויק, ומומש דרך AI. Google AI Studio הפך לכלי הבחירה לפרוטוטייפינג מהיר של ה-flows האג'נטיים מבוססי Gemini.</p>
+    <p><strong>שלב 3 — Google AI Studio (פיצ'רים מונחי לקוח):</strong> עבדתי ישירות מול לקוח אמיתי — בעל עסק קואצ'ינג — ותכננתי דרישות בזמן אמת. כל פיצ'ר חדש תורגם לפרומפט מדויק ומומש דרך AI. AI Studio שימש לפרוטוטייפינג מהיר של ה-flows האג'נטיים מבוססי Gemini.</p>
 
     <div class="insight-box" style="border-color: var(--accent-color); text-align: right; margin: 30px 0;">
         <strong style="color: var(--accent-color);">תובנת פיתוח:</strong> המיומנות האמיתית בפיתוח בסיוע AI היא לא לכתוב פחות — אלא לדעת בדיוק מה לבקש, לזהות מתי הפלט שגוי, ולקבל החלטות ארכיטקטוניות שאף AI לא יקבל במקומך. כל החלטת אבטחה בקוד הזה התקבלה על ידי בן אדם. ה-AI כתב את הקוד.
     </div>
 
-    <h2>1. תשתית "השרת האפל"</h2>
-    <p>הרעיון המרכזי של סביבת הייצור הוא אי-נראות. שרת ה-AWS EC2 חושף <strong>אפס פורטים נכנסים (0.0.0.0/0 חסום)</strong> לאינטרנט הציבורי. כל תעבורת הכניסה מנותבת ומבוקרת אך ורק דרך רשת ה-Edge של Cloudflare.</p>
-    <ul>
-        <li><strong>Identity-Aware Proxy (IAP):</strong> גישת SSH מתבצעת אך ורק דרך פרוקסי של <code>cloudflared</code> ומחייבת אימות עם מפתח חומרה.</li>
-        <li><strong>בידוד קונטיינרים:</strong> סטק האפליקציה רץ על Red Hat Enterprise Linux (RHEL 10.1) עם Rootless Podman מנוהל על ידי Systemd במרחב המשתמש, מה שמצמצם משמעותית את רדיוס הפיצוץ במקרה של פריצת קונטיינר.</li>
-    </ul>
+    <h2>1. תשתית "השרת האפל" — Zero Attack Surface</h2>
+    <p>כשהעליתי את תשתית ה-EC2 זיהיתי מיד סריקות בוטים אוטומטיות מכל העולם. ההחלטה הייתה לחנוק את מרחב התקיפה בשכבת הרשת עצמה.</p>
+    <p>שרת ה-AWS EC2 חוסם לחלוטין את כל ה-Inbound Ports — <code>0.0.0.0/0</code> ריק לגמרי. השרת אינו מקשיב לאינטרנט החיצוני. כל תעבורה נכנסת מנותבת דרך <strong>Cloudflare Tunnel</strong> — חיבור Outbound-only מוצפן שמנטרל Direct IP Scanning ו-DDoS ברמת הרשת. גישת SSH מחייבת מפתח חומרה דרך Cloudflare IAP. האפליקציה רצה ב-Rootless Podman על RHEL 10.1 — מצמצם את רדיוס הפיצוץ במקרה של פריצת קונטיינר.</p>
 
-    <h2>2. חומת אש WASM למניעת דליפת מידע (DLP)</h2>
-    <p>כדי למנוע API Over-fetching וחשיפת מידע ברמת האפליקציה (CWE-209), מימשתי פילטר WebAssembly (WASM) מותאם אישית שנכתב ב-Rust, שרץ ישירות בתוך Envoy Proxy.</p>
-    <p>חומת האש הזו משתמשת בארכיטקטורת <strong>Fail-Closed</strong>. היא בוחנת payloads של JSON יוצאים ומעמעמת בזמן אמת אישורים רגישים (כמו טוקנים פנימיים), כדי להבטיח שדליפת מידע נעצרת בקצה הרשת לפני שמגיעה ל-Frontend של Next.js.</p>
+    <h2>2. ניהול סודות — In-Memory Bootstrapping</h2>
+    <p>בקוד הליבה (<code>src/config.py</code>), ביטלתי לחלוטין את קובצי ה-<code>.env</code> הסטטיים. אם תוקף מנצל SSRF או LFI, היעד הראשון שלו הוא תמיד קובץ ה-<code>.env</code>.</p>
+    <p>הפתרון: בזמן עליית השרת, האפליקציה פונה ישירות ל-<strong>AWS SSM Parameter Store</strong> דרך <code>boto3</code> וטוענת את כל הסודות לזיכרון בלבד. אין שום עקבות על הדיסק. בנוסף, שימוש ב-IMDSv2 (Token-based Metadata) מגן מפני מעקפי SSRF בסיסיים נגד שירות ה-Metadata של AWS.</p>
 
-    <h2>3. ניהול Out-of-Band וה"כרית האוויר"</h2>
-    <p>פאנלי ניהול הם יעדים ידועים לפרצות אינטרנט. כדי לצמצם את הסיכון:</p>
-    <ul>
-        <li><strong>ניהול דרך CLI בלבד:</strong> פעולות אדמין מושבתות בממשק האינטרנט ומועברות לכלי CLI מאוחד ומאובטח שנגיש רק דרך SSH.</li>
-        <li><strong>Global Exception Handler:</strong> המערכת מיירטת שגיאות 500 Internal Server Error, מסירה stack traces למניעת דליפה, מציגה הודעה גנרית ומקומית, ושולחת דוח תקלות HTML מפורט לצוות ההנדסה מחוץ לערוץ הרגיל.</li>
-    </ul>
+    <h2>3. MFA — Single-Use OTP ומניעת Replay Attacks</h2>
+    <p>ב-<code>src/routers/auth.py</code> אכפתי לוגיקה קשיחה שמונעת Replay Attacks בחלון הזמן בין קבלת הטוקן למחיקת ה-OTP.</p>
+    <p>סדר הפעולות האטומי: המשתמש מזין OTP → ה-OTP <strong>נמחק מה-DB ומתבצע <code>db.commit()</code> לפני כל פעולה אחרת</strong> → רק לאחר האיפוס מונפק ה-JWT הסופי. יצירת ה-OTP מבוססת על <code>secrets</code> (CSPRNG של ה-OS) ולא על <code>random</code> הפגיע (CWE-338).</p>
 
-    <h2>4. שלמות נתונים ועבודה מקבילית</h2>
-    <p>טיפול באירועי webhook מקבילים בהיקף גבוה מפלטפורמות כמו Meta מחייב בטיחות טרנזקציונית. הגדרתי SQLite עם Write-Ahead Logging (WAL) למניעת שגיאות נעילה. בנוסף, <strong>Dead Letter Queue (DLQ)</strong> מבטיח שפayloads כושלים (למשל בגלל timeout של API ל-AI) מנותבים בבטחה לשחזור ידני — ומבטיח 0% אובדן מידע במהלך Retry Storms.</p>
+    <h2>4. חומת אש WASM — מניעת דליפת מידע (CWE-209)</h2>
+    <p>מימשתי פילטר WebAssembly כתוב ב-Rust שרץ ישירות בתוך Envoy Proxy. ארכיטקטורת <strong>Fail-Closed</strong>: כל תגובת 5xx נחתכת, ה-Stack Trace מועלם, והלקוח מקבל JSON גנרי בלבד.</p>
+    <p><strong>למה לא eBPF?</strong> eBPF מצוין ל-Observability אך הוא Read-Only על Data Payloads — הקרנל לא מאפשר Mutation של Payloads בשכבה 7 בזמן ריצה. Envoy WASM היה הבחירה הנכונה.</p>
 
-    <h2>5. אינטגרציית AI: מקומי מול ענן</h2>
-    <p>הפלטפורמה כוללת מנוע AI היברידי. רכיבי שמע רגישים (כמו הקלטות קואצ'ינג) מעובדים לחלוטין אופליין באמצעות מודל <strong>Faster-Whisper</strong> מקומי ו-FFmpeg מקומפל נטיבי. משימות אג'נטיות פונות לציבור (זיכרון שיחה, כישורי לידים) מועברות בצורה מאובטחת ל-Google Gemini 2.0 Flash עם מטמון Redis סמנטי למזעור זמן תגובה.</p>
+    <h2>5. מניעת IDOR ו-Broken Access Control</h2>
+    <p>ה-API לא סומך על שום פרמטר שהמשתמש שולח לזיהוי. הפונקציה <code>get_current_user</code> מפענחת את ה-JWT, שולפת את ה-<code>email</code> מתוך ה-Claims המוצפנים, ומושכת את המשתמש ישירות מה-DB. כל endpoint פרטי מחויב בשימוש ב-Dependency הזה — חסימה ברמת הניתוב לפני הגעה ללוגיקה העסקית.</p>
+
+    <h2>6. הצפנת PII במנוחה</h2>
+    <p>מספרי טלפון ותמלולים מוצפנים עם <strong>Fernet (AES-128 CBC)</strong>. ה-Cipher משתמש ב-Lazy Initialization — ממתין שהמפתח ייטען מ-AWS SSM לפני כל אתחול. כשל בפענוח (Key Rotation / Corrupted Data) לא מקריס את האפליקציה — רושם Audit Event ומחזיר <code>[DECRYPTION_FAILED]</code>.</p>
+
+    <h2>7. Rate Limiting מודע לפרוקסי</h2>
+    <p>בעיה ידועה: Rate Limiter רגיל מאחורי Cloudflare יחסום את ה-IP של ה-Tunnel (<code>127.0.0.1</code>) ויגרום ל-Global DoS על כל המשתמשים. הפתרון: פונקציה מותאמת <code>get_real_ip</code> שולפת את <code>CF-Connecting-IP</code> — ה-Header שמוזרק על ידי Cloudflare — ומכוונת את ה-Limiter לכוון ה-IP האמיתי של התוקף בלבד.</p>
+
+    <h2>8. Audit Logging מוכן ל-SIEM (OWASP A09)</h2>
+    <p>כל אירוע אבטחה נכתב כפול: ל-DB וגם כ-Structured JSON Log מוכן ל-AWS CloudWatch / ELK. כשל בשמירה ל-DB לא מקריס את ה-API — תוקף לא יכול לבצע DoS על ידי הצפת טבלת ה-Audit.</p>
+
+    <h2>9. ממצאים מ-Code Review עצמי</h2>
+    <p>חוקר אבטחה טוב יודע להגן. חוקר אבטחה מצוין יודע לבקר את הקוד של עצמו וגם למצוא בו חולשות.</p>
+
+    <p><strong>ממצא א' — Webhook Spoofing (Twilio):</strong> ב-<code>src/routers/webhooks/twilio.py</code>, ה-Webhook מקבל את פרמטר <code>From</code> ללא אימות חתימה. תוקף שיודע את כתובת ה-Webhook יכול לזייף את <code>From</code> למספר של בעל העסק ולהריץ פקודות Admin. תוכנן לתיקון עם <strong>Twilio Signature Validation Middleware</strong> (Header <code>X-Twilio-Signature</code>).</p>
+
+    <p><strong>ממצא ב' — Path Traversal ביצירת PDF:</strong> ב-<code>src/services/media/pdf_maker.py</code>, שימוש ב-<code>os.path.join(output_dir, filename)</code> ללא סניטציה עלול לאפשר Directory Traversal אם המשתמש שולט בשם הקובץ. תוכנן לתיקון עם <code>secure_filename</code>. (חיובי: השימוש ב-FPDF במקום HTML-to-PDF כבר מאפס את סיכון ה-SSRF ביצירת PDF עצמה.)</p>
 
     <div class="insight-box" style="border-color: var(--accent-purple); text-align: right; margin-top: 30px;">
-        <strong style="color: var(--accent-purple);">תובנה ארכיטקטונית:</strong> פיתוח מודרני כבר לא עוסק רק בכתיבת לוגיקה עסקית. על ידי שימוש בכלי AI — Copilot, Cursor, ו-AI Studio — לטיפול בייצור הקוד בכל שלב, הצלחתי להקדיש את משאבי ההנדסה שלי למה שבאמת חשוב: תכנון תשתית חזקה, עמידה בפני תקלות, ומאובטחת ברמה ארגונית. ה-AI כתב את המימוש. אני תכננתי את המערכת.
+        <strong style="color: var(--accent-purple);">תובנה ארכיטקטונית:</strong> פיתוח מודרני כבר לא עוסק רק בכתיבת לוגיקה עסקית. על ידי שימוש ב-Copilot, Cursor, ו-AI Studio לטיפול בייצור הקוד, הצלחתי להקדיש את משאבי ההנדסה שלי למה שבאמת חשוב: Threat Modeling, Defense in Depth, וביקורת עצמית על הקוד. ה-AI כתב את המימוש. אני תכננתי — ופרצתי — את המערכת.
     </div>
 </div>
 </body>
