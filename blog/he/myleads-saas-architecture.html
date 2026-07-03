@@ -3,77 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>פרויקט MyLeads: ארכיטקטורת SaaS מאובטחת by Design</title>
+    <title>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 <div id="content" style="direction: rtl; text-align: right;">
     <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
 
-    <h1>פרויקט MyLeads AI: ארכיטקטורת SaaS מאובטחת by Design</h1>
+    <h1>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</h1>
+    <h2 style="color: var(--text-muted); font-size: 1.2rem; margin-top: -10px; margin-bottom: 20px;">Secure-by-Design SaaS with CI/CD Security, Zero Trust Infrastructure & AI Integration</h2>
     <p><em>מאת שי מרדכי | 9 במרץ 2026</em></p>
 
-    <p>כשמפתחים פלטפורמת SaaS מודרנית שמטפלת בפניות לקוחות רגישות ובאינטראקציות AI, אבטחה לא יכולה להיות מחשבה שניה. מאמר זה מתאר את ההחלטות הארכיטקטוניות ואת צינורות ה-DevSecOps מאחורי <strong>MyLeads AI</strong> — פלטפורמה שתכננתי לפי פילוסופיית "Secure-by-Design" קפדנית.</p>
-
-    <p>המטרה הייתה לחסל משטחי תקיפה חיצוניים תוך מתן חוויית משתמש בעלת ביצועים גבוהים — תוך שימוש אינטנסיבי ב-AI לצורך מהירות פיתוח, כדי שאוכל להתמקד לחלוטין ב<strong>הקשחת תשתיות, Threat Modeling, ו-Code Review עצמי</strong>.</p>
+    <div class="insight-box" style="border-color: var(--accent-color); text-align: right; margin: 30px 0; padding: 15px; background-color: #f8fafc; border-right: 4px solid var(--accent-color);">
+        <h3 style="margin-top: 0;">0. Executive Summary</h3>
+        <p><strong>MyLeads AI</strong> היא מערכת SaaS מבוססת AI לניהול לידים, שנבנתה מתוך הנחה אחת מרכזית:</p>
+        <p><em>כל מערכת חשופה לאיום כברירת מחדל — ולכן אבטחה חייבת להיות חלק מהארכיטקטורה, לא תוספת.</em></p>
+        <p>המערכת תוכננה סביב שלושה עקרונות:</p>
+        <ul>
+            <li><strong>Secure SDLC</strong> מלא עם CI/CD אוטומטי</li>
+            <li><strong>Zero Trust</strong> Cloud Architecture</li>
+            <li><strong>AI-powered application workflows</strong> עם מודעות ל-abuse scenarios</li>
+        </ul>
+    </div>
 
     <div style="text-align: center; margin: 40px 0;">
         <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת האבטחה של MyLeads AI" style="max-width: 100%; border-radius: 8px; border: 1px solid #334155; background-color: white; padding: 10px;">
         <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור Zero Trust</p>
     </div>
 
-    <h2>0. איך זה נבנה: פיתוח AI-First</h2>
-    <p>לפני שנצלול לארכיטקטורה, חשוב להיות שקופים לגבי גישת הפיתוח — כי היא חלק בלתי נפרד ממה שהפך את הפרויקט הזה לאפשרי.</p>
+    <h2>1. Threat Model Overview</h2>
+    <p>בשלב התכנון זוהו שלוש קטגוריות סיכון מרכזיות:</p>
+    
+    <h3>1.1 External Attack Surface</h3>
+    <ul>
+        <li>Internet-facing SaaS application</li>
+        <li>Automated bot scanning</li>
+        <li>API abuse attempts</li>
+    </ul>
 
-    <p>MyLeads AI נבנתה כולה דרך <strong>פיתוח בסיוע AI</strong>, בשלושה שלבים מובחנים:</p>
+    <h3>1.2 Application Layer Risks</h3>
+    <ul>
+        <li>Authentication bypass</li>
+        <li>IDOR / Broken Access Control</li>
+        <li>Session hijacking</li>
+        <li>Webhook spoofing</li>
+        <li>Input-based injection vectors</li>
+    </ul>
 
-    <p><strong>שלב 1 — GitHub Copilot (VS Code):</strong> הגרסה הראשונית נבנתה עם Copilot. בשלב זה המוצר היה פרוטוטיפ — לכידת לידים בסיסית, אותנטיקציה, וממשק צ'אט ראשוני. Copilot האיץ את העבודה הכבדה בשלבים המוקדמים בעוד שהתמקדתי בהחלטות הארכיטקטורה והאבטחה.</p>
+    <h3>1.3 AI & Automation Risks</h3>
+    <ul>
+        <li>Prompt injection</li>
+        <li>Data leakage via AI outputs</li>
+        <li>Misuse of AI-generated business decisions</li>
+    </ul>
 
-    <p><strong>שלב 2 — Cursor:</strong> אחרי כשנה, שדרגתי את כל תהליך הפיתוח ל-Cursor. זה פתח מצב עבודה שונה מהיסוד: שיחות ארכיטקטוניות מלאות עם הקוד, refactor ממונוליט למונו-ריפו נקי של Next.js + Python, מימוש ה-WASM DLP Firewall, והגירת שכבת מסד הנתונים ל-Alembic.</p>
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
 
-    <p><strong>שלב 3 — Google AI Studio (פיצ'רים מונחי לקוח):</strong> עבדתי ישירות מול לקוח אמיתי — בעל עסק קואצ'ינג — ותכננתי דרישות בזמן אמת. כל פיצ'ר חדש תורגם לפרומפט מדויק ומומש דרך AI. AI Studio שימש לפרוטוטייפינג מהיר של ה-flows האג'נטיים מבוססי Gemini.</p>
+    <h2>2. Secure SDLC & CI/CD Security Model</h2>
+    <p>המערכת נבנתה סביב pipeline מלא של:</p>
+    <ul>
+        <li><strong>GitHub Actions</strong> (build/test/deploy orchestration)</li>
+        <li><strong>Pytest</strong> (backend validation)</li>
+        <li><strong>Vitest + Playwright</strong> (frontend + E2E validation)</li>
+        <li><strong>Docker-based containerization</strong></li>
+        <li><strong>Deployment</strong> to AWS ECR + EC2</li>
+    </ul>
+    <p><strong>Security Design Principle:</strong> ה-pipeline אינו רק כלי DevOps — אלא security enforcement layer. כל שינוי עובר validation לפני build artifact generation, קיימת הפרדת backend/frontend pipelines לצמצום blast radius, ונמנעת פריסה (deployment) של state לא מאומת.</p>
 
-    <div class="insight-box" style="border-color: var(--accent-color); text-align: right; margin: 30px 0;">
-        <strong style="color: var(--accent-color);">תובנת פיתוח:</strong> המיומנות האמיתית בפיתוח בסיוע AI היא לא לכתוב פחות — אלא לדעת בדיוק מה לבקש, לזהות מתי הפלט שגוי, ולקבל החלטות ארכיטקטוניות שאף AI לא יקבל במקומך. כל החלטת אבטחה בקוד הזה התקבלה על ידי בן אדם. ה-AI כתב את הקוד.
-    </div>
+    <h2>3. Zero Trust Cloud Architecture</h2>
+    <h3>3.1 Network Exposure Model</h3>
+    <p>המערכת נבנתה כך שאין פתיחת inbound ports ל-EC2. כל התעבורה נכנסת דרך <strong>Cloudflare Tunnel</strong> בלבד (outbound-only model), וגישה ניהולית מוגבלת מתבצעת דרך Cloudflare Access + MFA.</p>
+    <p><strong>&rarr; המשמעות:</strong> אין IP ציבורי שניתן לתקוף ישירות.</p>
 
-    <h2>1. תשתית "השרת האפל" — Zero Attack Surface</h2>
-    <p>בימים הראשונים שהאתר עלה לפרודקשן, זיהיתי מיד עשרות בוטים שסורקים את האתר מכל העולם בניסיון למצוא פרצות. ההחלטה הארכיטקטונית הייתה פשוטה: לנעול בפניהם את הדלת לחלוטין ולחנוק את מרחב התקיפה בשכבת הרשת עצמה.</p>
-    <p>כדי לממש את תפיסת ה-Zero Trust, שרת ה-AWS EC2 חוסם כעת לחלוטין את כל ה-Inbound Ports — <code>0.0.0.0/0</code> ריק לגמרי והשרת אינו מקשיב לאינטרנט החיצוני. כל תעבורה נכנסת מנותבת דרך <strong>Cloudflare Tunnel</strong> — חיבור Outbound-only מוצפן שמנטרל Direct IP Scanning ו-DDoS. כדי למנוע השתלטות עוינת, גישת ה-SSH והאדמין מחייבת הזדהות מול Cloudflare באמצעות חשבון דוא"ל מאובטח וייעודי שפתחתי ב-Proton, בליווי חובה של אימות MFA מבוסס Security Key פיזי. האפליקציה עצמה רצה ב-Rootless Podman על RHEL 10.1 — מה שמצמצם את רדיוס הפיצוץ במקרה של פריצת קונטיינר.</p>
+    <h3>3.2 Runtime Isolation</h3>
+    <ul>
+        <li>Containers מופעלים ב-rootless Podman.</li>
+        <li>הפרדת services (backend / worker / frontend).</li>
+        <li>הגבלת resource allocation לכל שירות.</li>
+    </ul>
 
-    <h2>2. ניהול סודות — In-Memory Bootstrapping</h2>
-    <p>בקוד הליבה (<code>src/config.py</code>), ביטלתי לחלוטין את קובצי ה-<code>.env</code> הסטטיים. אם תוקף מנצל SSRF או LFI, היעד הראשון שלו הוא תמיד קובץ ה-<code>.env</code>.</p>
-    <p>הפתרון: בזמן עליית השרת, האפליקציה פונה ישירות ל-<strong>AWS SSM Parameter Store</strong> דרך <code>boto3</code> וטוענת את כל הסודות לזיכרון בלבד. אין שום עקבות על הדיסק. בנוסף, שימוש ב-IMDSv2 (Token-based Metadata) מגן מפני מעקפי SSRF בסיסיים נגד שירות ה-Metadata של AWS.</p>
+    <h2>4. Secrets & Identity Security</h2>
+    <h3>4.1 Secret Management Model</h3>
+    <p>במקום שימוש ב-<code>.env</code> סטטי, secrets נטענים בזמן runtime מתוך <strong>AWS SSM Parameter Store</strong> ללא persistence על דיסק.</p>
+    <p><strong>&rarr; הפחתת סיכון של:</strong> LFI, SSRF-to-file exfiltration, ו-repo leakage.</p>
 
-    <h2>3. MFA — Single-Use OTP ומניעת Replay Attacks</h2>
-    <p>ב-<code>src/routers/auth.py</code> אכפתי לוגיקה קשיחה שמונעת Replay Attacks בחלון הזמן בין קבלת הטוקן למחיקת ה-OTP.</p>
-    <p>סדר הפעולות האטומי: המשתמש מזין OTP → ה-OTP <strong>נמחק מה-DB ומתבצע <code>db.commit()</code> לפני כל פעולה אחרת</strong> → רק לאחר האיפוס מונפק ה-JWT הסופי. יצירת ה-OTP מבוססת על <code>secrets</code> (CSPRNG של ה-OS) ולא על <code>random</code> הפגיע (CWE-338).</p>
+    <h3>4.2 AWS Metadata Protection</h3>
+    <p>שימוש ב-<strong>IMDSv2</strong> בלבד (token-based metadata access) המפחית דרמטית סיכוני SSRF metadata abuse.</p>
 
-    <h2>4. חומת אש WASM — מניעת דליפת מידע (CWE-209)</h2>
-    <p>מימשתי פילטר WebAssembly כתוב ב-Rust שרץ ישירות בתוך Envoy Proxy. ארכיטקטורת <strong>Fail-Closed</strong>: כל תגובת 5xx נחתכת, ה-Stack Trace מועלם, והלקוח מקבל JSON גנרי בלבד.</p>
-    <p><strong>למה לא eBPF?</strong> eBPF מצוין ל-Observability אך הוא Read-Only על Data Payloads — הקרנל לא מאפשר Mutation של Payloads בשכבה 7 בזמן ריצה. Envoy WASM היה הבחירה הנכונה.</p>
+    <h2>5. Authentication & Session Security Design</h2>
+    <h3>5.1 Token Model</h3>
+    <p>שימוש ב-<strong>httpOnly JWT cookies</strong> בלבד למניעת client-side token exposure (XSS), והפרדה מוחלטת בין session state ל-business logic state.</p>
 
-    <h2>5. מניעת IDOR ו-Broken Access Control</h2>
-    <p>ה-API לא סומך על שום פרמטר שהמשתמש שולח לזיהוי. הפונקציה <code>get_current_user</code> מפענחת את ה-JWT, שולפת את ה-<code>email</code> מתוך ה-Claims המוצפנים, ומושכת את המשתמש ישירות מה-DB. כל endpoint פרטי מחויב בשימוש ב-Dependency הזה — חסימה ברמת הניתוב לפני הגעה ללוגיקה העסקית.</p>
+    <h3>5.2 Authorization Model</h3>
+    <p>כל החלטת הרשאה מבוססת <strong>JWT claims</strong> בלבד. אין הסתמכות על user-controlled identifiers, וישנה ריכוזיות (centralization) של <code>get_current_user</code> logic.</p>
+    <p><strong>&rarr; Mitigates:</strong> IDOR, privilege escalation, ו-broken object-level authorization.</p>
 
-    <h2>6. הצפנת PII במנוחה</h2>
-    <p>מספרי טלפון ותמלולים מוצפנים עם <strong>Fernet (AES-128 CBC)</strong>. ה-Cipher משתמש ב-Lazy Initialization — ממתין שהמפתח ייטען מ-AWS SSM לפני כל אתחול. כשל בפענוח (Key Rotation / Corrupted Data) לא מקריס את האפליקציה — רושם Audit Event ומחזיר <code>[DECRYPTION_FAILED]</code>.</p>
+    <h2>6. AI Security Considerations</h2>
+    <p>המערכת כוללת רכיבי AI ל-lead scoring, conversational simulation, ו-workflow automation.</p>
+    <ul>
+        <li><strong>Threats Considered:</strong> Prompt injection, data poisoning, ושימוש לרעה ב-AI outputs לטובת business logic.</li>
+        <li><strong>Mitigation Approach:</strong> הפרדה מוחלטת בין AI output לבין החלטות קריטיות במערכת. ה-AI מוגדר ככלי "תומך החלטה" בלבד (untrusted subsystem), עם הגבלת scope מחמירה של פעולותיו.</li>
+    </ul>
 
-    <h2>7. Rate Limiting מודע לפרוקסי</h2>
-    <p>בעיה ידועה: Rate Limiter רגיל מאחורי Cloudflare יחסום את ה-IP של ה-Tunnel (<code>127.0.0.1</code>) ויגרום ל-Global DoS על כל המשתמשים. הפתרון: פונקציה מותאמת <code>get_real_ip</code> שולפת את <code>CF-Connecting-IP</code> — ה-Header שמוזרק על ידי Cloudflare — ומכוונת את ה-Limiter לכוון ה-IP האמיתי של התוקף בלבד.</p>
+    <h2>7. Application Security Controls</h2>
+    <h3>7.1 Input & Access Control</h3>
+    <p>Validation מתבצעת Server-side בלבד, תוך אכיפת strict API boundary enforcement ומניעת אמון (Trust) ב-client input.</p>
 
-    <h2>8. Audit Logging מוכן ל-SIEM (OWASP A09)</h2>
-    <p>כל אירוע אבטחה נכתב כפול: ל-DB וגם כ-Structured JSON Log מוכן ל-AWS CloudWatch / ELK. כשל בשמירה ל-DB לא מקריס את ה-API — תוקף לא יכול לבצע DoS על ידי הצפת טבלת ה-Audit.</p>
+    <h3>7.2 Web/API Security</h3>
+    <p>Mitigation מובנה ברמת הארכיטקטורה כנגד: XSS, IDOR, webhook spoofing, ו-path traversal (Design awareness).</p>
 
-    <h2>9. ממצאים מ-Code Review עצמי</h2>
-    <p>חוקר אבטחה טוב יודע להגן. חוקר אבטחה מצוין יודע לבקר את הקוד של עצמו וגם למצוא בו חולשות.</p>
+    <h2>8. Observability & Audit Logging</h2>
+    <p>שימוש ב-<strong>structured JSON logs</strong>. מודל dual-write logging (שמירה ל-DB + פורמט המוכן ל-AWS CloudWatch). חשוב מכך: failure-safe audit pipeline (שגיאת רישום לוג אינה מפילה את השירות ואינה מאפשרת DoS דרך מנגנון הלוגים).</p>
+    <p><strong>&rarr; מונע:</strong> Log tampering ו-audit-based DoS.</p>
 
-    <p><strong>ממצא א' — Webhook Spoofing (Twilio):</strong> ב-<code>src/routers/webhooks/twilio.py</code>, ה-Webhook מקבל את פרמטר <code>From</code> ללא אימות חתימה. תוקף שיודע את כתובת ה-Webhook יכול לזייף את <code>From</code> למספר של בעל העסק ולהריץ פקודות Admin. תוכנן לתיקון עם <strong>Twilio Signature Validation Middleware</strong> (Header <code>X-Twilio-Signature</code>).</p>
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
 
-    <p><strong>ממצא ב' — Path Traversal ביצירת PDF:</strong> ב-<code>src/services/media/pdf_maker.py</code>, שימוש ב-<code>os.path.join(output_dir, filename)</code> ללא סניטציה עלול לאפשר Directory Traversal אם המשתמש שולט בשם הקובץ. תוכנן לתיקון עם <code>secure_filename</code>. (חיובי: השימוש ב-FPDF במקום HTML-to-PDF כבר מאפס את סיכון ה-SSRF ביצירת PDF עצמה.)</p>
+    <h2>9. Key Security Engineering Decisions</h2>
+    <ul>
+        <li><strong>Decision 1: Edge-first security (Cloudflare Tunnel)</strong> &rarr; Reduce attack surface before application layer.</li>
+        <li><strong>Decision 2: Runtime secrets (SSM)</strong> &rarr; Eliminate static credential exposure.</li>
+        <li><strong>Decision 3: CI/CD as enforcement layer</strong> &rarr; Prevent insecure builds from reaching production.</li>
+        <li><strong>Decision 4: AI treated as untrusted subsystem</strong> &rarr; Avoid business logic dependency on AI output.</li>
+    </ul>
 
-    <div class="insight-box" style="border-color: var(--accent-purple); text-align: right; margin-top: 30px;">
-        <strong style="color: var(--accent-purple);">תובנה ארכיטקטונית:</strong> פיתוח מודרני כבר לא עוסק רק בכתיבת לוגיקה עסקית. על ידי שימוש ב-Copilot, Cursor, ו-AI Studio לטיפול בייצור הקוד, הצלחתי להקדיש את משאבי ההנדסה שלי למה שבאמת חשוב: Threat Modeling, Defense in Depth, וביקורת עצמית על הקוד. ה-AI כתב את המימוש. אני תכננתי — ופרצתי — את המערכת.
+    <div class="insight-box" style="border-color: var(--accent-purple); text-align: right; margin-top: 40px; padding: 15px; background-color: #f8fafc; border-right: 4px solid var(--accent-purple);">
+        <h2 style="margin-top: 0; color: var(--accent-purple);">10. Conclusion</h2>
+        <p><strong>MyLeads AI</strong> מדגים גישה של: <em>Security as Architecture, not as Post-Deployment Hardening.</em></p>
+        <p>המערכת נבנתה סביב עקרונות תשתיתיים של Zero Trust, Least Privilege, Secure SDLC, Runtime isolation, ו-AI-aware security design.</p>
     </div>
 </div>
 </body>
