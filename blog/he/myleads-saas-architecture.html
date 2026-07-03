@@ -6,60 +6,120 @@
     <title>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
-        /* Dark Mode Support Overrides */
-        .insight-box {
-            border-color: var(--accent-color, #0B57D0); 
-            text-align: right; 
-            margin: 30px 0; 
-            padding: 15px; 
-            /* Use surface container variables for dark mode support instead of hardcoded white/gray */
-            background-color: var(--surface-container, #f8fafc); 
-            border-right: 4px solid var(--accent-color, #0B57D0);
-            border-radius: 4px;
-            color: var(--on-surface-default, #1B1C1D);
+        /* CSS Variables for Dark/Light Mode Support */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --accent-color: #0B57D0;
+            --accent-purple: #681DA8;
+            --surface-container: #f8fafc;
+            --outline: #e2e8f0;
+            --table-border: #cbd5e1;
         }
-        
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --text-muted: #94a3b8;
+                --accent-color: #3b82f6;
+                --accent-purple: #a855f7;
+                --surface-container: #1e293b;
+                --outline: #334155;
+                --table-border: #334155;
+            }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a {
+            color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+
+        .insight-box {
+            border-color: var(--accent-color);
+            text-align: right;
+            margin: 30px 0;
+            padding: 15px;
+            background-color: var(--surface-container);
+            border-right: 4px solid var(--accent-color);
+            border-radius: 6px;
+            color: var(--text-color);
+        }
+
         .insight-box.purple {
-            border-color: var(--accent-purple, #681DA8);
-            border-right-color: var(--accent-purple, #681DA8);
+            border-color: var(--accent-purple);
+            border-right-color: var(--accent-purple);
         }
 
         .insight-box.purple h2 {
-            color: var(--accent-purple, #681DA8);
+            color: var(--accent-purple);
         }
 
         hr {
-            border: 0; 
-            border-top: 1px solid var(--outline-variant, #e2e8f0); 
+            border: 0;
+            border-top: 1px solid var(--outline);
             margin: 30px 0;
         }
 
         img {
-            max-width: 100%; 
-            border-radius: 8px; 
-            border: 1px solid var(--outline, #334155); 
-            /* Ensure image background adapts or stays neutral */
-            background-color: var(--surface, #ffffff); 
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--outline);
+            background-color: var(--surface-container);
             padding: 10px;
         }
-        
+
         ul li {
             margin-bottom: 8px;
+        }
+
+        /* Table Styles for Dark Mode */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: var(--surface-container);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid var(--table-border);
+            padding: 12px;
+            text-align: right;
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.05);
+            font-weight: bold;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            th {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
         }
     </style>
 </head>
 <body>
 <div id="content" style="direction: rtl; text-align: right;">
-    <a href="index.html" style="color: var(--accent-color, #0B57D0); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
+    <a href="index.html" style="font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
 
     <h1>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</h1>
-    <h2 style="color: var(--on-surface-de-emphasis, #64748b); font-size: 1.2rem; margin-top: -10px; margin-bottom: 20px;">Secure-by-Design SaaS with CI/CD Security, Hybrid Zero Trust Infrastructure & AI Integration</h2>
+    <h2 style="color: var(--text-muted); font-size: 1.2rem; margin-top: -10px; margin-bottom: 20px;">Secure-by-Design SaaS with CI/CD Security, Hybrid Zero Trust Infrastructure & AI Integration</h2>
     <p><em>מאת שי מרדכי | 9 במרץ 2026</em></p>
 
     <div class="insight-box">
-        <h3 style="margin-top: 0;">0. Executive Summary</h3>
+        <h3 style="margin-top: 0; color: var(--accent-color);">0. Executive Summary</h3>
         <p><strong>MyLeads AI</strong> היא מערכת SaaS מבוססת AI לניהול לידים, שנבנתה מתוך הנחה אחת מרכזית:</p>
-        <p><em>כל מערכת חשופה לאיום כברירת מחדל — ולכן אבטחה חייבת להיות חלק מהארכיטקטורה, לא תוספת (Post-deployment afterthought).</em></p>
+        <p><em>כל מערכת חשופה לאיום כברירת מחדל — ולכן אבטחה חייבת להיות חלק מהארכיטקטורה, לא תוספת לאחר פריסה (Post-deployment afterthought).</em></p>
         <p>המערכת תוכננה סביב שלושה עקרונות:</p>
         <ul>
             <li><strong>Secure SDLC</strong> מלא עם CI/CD אוטומטי שחוסם פריסות שגויות.</li>
@@ -70,12 +130,12 @@
 
     <div style="text-align: center; margin: 40px 0;">
         <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת האבטחה של MyLeads AI">
-        <p style="color: var(--on-surface-de-emphasis, #64748b); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור Zero Trust</p>
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור Zero Trust</p>
     </div>
 
     <h2>1. Threat Model Overview</h2>
     <p>בשלב התכנון זוהו שלוש קטגוריות סיכון מרכזיות:</p>
-    
+
     <h3>1.1 External Attack Surface</h3>
     <ul>
         <li>Internet-facing SaaS application</li>
@@ -101,7 +161,7 @@
     <hr>
 
     <h2>2. Secure SDLC & CI/CD Security Model</h2>
-    <p>המערכת נבנתה סביב pipeline פריסה קשיח מבוסס:</p>
+    <p>המערכת נבנתה סביב צינור פריסה (pipeline) קשיח מבוסס:</p>
     <ul>
         <li><strong>GitHub Actions</strong> (build/test/deploy orchestration)</li>
         <li><strong>Pytest</strong> (backend validation)</li>
@@ -112,13 +172,13 @@
 
     <h2>3. Hybrid Zero Trust Cloud Architecture</h2>
     <h3>3.1 Network Exposure & Access Control</h3>
-    <p>בעקבות סריקות עוינות בימים הראשונים, המערכת נבנתה כך שאין פתיחת inbound ports (0.0.0.0/0 ריק לחלוטין). כל התעבורה נכנסת דרך <strong>Cloudflare Tunnel</strong> בלבד (outbound-only model).</p>
-    <p>גישה ניהולית (SSH) מחייבת הזדהות מול Cloudflare דרך חשבון <strong>ProtonMail</strong> ייעודי, ומאובטחת באמצעות <strong>MFA קשיח (Hardware Security Key)</strong>.</p>
+    <p>בעקבות סריקות עוינות בימים הראשונים, המערכת נבנתה כך שאין פתיחת inbound ports (<code>0.0.0.0/0</code> ריק לחלוטין). כל התעבורה נכנסת דרך <strong>Cloudflare Tunnel</strong> בלבד (outbound-only model).</p>
+    <p>גישה ניהולית (SSH) מחייבת הזדהות מול Cloudflare דרך חשבון <strong>ProtonMail</strong> ייעודי, ומאובטחת באמצעות MFA קשיח (<strong>Hardware Security Key</strong>).</p>
     <p><strong>&rarr; המשמעות:</strong> אין IP ציבורי שניתן לתקוף ישירות, ואין אפשרות לעקוף את מנגנון הניהול ללא מפתח חומרה פיזי.</p>
 
     <h3>3.2 Runtime Isolation & Resource Exhaustion Protection</h3>
     <ul>
-        <li>Containers מופעלים ב-<strong>Rootless Podman</strong> על גבי Enterprise Linux, למניעת Privilege Escalation במקרה של Container Escape.</li>
+        <li>Containers מופעלים ב-<strong>Rootless Podman</strong> על גבי Enterprise Linux, למניעת Privilege Escalation (הסלמת הרשאות) במקרה של Container Escape.</li>
         <li>הגבלת משאבים קשיחה למניעת קריסות שרשרת (OOM-Killer): ה-Worker מוגבל ל-<code>--memory="400m"</code> ו-<code>--memory-swap="2.4g"</code>.</li>
         <li>ניקוי מטמונים (<code>drop_caches</code>) מתבצע אוטומטית לפני משיכת אימג'ים כבדים.</li>
     </ul>
@@ -136,7 +196,7 @@
     <p>שימוש ב-<strong>httpOnly JWT cookies</strong> עם <code>SameSite=Strict</code> למניעת client-side token exposure (XSS).</p>
 
     <h3>5.2 Atomic MFA Operations</h3>
-    <p>כדי למנוע OTP Replay Attacks, האותנטיקציה פועלת במבנה אטומי: ה-OTP <strong>נמחק מה-DB ומבוצע <code>db.commit()</code></strong> לפני הנפקת ה-JWT. ייצור ה-OTP מבוסס על ה-CSPRNG של מערכת ההפעלה (ספריית <code>secrets</code>).</p>
+    <p>כדי למנוע OTP Replay Attacks, האותנטיקציה פועלת במבנה אטומי: ה-OTP נמחק מה-DB ומבוצע <code>db.commit()</code> לפני הנפקת ה-JWT. ייצור ה-OTP מבוסס על ה-CSPRNG של מערכת ההפעלה (ספריית <code>secrets</code>).</p>
 
     <h3>5.3 Authorization Model</h3>
     <p>כל החלטת הרשאה מבוססת <strong>JWT claims</strong> בלבד דרך מנגנון <code>get_current_user</code> ריכוזי, החוסם את הבקשה בשכבת הניתוב לפני הגישה ללוגיקה העסקית.</p>
@@ -144,8 +204,8 @@
 
     <h2>6. Real-World AppSec Mitigations</h2>
     <h3>6.1 WASM DLP Firewall (Information Disclosure Prevention)</h3>
-    <p>פילטר <strong>WebAssembly (WASM)</strong> שכתבתי ב-<strong>Rust</strong> פועל כ-Sidecar בתוך <strong>Envoy Proxy</strong>. הארכיטקטורה עובדת במוד <strong>Fail-Closed</strong>: ה-WASM מצנזר בזמן אמת שגיאות 5xx ומעלים Stack Traces שעלולים להדליף מידע פנימי.</p>
-    
+    <p>פילטר <strong>WebAssembly (WASM)</strong> שכתבתי ב-<strong>Rust</strong> פועל כ-Sidecar בתוך Envoy Proxy. הארכיטקטורה עובדת במוד <strong>Fail-Closed</strong>: ה-WASM מצנזר בזמן אמת שגיאות 5xx ומעלים Stack Traces שעלולים להדליף מידע פנימי.</p>
+
     <h3>6.2 Proxy-Aware Rate Limiting</h3>
     <p>כדי למנוע חסימה גלובלית (Global DoS) של כל המשתמשים דרך כתובת ה-Loopback של ה-Tunnel, ה-Rate Limiter שולף את כתובת התוקף האמיתית מתוך ההדר <code>CF-Connecting-IP</code>.</p>
 
@@ -154,16 +214,59 @@
 
     <hr>
 
-    <h2>7. Key Security Engineering Decisions</h2>
+    <h2>7. Open Findings & Continuous Hardening</h2>
+    <p>במסגרת פילוסופיית ה-<em>Secure-by-Design</em> ושקיפות ארכיטקטונית, ממצאים פתוחים (Open Findings) מתועדים ומנוהלים באופן אקטיבי, ולא מוסתרים:</p>
     <ul>
-        <li><strong>Decision 1: Edge-first security (Cloudflare Tunnel)</strong> &rarr; Reduce attack surface before application layer.</li>
-        <li><strong>Decision 2: Hybrid Runtime secrets (SSM/KMS)</strong> &rarr; Eliminate static credential exposure on affordable compute infrastructure.</li>
-        <li><strong>Decision 3: CI/CD as enforcement layer</strong> &rarr; Prevent insecure builds (Alembic mismatches) from reaching production.</li>
-        <li><strong>Decision 4: AI treated as untrusted subsystem</strong> &rarr; Avoid business logic dependency on AI output.</li>
+        <li><strong>SEC-015 (Webhook Spoofing):</strong> ה-endpoint של Twilio כרגע מעבד בקשות ללא אימות חתימה קריפטוגרפית. התיקון המתוכנן הוא להטמיע Twilio Signature Validation Middleware שיבדוק את ההדר <code>X-Twilio-Signature</code> בכל בקשה נכנסת.</li>
+        <li><strong>SEC-012 (Path Traversal):</strong> ייצוא מסמכים משתמש כעת ב-<code>os.path.join</code>. כדי למנוע Directory Traversal, יוטמע מנגנון <code>secure_filename</code>.</li>
     </ul>
 
+    <h2>8. Summary of Security Controls</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Security Layer (שכבת אבטחה)</th>
+                <th>Mitigation Strategy (אסטרטגיית הגנה)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Network Security</strong></td>
+                <td>Zero open ports, Cloudflare Tunnel ingress routing</td>
+            </tr>
+            <tr>
+                <td><strong>Administrative Access</strong></td>
+                <td>Cloudflare IAP, ProtonMail identity, physical MFA (Hardware Keys)</td>
+            </tr>
+            <tr>
+                <td><strong>Secrets Management</strong></td>
+                <td>AWS SSM/KMS hybrid runtime injection (No <code>.env</code> on disk)</td>
+            </tr>
+            <tr>
+                <td><strong>Runtime Isolation</strong></td>
+                <td>Rootless Podman, strict memory capping (<code>--memory="400m"</code>)</td>
+            </tr>
+            <tr>
+                <td><strong>Secure SDLC</strong></td>
+                <td>Automated GitHub Actions pipelines, integrated <code>alembic check</code></td>
+            </tr>
+            <tr>
+                <td><strong>Data Protection</strong></td>
+                <td>Fernet AES-128 symmetric encryption with lazy initialization</td>
+            </tr>
+            <tr>
+                <td><strong>DLP Proxying</strong></td>
+                <td>Envoy WASM filter written in Rust for real-time traffic sanitization</td>
+            </tr>
+            <tr>
+                <td><strong>Session Control</strong></td>
+                <td>CSPRNG single-use OTP validation, atomic "Delete-Before-Issue"</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div class="insight-box purple">
-        <h2 style="margin-top: 0;">8. Conclusion</h2>
+        <h2 style="margin-top: 0; color: var(--accent-purple);">9. Conclusion</h2>
         <p><strong>MyLeads AI</strong> מדגים גישה של: <em>Security as Architecture, not as Post-Deployment Hardening.</em></p>
         <p>המערכת נבנתה סביב עקרונות תשתיתיים של Hybrid Zero Trust, Least Privilege, Secure SDLC, Runtime isolation, ו-AI-aware security design.</p>
     </div>
