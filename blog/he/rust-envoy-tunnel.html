@@ -13,37 +13,27 @@
     <p><em>מאת שי מרדכי | 8 במרץ 2026</em></p>
 
     <div style="background-color: rgba(0, 0, 0, 0.03); border-right: 4px solid var(--accent-color, #007bff); padding: 15px; margin: 20px 0; border-radius: 4px;">
-        <strong>הערת חוקר:</strong> המוקד של פרויקט זה הוא המחקר והאפיון הארכיטקטוני. הרעיון, תכנון מודל ה-Zero Trust, וזיהוי וקטורי התקיפה (CWE-209, Information Disclosure, React2Shell) הם פרי מחקר ועיצוב בלעדיים שלי. מכיוון שההתמחות שלי היא בחקר חולשות ומנגנוני ריצה, ולא בפיתוח יומיומי ב-Rust, כתיבת הקוד עצמו (Rust/WASM) בוצעה בסיוע AI תחת הנחייתי ואחריותי הטכנית המלאה. הנכס המרכזי המוצג כאן הוא זיהוי החולשה בסביבת ייצור פיננסית והתכנון ההנדסי של המענה.
-    </div>
 
     <p>הפרויקט הזה (<code>wasm-dlp-firewall</code>) נולד מתוך צורך פרקטי עבור מוצר SaaS שפיתחתי. כשהעליתי את תשתית ה-EC2 ב-AWS, שמתי לב מהר מאוד שבוטים מכל רחבי העולם מתחילים לסרוק את השרתים ולחפש חולשות. זה הוביל אותי לתכנן מחדש את רמת האבטחה של התשתית, ולהטמיע מודל <strong>Zero Trust</strong> מחמיר.</p>
 
     <h2>1. הקשחת התשתית (Infrastructure Hardening)</h2>
-    <p>הצעד הראשון היה למנוע גישה ישירה לשרת. סגרתי לחלוטין את כל הפורטים הנכנסים (Inbound Ports) ל-EC2. במקומם, הקמתי <strong>Cloudflare Tunnel</strong> – כך שהתעבורה נכנסת אך ורק דרך תווך מאובטח. את הגישה האישית שלי למערכת אבטחתי באמצעות תיבת Proton Mail עסקית שמוגנת באימות חומרתי מבוסס מפתח USB (Security Key). ברמת ה-Runtime, שירותי האפליקציה בודדו בתוך Containers שרצו יחד ב-Pod של <strong>Podman</strong>.</p>
+    <p>הצעד הראשון היה למנוע גישה ישירה לשרת. סגרתי לחלוטין את כל הפורטים הנכנסים ל-EC2. במקומם, הקמתי <strong>Cloudflare Tunnel</strong> – כך שהתעבורה נכנסת אך ורק דרך תווך מאובטח. את הגישה האישית שלי למערכת אבטחתי באמצעות תיבת Proton Mail עסקית שמוגנת באימות חומרתי מבוסס מפתח USB (Security Key). ברמת ה-Runtime, שירותי האפליקציה בודדו בתוך Containers שרצו יחד ב-Pod של <strong>Podman</strong>.</p>
 
-    <h2>2. הגנה בשכבת האפליקציה (Layer 7 DLP)</h2>
+    <h2>2. הגנה בשכבת האפליקציה</h2>
     <p>אחרי שקראתי על וקטורי תקיפה מודרניים כמו React2Shell, ולאור המחקרים הקודמים שלי על V8 ועל חולשת Log4j (מ-2022), הבנתי שההקשחה הרשתית אינה מספיקה. האיום המרכזי בארכיטקטורת Microservices הוא <strong>API Over-fetching (CWE-201/CWE-209)</strong> – מצב שבו ה-Backend מחזיר אובייקטים מלאים מהמסד נתונים, וסומך על ה-Frontend (למשל React) שיסנן מידע רגיש. מצב זה עלול להוביל לזליגת PII, טוקנים פנימיים, או Stack Traces.</p>
 
-    <p>חשבתי בתחילה על פילטור ברמת הקרנל עם eBPF — אבל הבנתי שהוא Read-Only לPayloads ולא מאפשר שינוי תוכן בפועל. הגעתי לפתרון דרך Cloudflare Tunnel שכבר הכרתי: WASM filter ב-Rust על גבי Envoy, שיושב ב-User Space אבל שולט על תוכן ה-HTTP Response לפני שהוא יוצא.
+    <p>חשבתי בתחילה על פילטור ברמת הקרנל עם eBPF — אבל הבנתי שהוא Read-Only לPayloads ולא מאפשר שינוי תוכן בפועל. הגעתי לפתרון דרך Cloudflare Tunnel שכבר הכרתי: WASM filter ב-Rust על גבי Envoy, שיושב ב-User Space אבל שולט על תוכן ה-HTTP Response לפני שהוא יוצא.</p>
 
-    <p>החלטתי להעביר את האחריות על ניקוי המידע (Sanitization) משכבת האפליקציה אל שכבת התשתית.</p>
+    <p>החלטתי להעביר את האחריות על ניקוי המידע משכבת האפליקציה אל שכבת התשתית.</p>
 
     <h2>3. הארכיטקטורה של Wasm DLP Firewall</h2>
-    <p>בניתי רכיב סינון חכם (Filter) עבור <strong>Envoy Proxy</strong>. בחרתי לכתוב אותו ב-<strong>Rust</strong> ולקמפל אותו ל-WebAssembly (<code>wasm32-wasi</code>). הבחירה ב-Rust הבטיחה Memory Safety וביצועים גבוהים ללא עלות נוספת (Zero-cost abstractions), בעוד ה-Wasm סיפק ארגז חול (Sandbox) מבודד בתוך ה-Proxy שאפשר לי לבצע Hot-reloading ללא השבתת הראוטר.</p>
+    <p>בניתי רכיב סינון חכם עבור <strong>Envoy Proxy</strong>. בחרתי לכתוב אותו ב-<strong>Rust</strong> ולקמפל אותו ל-WebAssembly (<code>wasm32-wasi</code>). הבחירה ב-Rust הבטיחה יעילות מקסימלית, בעוד ה-Wasm סיפק את הבידוד בcontainer נפרד משאר המערכת.</p>
 
     <h3>יכולות מרכזיות:</h3>
     <ul>
         <li><strong>Recursive JSON Redaction:</strong> סריקה עמוקה של תוכן ה-Response ומיסוך מפתחות רגישים (כמו Passwords או Secrets) על בסיס חוקים לוגיים.</li>
         <li><strong>Logical Data TTL:</strong> תמיכה בהאדרים מותאמים אישית (כגון <code>X-Data-TTL</code>) כדי להפעיל סניטיזציה.</li>
         <li><strong>Fail-Closed Security:</strong> אם לא ניתן לפענח או לבדוק את ה-Payload בבטחה, הבקשה פשוט נשמטת (Dropped).</li>
-    </ul>
-
-    <h2>4. מקרה בוחן מהשטח: Error Shielding ו-Information Disclosure</h2>
-    <p>כדי לבחון את המערכת, התבססתי על תרחיש תקיפה אמיתי מסביבות פיננסיות (CWE-209). בתרחיש זה, Session שהושאר פתוח במשך למעלה מ-60 דקות יחד עם רענון אגרסיבי (Ctrl+F5) גרמו למערכת ה-ASP.NET ב-Backend לקרוס. במקום שגיאה גנרית, השרת החזיר שגיאת <strong>500 Internal Server Error</strong> שכללה עמודי HTML עם:</p>
-    <ul>
-        <li>נתיבים פיזיים בשרת (Directory structures).</li>
-        <li>גרסאות מדויקות של IIS ו-.NET.</li>
-        <li>הצעות קונפיגורציה ישירות ל-<code>web.config</code>.</li>
     </ul>
 
     <p>ה-Data Hop Firewall מזהה אוטומטית שגיאות 5xx לפני שהן עוזבות את הרשת הפנימית, מאתר מחרוזות מערכת (כמו "Stack Trace" או "System.Web"), ומחליף את ה-Payload הרגיש בתגובת JSON נקייה וסטנדרטית:</p>
@@ -57,6 +47,14 @@
     <p>כך, גם אם המפתח שכח להגדיר <code>customErrors="On"</code> באפליקציה, מנגנון ה-Zero-Trust מבטיח שמידע על תצורת השרת לעולם לא ידלוף לאינטרנט.</p>
 
     <p><a href="https://github.com/shay-mordechai/wasm-dlp-firewall" target="_blank" style="color: var(--accent-blue, #0056b3); font-weight: bold;">[🔗 צפו בקוד המלא (Rust / Envoy Wasm) ב-GitHub]</a></p>
+
+    <h2>תובנות ל-Malware Analysis</h2>
+    <ul>
+        <li>קבצי WASM הם עולם ה-Native של הדפדפנים, בדומה לקבצי SO באנדרואיד.</li>
+        <li>הם עדיין כפופים ל-Sandbox של הדפדפן, לעומת Native באנדרואיד.</li>
+        <li>נוזקות יחביאו שם קוד כבד שדורש חישובים מהירים, כי הוא כבר מקומפל ורץ ישירות על המעבד.</li>
+    </ul>
+
 </div>
 </body>
 </html>
