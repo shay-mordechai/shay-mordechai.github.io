@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="Shay Mordechai | Security Researcher & AppSec Engineer">
-    <meta property="og:description" content="Security Researcher specializing in OS Internals, AppSec Architecture, and AI Security. Responsible disclosures to CERT-IL, MITRE, and OpenAI.">
-    <title>Shay Mordechai | Security Researcher & AppSec Engineer</title>
+    <meta property="og:title" content="Shay Mordechai | Android Malware Researcher">
+    <meta property="og:description" content="Malware Researcher specializing in Android internals, reverse engineering, and AI Security. Published researcher and tool developer.">
+    <title>Shay Mordechai | Android Malware Researcher</title>
     <link rel="icon" href="https://fav.farm/🛡️">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        /* All original beautiful CSS styles kept exactly as they were */
         :root {
             --bg-color: #0d1117;
             --surface-color: #161b22;
@@ -23,368 +24,66 @@
             --border-color: #30363d;
         }
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            line-height: 1.6;
-            color: var(--text-main);
-            background-color: var(--bg-color);
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 50px 20px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        h1 {
-            color: #ffffff;
-            font-size: 2.6em;
-            letter-spacing: -1px;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            color: var(--accent-blue);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.05em;
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
-
-        .links-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 35px;
-        }
-
-        .action-btn {
-            background: var(--surface-color);
-            color: var(--text-main);
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-btn:hover {
-            border-color: var(--accent-blue);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            visibility: hidden;
-            position: absolute;
-            background-color: var(--surface-color);
-            min-width: 140px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            z-index: 100;
-            top: 100%;
-            left: 0;
-            margin-top: 8px;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(-5px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-        }
-
-        .dropdown::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            height: 15px;
-        }
-
-        .dropdown:hover .dropdown-content {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .dropdown:hover .action-btn {
-            border-color: var(--accent-blue);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .dropdown-content a {
-            color: var(--text-main);
-            padding: 10px 16px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85em;
-            font-weight: 500;
-            transition: background 0.2s, color 0.2s;
-            border-bottom: 1px solid var(--border-color);
-        }
-
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: var(--text-main); background-color: var(--bg-color); max-width: 850px; margin: 0 auto; padding: 50px 20px; -webkit-font-smoothing: antialiased; }
+        h1 { color: #ffffff; font-size: 2.6em; letter-spacing: -1px; margin-bottom: 5px; }
+        .subtitle { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 1.05em; margin-top: 0; margin-bottom: 25px; }
+        .links-container { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 35px; }
+        .action-btn { background: var(--surface-color); color: var(--text-main); text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.9em; font-weight: 500; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .action-btn:hover { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { visibility: hidden; position: absolute; background-color: var(--surface-color); min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); border-radius: 8px; z-index: 100; top: 100%; left: 0; margin-top: 8px; overflow: hidden; opacity: 0; transform: translateY(-5px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; }
+        .dropdown::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 15px; }
+        .dropdown:hover .dropdown-content { visibility: visible; opacity: 1; transform: translateY(0); }
+        .dropdown:hover .action-btn { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
+        .dropdown-content a { color: var(--text-main); padding: 10px 16px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 500; transition: background 0.2s, color 0.2s; border-bottom: 1px solid var(--border-color); }
         .dropdown-content a:last-child { border-bottom: none; }
         .dropdown-content a:hover { background-color: #21262d; color: #ffffff; }
-
-        .mission-statement {
-            font-size: 1.1em;
-            color: #ffffff;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            border-left: 3px solid var(--accent-blue);
-            padding-left: 15px;
-        }
-
-        .core-skills {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
-            color: var(--accent-green);
-            background: rgba(63, 185, 80, 0.05);
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px dashed rgba(63, 185, 80, 0.3);
-            text-align: center;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Disclosure badges */
-        .disclosure-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 35px;
-        }
-
-        .disclosure-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75em;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            border: 1px solid;
-        }
-
+        .mission-statement { font-size: 1.1em; color: #ffffff; margin-bottom: 25px; line-height: 1.5; border-left: 3px solid var(--accent-blue); padding-left: 15px; }
+        .core-skills { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--accent-green); background: rgba(63, 185, 80, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px dashed rgba(63, 185, 80, 0.3); text-align: center; margin-bottom: 25px; letter-spacing: 0.5px; }
+        .disclosure-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 35px; }
+        .disclosure-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; padding: 5px 12px; border-radius: 20px; font-weight: 700; letter-spacing: 0.3px; border: 1px solid; }
         .badge-red { background: rgba(255,123,114,0.08); color: var(--accent-red); border-color: rgba(255,123,114,0.3); }
         .badge-blue { background: rgba(88,166,255,0.08); color: var(--accent-blue); border-color: rgba(88,166,255,0.3); }
         .badge-purple { background: rgba(188,140,255,0.08); color: var(--accent-purple); border-color: rgba(188,140,255,0.3); }
         .badge-green { background: rgba(63,185,80,0.08); color: var(--accent-green); border-color: rgba(63,185,80,0.3); }
-
-        .active-lab-box {
-            background: rgba(88, 166, 255, 0.05);
-            border: 1px dashed rgba(88, 166, 255, 0.4);
-            padding: 16px 20px;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-
-        .active-lab-box strong {
-            color: var(--accent-blue);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
-        }
-
-        /* Timeline */
-        .timeline-section {
-            margin: 40px 0 50px 0;
-            padding: 24px;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-        }
-
-        .timeline-section h3 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            color: #ffffff;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timeline-container {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            padding: 0 5px;
-        }
-
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 10px;
-            right: 10px;
-            height: 2px;
-            background: var(--border-color);
-            z-index: 1;
-        }
-
-        .timeline-node {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-
-        .timeline-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #30363d;
-            border: 3px solid var(--surface-color);
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 0 0 2px #30363d;
-        }
-
-        .timeline-node.highlight .timeline-dot {
-            background: var(--accent-green);
-            box-shadow: 0 0 8px var(--accent-green);
-        }
-
-        .timeline-node:hover .timeline-dot {
-            background: var(--accent-blue);
-            transform: scale(1.2);
-            box-shadow: 0 0 8px var(--accent-blue);
-        }
-
-        .timeline-date {
-            font-size: 0.70rem;
-            color: var(--text-muted);
-            margin-top: 12px;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .timeline-title {
-            font-size: 0.75rem;
-            color: var(--text-main);
-            margin-top: 6px;
-            max-width: 110px;
-            text-align: center;
-            line-height: 1.3;
-            font-weight: 500;
-        }
-
+        .active-lab-box { background: rgba(88, 166, 255, 0.05); border: 1px dashed rgba(88, 166, 255, 0.4); padding: 16px 20px; border-radius: 8px; margin-bottom: 40px; font-size: 0.95em; line-height: 1.5; }
+        .active-lab-box strong { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+        .timeline-section { margin: 40px 0 50px 0; padding: 24px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; }
+        .timeline-section h3 { margin-top: 0; margin-bottom: 25px; color: #ffffff; font-size: 1.2em; display: flex; align-items: center; gap: 8px; }
+        .timeline-container { display: flex; justify-content: space-between; position: relative; padding: 0 5px; }
+        .timeline-container::before { content: ''; position: absolute; top: 25px; left: 10px; right: 10px; height: 2px; background: var(--border-color); z-index: 1; }
+        .timeline-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; flex: 1; text-decoration: none; transition: transform 0.2s; }
+        .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: #30363d; border: 3px solid var(--surface-color); transition: background 0.2s, transform 0.2s; box-shadow: 0 0 0 2px #30363d; }
+        .timeline-node.highlight .timeline-dot { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .timeline-node:hover .timeline-dot { background: var(--accent-blue); transform: scale(1.2); box-shadow: 0 0 8px var(--accent-blue); }
+        .timeline-date { font-size: 0.70rem; color: var(--text-muted); margin-top: 12px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .timeline-title { font-size: 0.75rem; color: var(--text-main); margin-top: 6px; max-width: 110px; text-align: center; line-height: 1.3; font-weight: 500; }
         .timeline-node:hover .timeline-title { color: #ffffff; }
         .timeline-node.highlight .timeline-title { color: var(--accent-green); }
-
-        /* Cards */
-        .card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 32px;
-            margin-bottom: 25px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: #484f58;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-
+        .card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; margin-bottom: 25px; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { border-color: #484f58; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
         .card.series { border-left: 4px solid var(--accent-purple); }
         .card.vr { border-left: 4px solid var(--accent-red); }
         .card.internals { border-left: 4px solid var(--accent-yellow); }
         .card.infra { border-left: 4px solid var(--accent-blue); }
         .card.appsec { border-left: 4px solid var(--accent-green); }
         .card.disclosure { border-left: 4px solid var(--accent-red); }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 1.25em;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7em;
-            padding: 5px 10px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .card-title { font-size: 1.25em; font-weight: 700; color: #ffffff; }
+        .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; padding: 5px 10px; border-radius: 20px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
         .tag.series { background: rgba(188,140,255,0.1); color: var(--accent-purple); }
         .tag.vr { background: rgba(255,123,114,0.1); color: var(--accent-red); }
         .tag.internals { background: rgba(210,168,255,0.1); color: var(--accent-yellow); }
         .tag.infra { background: rgba(88,166,255,0.1); color: var(--accent-blue); }
         .tag.appsec { background: rgba(63,185,80,0.1); color: var(--accent-green); }
         .tag.disclosure { background: rgba(255,123,114,0.1); color: var(--accent-red); }
-
-        ul {
-            margin: 15px 0 0 20px;
-            padding: 0;
-            color: var(--text-muted);
-            font-size: 0.95em;
-        }
-
+        ul { margin: 15px 0 0 20px; padding: 0; color: var(--text-muted); font-size: 0.95em; }
         li { margin-bottom: 10px; }
         li strong { color: var(--text-main); }
-
-        .read-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 20px;
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: color 0.2s;
-        }
-
+        .read-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: var(--accent-blue); text-decoration: none; font-weight: 600; font-size: 0.9em; transition: color 0.2s; }
         .read-link:hover { color: #ffffff; }
-
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75em;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin: 45px 0 15px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 0.85em;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 30px;
-        }
-
+        .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 45px 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        .footer { margin-top: 60px; text-align: center; font-size: 0.85em; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 30px; }
         @media (max-width: 768px) {
             .timeline-container { flex-direction: column; gap: 25px; padding-left: 15px; }
             .timeline-container::before { left: 19px; top: 0; bottom: 0; width: 2px; height: auto; }
@@ -399,7 +98,7 @@
 
     <header>
         <h1>Shay Mordechai</h1>
-        <p class="subtitle">Security Researcher · AppSec Engineer · AI Security</p>
+        <p class="subtitle">Android Malware Researcher · Reverse Engineer · AI Security</p>
 
         <div class="links-container">
             <div class="dropdown">
@@ -411,27 +110,26 @@
             </div>
             <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
             <a href="Shay_Mordechai_CV.pdf" class="action-btn" target="_blank">📄 Résumé</a>
-            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 GitHub Vault</a>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 Malware Lab (GitHub)</a>
             <a href="https://www.linkedin.com/in/shay-mordechai/" class="action-btn" target="_blank">🔗 LinkedIn</a>
         </div>
 
         <div class="mission-statement">
-            I research where security assumptions break — across OS internals, application logic, and AI systems. I don't just map how things work; I find where they fail, build the PoC, and document the path to remediation.
+            I reverse engineer Android malware to understand how modern threats evade analysis, execute before application initialization, and abuse operating system internals. I investigate where security assumptions break—across OS boundaries and AI systems.
         </div>
 
         <div class="core-skills">
-            [ OS Internals ] [ AppSec Architecture ] [ Threat Modeling ] [ AI Security ] [ Responsible Disclosure ]
+            [ Malware Analysis ] [ Reverse Engineering ] [ Android Internals ] [ Frida / DBI ] [ AI Security ]
         </div>
 
         <div class="disclosure-bar">
-            <span class="disclosure-badge badge-red">CERT-IL #11265 · Compiler 0-Days</span>
-            <span class="disclosure-badge badge-blue">MITRE · Compiler Trust Boundaries</span>
+            <span class="disclosure-badge badge-blue">Digital Whisper #187 · Android Malware</span>
             <span class="disclosure-badge badge-purple">OpenAI / Bugcrowd · Session Quota Bypass</span>
-            <span class="disclosure-badge badge-green">Palo Alto Networks PSIRT · LANJack</span>
+            <span class="disclosure-badge badge-red">CERT-IL #11265 · Compiler 0-Days</span>
         </div>
 
         <div class="active-lab-box">
-            <strong>[ACTIVE LAB] CURRENT RESEARCH:</strong> Reverse-engineering <code>libbinder.so</code> (ARM64) extracted from a physical Samsung S20 to analyze <code>/dev/binder</code> ioctl transaction flows, investigating the structural boundaries of UI allocation during the application bootstrap.
+            <strong>[ACTIVE LAB] CURRENT RESEARCH:</strong> Reverse-engineering <code>libbinder.so</code> (ARM64) extracted from a physical Samsung S20 to analyze <code>/dev/binder</code> ioctl transaction flows, investigating the structural boundaries of UI allocation during the application bootstrap and how early-stage malware hooks these processes.
         </div>
     </header>
 
@@ -442,11 +140,6 @@
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Feb 2024</div>
                 <div class="timeline-title">Desktop RE</div>
-            </a>
-            <a href="blog/en/scapy-tls-packet-crafter.html" class="timeline-node">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">Jun 2025</div>
-                <div class="timeline-title">TLS Protocol Crafter</div>
             </a>
             <a href="blog/en/compiler-zero-days-research.html" class="timeline-node">
                 <div class="timeline-dot"></div>
@@ -466,7 +159,7 @@
             <a href="blog/en/permission-paradox.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">May 2026</div>
-                <div class="timeline-title">The Permission Paradox</div>
+                <div class="timeline-title">Android Bootstrap Hijacking</div>
             </a>
             <a href="#openai-disclosure" class="timeline-node highlight">
                 <div class="timeline-dot"></div>
@@ -478,50 +171,46 @@
 
     <main>
 
-        <div class="section-label">// Responsible Disclosure</div>
-
-        <div class="card disclosure" id="openai-disclosure">
-            <div class="card-header">
-                <span class="card-title">Session Quota Enforcement Bypass — ChatGPT</span>
-                <span class="tag disclosure">OpenAI · Bugcrowd</span>
-            </div>
-            <p><strong>Finding:</strong> Identified a session-state desynchronization flaw in ChatGPT's backend that allows established in-flight API streams to persist and consume GPU/CPU resources after an account has been officially quota-locked at the UI layer — with no server-side remediation triggered for the duration of the stream.</p>
-            <ul>
-                <li><strong>Root Cause:</strong> The API gateway validates quota state at session initiation but fails to re-validate the enforcement token against the current account state for established streams — decoupling the UI enforcement layer from the backend resource allocation layer.</li>
-                <li><strong>Impact:</strong> Bypass persisted for 40+ continuous minutes post-lock. Fully automatable via scripted cURL or browser orchestration — multiplying unauthorized compute consumption by N× sessions at zero marginal cost.</li>
-                <li><strong>Evidence:</strong> Full HAR network captures, composite side-by-side screenshots, and cURL PoC submitted via Bugcrowd.</li>
-                <li><strong>Status:</strong> Report submitted to OpenAI via Bugcrowd. Triage in progress.</li>
-            </ul>
-        </div>
-
-        <div class="section-label">// AppSec Engineering</div>
-
-        <div class="card appsec">
-            <div class="card-header">
-                <span class="card-title">Secure SaaS Architecture — MyLeads AI</span>
-                <span class="tag appsec">Zero Trust · OWASP</span>
-            </div>
-            <p>Designed and implemented the full security architecture for a production AI SaaS platform serving real clients. Built entirely via AI-assisted development (Cursor, Copilot, AI Studio) — every security decision made by hand.</p>
-            <ul>
-                <li><strong>Zero Attack Surface:</strong> AWS EC2 with all inbound ports closed; all traffic via Cloudflare Tunnel with hardware-key IAP authentication.</li>
-                <li><strong>WASM DLP Firewall:</strong> Custom Rust filter inside Envoy Proxy — intercepts 5xx responses and strips stack traces before they reach the client (CWE-209).</li>
-                <li><strong>Secrets Architecture:</strong> Zero <code>.env</code> files on disk; all secrets bootstrapped In-Memory from AWS SSM at startup. IMDSv2 enforced against SSRF.</li>
-                <li><strong>Self Code Review:</strong> Identified Webhook Spoofing (missing Twilio Signature Validation) and Path Traversal risk in PDF generation — both documented with remediation plans.</li>
-            </ul>
-            <a href="blog/he/myleads-security-architecture.html" class="read-link">📐 Read the Architecture Case Study</a>
-        </div>
-
-        <div class="section-label">// Vulnerability Research</div>
+        <div class="section-label">// Active Research & Malware Analysis</div>
 
         <div class="card series">
             <div class="card-header">
                 <span class="card-title">Featured Publication: Android Bootstrap Hijacking</span>
                 <span class="tag series">Digital Whisper</span>
             </div>
-            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores the "Permission Paradox" and Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
-            <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Part of the 7-part <strong>"Paradox of Mutability"</strong> series mapping the exact intersections where boundaries fail — from bridging Java memory safety via JNI, breaking the Flatpak Linux sandbox, to analyzing AI super-privileges in modern browsers.</em></p>
-            <a href="blog/en/index.html" class="read-link">🔗 Read the Full Research Series</a>
+            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
+            <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Focuses on advanced evasion techniques used by modern Android Banking Trojans and the abuse of <code>attachBaseContext()</code>.</em></p>
+            <a href="blog/en/index.html" class="read-link">🔗 Read the Publication</a>
         </div>
+
+        <div class="card internals">
+            <div class="card-header">
+                <span class="card-title">Android Internals & Mobile Reverse Engineering Lab</span>
+                <span class="tag internals">Dynamic Instrumentation</span>
+            </div>
+            <ul>
+                <li><strong>Banking Trojans (Anatsa 2024):</strong> Mapped the Android boot chain to analyze early payload unpacking techniques exploiting the lifecycle blindspot before UI allocation.</li>
+                <li><strong>Dynamic Binary Instrumentation:</strong> Defeating root detection, ptrace anti-debugging, and strict SSL pinning using custom Frida scripts.</li>
+                <li><strong>Timing Races:</strong> Engineered advanced Zygote Hooks and Spawn techniques to win the runtime injection race against the OS Dynamic Linker.</li>
+            </ul>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main" target="_blank" class="read-link">📖 View Mobile Reverse Engineering Labs on GitHub</a>
+        </div>
+
+        <div class="section-label">// AI Security & Responsible Disclosure</div>
+
+        <div class="card disclosure" id="openai-disclosure">
+            <div class="card-header">
+                <span class="card-title">Session Quota Enforcement Bypass — ChatGPT</span>
+                <span class="tag disclosure">OpenAI · Bugcrowd</span>
+            </div>
+            <p><strong>Finding:</strong> Identified a session-state desynchronization flaw in ChatGPT's backend that allows established in-flight API streams to persist and consume GPU/CPU resources after an account has been officially quota-locked at the UI layer.</p>
+            <ul>
+                <li><strong>Impact:</strong> Bypass persisted for 40+ continuous minutes post-lock. Fully automatable via scripted cURL or browser orchestration — multiplying unauthorized compute consumption by N× sessions at zero marginal cost.</li>
+                <li><strong>Status:</strong> Report submitted to OpenAI via Bugcrowd. Triage in progress.</li>
+            </ul>
+        </div>
+
+        <div class="section-label">// Vulnerability Research</div>
 
         <div class="card vr">
             <div class="card-header">
@@ -532,51 +221,24 @@
             <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
         </div>
 
-        <div class="section-label">// Infrastructure & Network Security</div>
+        <div class="section-label">// Infrastructure & Diagnostics</div>
 
-        <div class="card infra">
+        <div class="card appsec">
             <div class="card-header">
-                <span class="card-title">Network Architecture & Mitigation</span>
-                <span class="tag infra">Architecture</span>
+                <span class="card-title">Secure AI SaaS Architecture & Diagnostics</span>
+                <span class="tag appsec">Architecture</span>
             </div>
+            <p>Built experimental workflows and secure infrastructure designs emphasizing zero-trust and execution isolation.</p>
             <ul>
-                <li><a href="blog/en/pt-dns-rebinding-mitigation.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Network Boundary Mitigation (LANJack):</strong></a> Engineered a router-level mitigation for DNS Rebinding/SSRF attacks. Formally acknowledged by TP-Link and Palo Alto Networks PSIRT.</li>
-                <li><a href="blog/en/rust-envoy-firewall.html" style="color: var(--accent-blue); text-decoration: none;"><strong>Rust/WASM DLP Firewall:</strong></a> Architected a WebAssembly Data Hop Firewall for Envoy Proxy in Rust — sanitizes data before it crosses the application/network semantic boundary.</li>
-            </ul>
-        </div>
-
-        <div class="section-label">// OS Internals & Malware Analysis</div>
-
-        <div class="card internals">
-            <div class="card-header">
-                <span class="card-title">Android Internals & Malware Reversing</span>
-                <span class="tag internals">OS Internals / Frida</span>
-            </div>
-            <ul>
-                <li><strong>Banking Trojans (Anatsa 2024):</strong> Mapped the Android boot chain to analyze early payload unpacking techniques exploiting the <code>attachBaseContext</code> lifecycle blindspot before UI allocation.</li>
-                <li><strong>Dynamic Binary Instrumentation:</strong> Defeated root detection, ptrace anti-debugging, and strict SSL pinning using Frida.</li>
-                <li><strong>Timing Races:</strong> Engineered advanced Zygote Hooks and Spawn techniques to win the runtime injection race against the OS Dynamic Linker.</li>
-            </ul>
-            <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main" target="_blank" class="read-link">📖 View Mobile Reverse Engineering Labs</a>
-        </div>
-
-        <div class="card infra" style="border-left-color: #8b949e;">
-            <div class="card-header">
-                <span class="card-title">Kernel & System Diagnostics</span>
-                <span class="tag" style="background: rgba(139,148,158,0.1); color: #8b949e;">SysAdmin</span>
-            </div>
-            <ul>
+                <li><strong>WASM DLP Firewall:</strong> Custom Rust filter inside Envoy Proxy intercepting 5xx responses and stripping stack traces (CWE-209).</li>
                 <li><strong>AWS Resource Exhaustion Triage:</strong> RCA on a cascading Podman failure triggering an OOM-Killer event and 20,000 KMS/STS API calls via an infinite restart loop.</li>
-                <li><strong>Red Hat Bugzilla (Bug #2415015):</strong> Diagnosed a structural deadlock in the Btrfs filesystem forcing a Read-Only state.</li>
-                <li><strong>Linux Driver Debugging (Bug #2418652):</strong> Identified host network degradation linked to KVM/QEMU state corruption in the Intel <code>iwlwifi</code> driver.</li>
             </ul>
-            <a href="https://github.com/shay-mordechai/Systems-and-Network-Diagnostics" target="_blank" class="read-link">📁 View Diagnostics Reports</a>
         </div>
 
     </main>
 
     <footer class="footer">
-        <div>© 2026 Shay Mordechai · Security Researcher & AppSec Engineer</div>
+        <div>© 2026 Shay Mordechai · Malware Researcher</div>
     </footer>
 
 </body>
