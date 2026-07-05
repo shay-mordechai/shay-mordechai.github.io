@@ -19,300 +19,300 @@
 <body>
 <div id="content">
     <h1>Android Bootstrap Hijacking</h1>
-    <p><em>מאת שי מרדכי [cite: 3] | יוני 2026, גליון 186 [cite: 77]</em></p>
+    <p><em>מאת שי מרדכי | יוני 2026, גליון 186</em></p>
 
-    <h2>תקציר מנהלים [cite: 5]</h2>
-    <p>הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מודעים לנתון הבא: [cite: 6] "עולם האנדרואיד" כפי שאנחנו מכירים אותו, לא באמת קיים ברגע שהמכשיר נדלק. [cite: 7] בשניות הראשונות, הטלפון שלכם פשוט פלטפורמת Linux רגילה לחלוטין. [cite: 8]</p>
-    <p>המאמר מתמקד בשבריר השניה לאחר ריצת האפליקציה על מכשיר האנדרואיד, וכיצד נוזקות מתקדמות מנסות "לעצור את הזמן" ולהידמות למערכת ההפעלה בעצמה, עוד לפני שהמשתמש רואה מסך כלשהו. [cite: 9]</p>
-    <p>במאמר זה, ננתח חלק מהנוזקה Anatsa - כלי תקיפה ממשפחת ה-Banking Trojans, המיועד לגניבת פרטי גישה לחשבונות פיננסיים. [cite: 10] ב-2024 היא הגיעה ל-100,000 הורדות ב-Google Play עד שהסירו אותה. [cite: 11] הנוזקה הזו, מבצעת עקיפה לא שיגרתית של הצגת ה-UI של האפליקציה. [cite: 12]</p>
-    <p>בחרתי לנתח אותה, כמקרה בוחן ל-Framework שפיתחתי למידול התנהגות נוזקה לפי 5 שכבות, ו-Anatsa פשוט ביצעה כל אחת מהן. [cite: 13]</p>
-    <p>התרשים הבא מתאר את תהליך יצירת אפליקציה בשלבים - החל מהתקנה עד יצירת התהליך הלינוקסי: [cite: 14]</p>
+    <h2>תקציר מנהלים</h2>
+    <p>הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מודעים לנתון הבא: "עולם האנדרואיד" כפי שאנחנו מכירים אותו, לא באמת קיים ברגע שהמכשיר נדלק. בשניות הראשונות, הטלפון שלכם פשוט פלטפורמת Linux רגילה לחלוטין.</p>
+    <p>המאמר מתמקד בשבריר השניה לאחר ריצת האפליקציה על מכשיר האנדרואיד, וכיצד נוזקות מתקדמות מנסות "לעצור את הזמן" ולהידמות למערכת ההפעלה בעצמה, עוד לפני שהמשתמש רואה מסך כלשהו.</p>
+    <p>במאמר זה, ננתח חלק מהנוזקה Anatsa - כלי תקיפה ממשפחת ה-Banking Trojans, המיועד לגניבת פרטי גישה לחשבונות פיננסיים. ב-2024 היא הגיעה ל-100,000 הורדות ב-Google Play עד שהסירו אותה. הנוזקה הזו, מבצעת עקיפה לא שיגרתית של הצגת ה-UI של האפליקציה.</p>
+    <p>בחרתי לנתח אותה, כמקרה בוחן ל-Framework שפיתחתי למידול התנהגות נוזקה לפי 5 שכבות, ו-Anatsa פשוט ביצעה כל אחת מהן.</p>
+    <p>התרשים הבא מתאר את תהליך יצירת אפליקציה בשלבים - החל מהתקנה עד יצירת התהליך הלינוקסי:</p>
     <img src="../../assets/images/summary.png" alt="Summary of Application Creation Process" class="article-image">
 
-    <h2>המירוץ מתחיל [cite: 50]</h2>
-    <p>כאשר משתמש מריץ אפליקציה לגיטימית, עץ התהליכים נראה כך: [cite: 51]</p>
+    <h2>המירוץ מתחיל</h2>
+    <p>כאשר משתמש מריץ אפליקציה לגיטימית, עץ התהליכים נראה כך:</p>
     <img src="../../assets/images/process-tree.png" alt="Processes Map Hierarchy" class="article-image">
-    <p>ה-Zygote הוא בעצם טמפלט נקי עבור כל אפליקציית אנדרואיד. כדי להכין את הקרקע, תהליך ה-Zygote מאתחל שלושה רכיבים בסיסיים: [cite: 62]</p>
+    <p>ה-Zygote הוא בעצם טמפלט נקי עבור כל אפליקציית אנדרואיד. כדי להכין את הקרקע, תהליך ה-Zygote מאתחל שלושה רכיבים בסיסיים:</p>
     <ul>
-        <li><strong>ה-Android Runtime:</strong> ה-ART הינו "המכונה הוירטואלית", המסוגלת לקרוא ולהריץ קוד Java או Kotlin [cite: 65] (קבצי ה-DEX). [cite: 66]</li>
-        <li><strong>ה-Android Framework:</strong> טעינה מראש של אלפי מחלקות ומשאבי מערכת אל הזיכרון. [cite: 67]</li>
-        <li><strong>סוקט מקומי:</strong> ערוץ תקשורת שמאזין לבקשות <code>fork()</code>. [cite: 68] יוצר אותו לפני שעדיין ה-System Server נולד. [cite: 68, 69]</li>
+        <li><strong>ה-Android Runtime:</strong> ה-ART הינו "המכונה הוירטואלית", המסוגלת לקרוא ולהריץ קוד Java או Kotlin (קבצי ה-DEX).</li>
+        <li><strong>ה-Android Framework:</strong> טעינה מראש של אלפי מחלקות ומשאבי מערכת אל הזיכרון.</li>
+        <li><strong>סוקט מקומי:</strong> ערוץ תקשורת שמאזין לבקשות <code>fork()</code>. יוצר אותו לפני שעדיין ה-System Server נולד.</li>
     </ul>
 
-    <h3>הפיצול [cite: 70]</h3>
-    <p>במהלך ה-Boot, מתבצע <code>fork()</code> ראשון שיוזם ה-Zygote. נוצר תהליך בן שירש את ה-ART, את ה-Framework, ובלית ברירה, גם את הסוקט. [cite: 71]</p>
-    <p>מתכנתי הקוד של אנדרואיד, הזדרזו לסגור את הסוקט מטעמי אבטחה, כפי שניתן לראות בקטע הקוד הבא: [cite: 72]</p>
-    <pre><code dir="ltr">Zygote.closeAllFilesExcept(managedFileDescriptors); [cite: 73]</code></pre>
+    <h3>הפיצול</h3>
+    <p>במהלך ה-Boot, מתבצע <code>fork()</code> ראשון שיוזם ה-Zygote. נוצר תהליך בן שירש את ה-ART, את ה-Framework, ובלית ברירה, גם את הסוקט.</p>
+    <p>מתכנתי הקוד של אנדרואיד, הזדרזו לסגור את הסוקט מטעמי אבטחה, כפי שניתן לראות בקטע הקוד הבא:</p>
+    <pre><code dir="ltr">Zygote.closeAllFilesExcept(managedFileDescriptors);</code></pre>
 
-    <p>ה-Fork "נולד" עם מחרוזת בזיכרון, שתשמש אותו כדי להריץ את ה"ייעוד" שלו בעזרת פונקציות בזמן ריצה (ע"י מנגנון Reflection) [cite: 74]</p>
-    <p>מי שאחראי לכך שה-Fork הראשון ייווצר עם המחרוזת <code>SystemServer.main()</code>, זהו ה-Init (בכבודו ובעצמו). [cite: 79] הוא מעביר אותה כחלק מיצירת ה-Zygote עם דגל <code>--start-system-server</code> חד-פעמי (לחיסכון בזמן). [cite: 80] כך ה-Zygote מחזיק בזיכרון את המחרוזת ומיד משכפל את עצמו. [cite: 80, 81]</p>
-    <p>בהמשך, כאשר ה-System Server ירוץ ויגיד ל-Zygote שצריך Fork חדש, הוא זה שיקבל את המחרוזת מה-Launcher, ויעביר אותה ל-Zygote דרך ה-Local Socket. [cite: 82, 83]</p>
-    <p>מעתה והלאה, ה-Zygote עובר למצב האזנה בסוקט שפתח. מי שאחראי "להעיר" אותו וליזום קריאות של Zygote Forks, זה רק המנהל הראשי - ה-System Server. [cite: 84, 85]</p>
+    <p>ה-Fork "נולד" עם מחרוזת בזיכרון, שתשמש אותו כדי להריץ את ה"ייעוד" שלו בעזרת פונקציות בזמן ריצה (ע"י מנגנון Reflection)</p>
+    <p>מי שאחראי לכך שה-Fork הראשון ייווצר עם המחרוזת <code>SystemServer.main()</code>, זהו ה-Init (בכבודו ובעצמו). הוא מעביר אותה כחלק מיצירת ה-Zygote עם דגל <code>--start-system-server</code> חד-פעמי (לחיסכון בזמן). כך ה-Zygote מחזיק בזיכרון את המחרוזת ומיד משכפל את עצמו.</p>
+    <p>בהמשך, כאשר ה-System Server ירוץ ויגיד ל-Zygote שצריך Fork חדש, הוא זה שיקבל את המחרוזת מה-Launcher, ויעביר אותה ל-Zygote דרך ה-Local Socket.</p>
+    <p>מעתה והלאה, ה-Zygote עובר למצב האזנה בסוקט שפתח. מי שאחראי "להעיר" אותו וליזום קריאות של Zygote Forks, זה רק המנהל הראשי - ה-System Server.</p>
 
-    <h2>חלוקת תפקידים [cite: 86]</h2>
-    <h3>תהליך ה-System Server [cite: 87]</h3>
-    <p>הפונקציה <code>SystemServer.main()</code> היא זו ש"מייצגת" את מערכת ההפעלה, ומנהלת את תהליך האפליקציה. שניים מהשירותים המרכזיים שחשוב להכיר הם: [cite: 88]</p>
+    <h2>חלוקת תפקידים</h2>
+    <h3>תהליך ה-System Server</h3>
+    <p>הפונקציה <code>SystemServer.main()</code> היא זו ש"מייצגת" את מערכת ההפעלה, ומנהלת את תהליך האפליקציה. שניים מהשירותים המרכזיים שחשוב להכיר הם:</p>
     <ol>
-        <li><strong>Activity Manager Service:</strong> ה-AMS, הוא ה"מבוגר האחראי" שמנהל את הרכיב המנוהל ActivityThread שבתוך האפליקציה. [cite: 89, 90]</li>
-        <li><strong>Package Manager Service:</strong> ה-PMS, אחראי לנהל ולשמור את המידע על כל האפליקציות המותקנות במכשיר. [cite: 91, 92]</li>
+        <li><strong>Activity Manager Service:</strong> ה-AMS, הוא ה"מבוגר האחראי" שמנהל את הרכיב המנוהל ActivityThread שבתוך האפליקציה.</li>
+        <li><strong>Package Manager Service:</strong> ה-PMS, אחראי לנהל ולשמור את המידע על כל האפליקציות המותקנות במכשיר.</li>
     </ol>
-    <p>ברגע שמתעורר ה-System Server במהלך ה-Boot, דבר ראשון שהוא עושה זה להריץ את ה-main שלו. [cite: 93] ה-PMS סורק את כל קבצי ה-Manifests שיש במכשיר (בפועל, סורק קובץ כללי אחד - כחלק מאופטימיזציה), ומעדכן טבלה פנימית שמגדירה הרשאות ושירותים לכל אפליקציה. [cite: 94]</p>
-    <p>מאוחר יותר, ה-Launcher (מסך הבית) רק "מתשאל" את ה-PMS, כדי לקבל את האייקון והשם (ה-Label) שלה, כדי להציג אותם במסך הבית (כפי שנראה בחלק ג', בקוד ה-XML הראשון). [cite: 95]</p>
+    <p>ברגע שמתעורר ה-System Server במהלך ה-Boot, דבר ראשון שהוא עושה זה להריץ את ה-main שלו. ה-PMS סורק את כל קבצי ה-Manifests שיש במכשיר (בפועל, סורק קובץ כללי אחד - כחלק מאופטימיזציה), ומעדכן טבלה פנימית שמגדירה הרשאות ושירותים לכל אפליקציה.</p>
+    <p>מאוחר יותר, ה-Launcher (מסך הבית) רק "מתשאל" את ה-PMS, כדי לקבל את האייקון והשם (ה-Label) שלה, כדי להציג אותם במסך הבית (כפי שנראה בחלק ג', בקוד ה-XML הראשון).</p>
 
-    <h3>תהליך אפליקציה [cite: 96]</h3>
-    <p>נוצר בכל פעם שהמשתמש לוחץ על ה-Launcher של האפליקציה. [cite: 97]</p>
-    <p>ה-System Server שולח פקודה ל-Zygote דרך ה-Socket: "תשכפל פרוסס חדש". התהליך החדש שנוצר, משתמש ב-Reflection כדי להריץ את <code>ActivityThread.main()</code>, שמפעיל את ה-Looper (נראה בהמשך) ומכין את ה-UI Thread לקבלת הודעות מה-System Server. [cite: 98, 99, 101]</p>
-    <p>ברגע שהאפליקציה "חיה ונושמת", ה-Zygote מסיים את תפקידו וחוזר "לישון". [cite: 105] מעתה והלאה, התקשורת השוטפת מתבצעת ישירות בין ה-ActivityThread לבין ה-System Server (ה-AMS), באמצעות מנגנון העברת הודעות מאובטח (IPC) הראשי של אנדרואיד - Binder IPC. [cite: 106]</p>
+    <h3>תהליך אפליקציה</h3>
+    <p>נוצר בכל פעם שהמשתמש לוחץ על ה-Launcher של האפליקציה.</p>
+    <p>ה-System Server שולח פקודה ל-Zygote דרך ה-Socket: "תשכפל פרוסס חדש". התהליך החדש שנוצר, משתמש ב-Reflection כדי להריץ את <code>ActivityThread.main()</code>, שמפעיל את ה-Looper (נראה בהמשך) ומכין את ה-UI Thread לקבלת הודעות מה-System Server.</p>
+    <p>ברגע שהאפליקציה "חיה ונושמת", ה-Zygote מסיים את תפקידו וחוזר "לישון". מעתה והלאה, התקשורת השוטפת מתבצעת ישירות בין ה-ActivityThread לבין ה-System Server (ה-AMS), באמצעות מנגנון העברת הודעות מאובטח (IPC) הראשי של אנדרואיד - Binder IPC.</p>
 
-    <h3>תהליך ה-ActivityThread [cite: 111]</h3>
-    <p>זהו "סוכן" שיושב בתהליך האפליקציה, ומקבל את הפקודות מ-AMS. למרות שמו, הוא אינו Thread, אלא מחלקת Java שמנהלת את האפליקציה מבפנים. [cite: 112] על מנת לתקשר עם החוץ, הוא מחזיק בתוכו מחלקה פנימית שמאזינה לבקשות מ-AMS. בקשות אלו מועברות לתור של ה-UI Thread. [cite: 113]</p>
+    <h3>תהליך ה-ActivityThread</h3>
+    <p>זהו "סוכן" שיושב בתהליך האפליקציה, ומקבל את הפקודות מ-AMS. למרות שמו, הוא אינו Thread, אלא מחלקת Java שמנהלת את האפליקציה מבפנים. על מנת לתקשר עם החוץ, הוא מחזיק בתוכו מחלקה פנימית שמאזינה לבקשות מ-AMS. בקשות אלו מועברות לתור של ה-UI Thread.</p>
 
-    <h3>מנגנוני ה-Socket וה-Binder [cite: 114]</h3>
-    <p>נמצאנו למדים, שיש ל-System Server כ-3 תפקידים עיקריים: [cite: 115]</p>
+    <h3>מנגנוני ה-Socket וה-Binder</h3>
+    <p>נמצאנו למדים, שיש ל-System Server כ-3 תפקידים עיקריים:</p>
     <ul>
-        <li>לבקש בעצמו Zygote Forks עבור אפליקציות חדשות. [cite: 115]</li>
-        <li>לתקשר עם האפליקציה שנוצרה באמצעות ה-AMS. [cite: 116]</li>
-        <li>לסרוק את קובץ ה-AndroidManifest.xml במהלך ה-Boot או התקנת האפליקציה באמצעות ה-PMS. [cite: 118]</li>
+        <li>לבקש בעצמו Zygote Forks עבור אפליקציות חדשות.</li>
+        <li>לתקשר עם האפליקציה שנוצרה באמצעות ה-AMS.</li>
+        <li>לסרוק את קובץ ה-AndroidManifest.xml במהלך ה-Boot או התקנת האפליקציה באמצעות ה-PMS.</li>
     </ul>
-    <p>אך כאן עולה שאלה מעניינת: למה המערכת צריכה שני מנגנוני תקשורת (IPC) שונים? [cite: 119] בדומה למודלים של IPC בין דפדפן ליישומים בלינוקס, גם כאן התקשורת לא מתבצעת ישירות. [cite: 120]</p>
+    <p>אך כאן עולה שאלה מעניינת: למה המערכת צריכה שני מנגנוני תקשורת (IPC) שונים? בדומה למודלים של IPC בין דפדפן ליישומים בלינוקס, גם כאן התקשורת לא מתבצעת ישירות.</p>
     <ul>
-        <li><strong>בשלב ההקמה:</strong> שלב שבו עוברת התקשורת דרך ה-Local Socket, בין ה-System Server לבין ה-Zygote. [cite: 123] זהו צינור מהיר ופשוט שנועד למטרה אחת בלבד - להעיר את ה-Zygote ולהגיד לו לבצע שכפול. [cite: 124]</li>
-        <li><strong>בשלב הריצה:</strong> שלב שבו עוברת התקשורת דרך ה-Binder, בין ה-AMS לבין ה-ActivityThread. [cite: 125]</li>
+        <li><strong>בשלב ההקמה:</strong> שלב שבו עוברת התקשורת דרך ה-Local Socket, בין ה-System Server לבין ה-Zygote. זהו צינור מהיר ופשוט שנועד למטרה אחת בלבד - להעיר את ה-Zygote ולהגיד לו לבצע שכפול.</li>
+        <li><strong>בשלב הריצה:</strong> שלב שבו עוברת התקשורת דרך ה-Binder, בין ה-AMS לבין ה-ActivityThread.</li>
     </ul>
 
-    <h3>מנוע החיים של התהליך: ה-Looper של ה-UI Thread [cite: 126]</h3>
-    <p><em>(חשוב להבהיר: ארכיטקטורת אנדרואיד רוויה בלולאות Looper שונות, ולמעשה כמעט לכל Service).</em> [cite: 127]</p>
-    <p>בהקשר של "לידת" אפליקציה, לאחר ה-Fork והרצת הפונקציה הייעודית מ-Framework, יש רק Thread אחד, ה-UI Thread. [cite: 128]</p>
-    <p>בפועל, כל מה שאנחנו קוראים לו 'האפליקציה', יושב על לולאה אחת (Looper) שחיה בתוך ה-UI Thread, שמנוהלת על ידי ה-ActivityThread. [cite: 129] היא משהה את ה-UI Thread מלהסתיים, וממתינה לפקודות ה-System Server כדי להריץ את קוד האפליקציה. [cite: 130]</p>
-    <p>כבר הזכרנו שה-System Server כבר מחזיק בזיכרון שלו הרשאות, וביניהן את ה-Entry Point של האפליקציה. [cite: 131] בזמן הריצה, ה-System Server שולח פקודות הרצה (כמו onCreate, onStart וכו'), כדי להניע את ה-Entry Point. [cite: 132] הפקודות האלו נשלחות מה-System Server דרך ה-Binder IPC, ומתורגמות להודעות בתוך תור ההודעות של האפליקציה. [cite: 133]</p>
-    <p>ה-UI Thread מצידו לא "נחנק" - הוא יושב בתוך לולאת ה-Looper האינסופית, שולף את הפקודות האלו מהתור אחת אחת בעזרת המתווך שלו, ומריץ את פונקציות האפליקציה בזו אחר זו. [cite: 134]</p>
+    <h3>מנוע החיים של התהליך: ה-Looper של ה-UI Thread</h3>
+    <p><em>(חשוב להבהיר: ארכיטקטורת אנדרואיד רוויה בלולאות Looper שונות, ולמעשה כמעט לכל Service).</em></p>
+    <p>בהקשר של "לידת" אפליקציה, לאחר ה-Fork והרצת הפונקציה הייעודית מ-Framework, יש רק Thread אחד, ה-UI Thread.</p>
+    <p>בפועל, כל מה שאנחנו קוראים לו 'האפליקציה', יושב על לולאה אחת (Looper) שחיה בתוך ה-UI Thread, שמנוהלת על ידי ה-ActivityThread. היא משהה את ה-UI Thread מלהסתיים, וממתינה לפקודות ה-System Server כדי להריץ את קוד האפליקציה.</p>
+    <p>כבר הזכרנו שה-System Server כבר מחזיק בזיכרון שלו הרשאות, וביניהן את ה-Entry Point של האפליקציה. בזמן הריצה, ה-System Server שולח פקודות הרצה (כמו onCreate, onStart וכו'), כדי להניע את ה-Entry Point. הפקודות האלו נשלחות מה-System Server דרך ה-Binder IPC, ומתורגמות להודעות בתוך תור ההודעות של האפליקציה.</p>
+    <p>ה-UI Thread מצידו לא "נחנק" - הוא יושב בתוך לולאת ה-Looper האינסופית, שולף את הפקודות האלו מהתור אחת אחת בעזרת המתווך שלו, ומריץ את פונקציות האפליקציה בזו אחר זו.</p>
 
-    <h2>נקודת המחטף [cite: 139]</h2>
-    <p>עד כאן, זה מה שהבנתי מחקירת OWASP Uncrackable Level 2. זה כבר הספיק כדי "לשרוף לי את המוח" בקטע טוב. [cite: 140] אך מסתבר שזו הייתה רק ההתחלה. שם, קובץ ה-AndroidManifest.xml עבד "ממש לפי הספר". [cite: 141] כשהגעתי לחקור את הנוזקה Anatsa, ראיתי שה-Manifest שלה נראה אחרת לגמרי. [cite: 142]</p>
+    <h2>נקודת המחטף</h2>
+    <p>עד כאן, זה מה שהבנתי מחקירת OWASP Uncrackable Level 2. זה כבר הספיק כדי "לשרוף לי את המוח" בקטע טוב. אך מסתבר שזו הייתה רק ההתחלה. שם, קובץ ה-AndroidManifest.xml עבד "ממש לפי הספר". כשהגעתי לחקור את הנוזקה Anatsa, ראיתי שה-Manifest שלה נראה אחרת לגמרי.</p>
 
-    <h3>שתי נקודות הכניסה - Application vs. Activity [cite: 143]</h3>
-    <p>באנדרואיד אין רק "נקודת כניסה" אחת. יש למעשה שתי רמות שונות של הרצת קוד שרצות זו אחר זו האחת ברמת ה"תהליך", והשניה ברמת ה"חלון." [cite: 144]</p>
-    <p>הזכרנו שה-System Server אחראי לשלוח פקודות ל-Looper. יש פקודה אחת שמתרחשת בתחילת הרצת האפליקציה, והיא מושפעת ממה שכתוב (או לא כתוב) ב-Manifest. [cite: 145] הפקודה הראשונה של ה-AMS נקראת bindApplication. היא הטריגר שגורם למערכת ההפעלה ליצור את אובייקט ה-Application (כפי שנראה בהמשך), והיא מתרחשת עוד לפני שהאפליקציה מריצה UI כלשהו. [cite: 146]</p>
+    <h3>שתי נקודות הכניסה - Application vs. Activity</h3>
+    <p>באנדרואיד אין רק "נקודת כניסה" אחת. יש למעשה שתי רמות שונות של הרצת קוד שרצות זו אחר זו האחת ברמת ה"תהליך", והשניה ברמת ה"חלון."</p>
+    <p>הזכרנו שה-System Server אחראי לשלוח פקודות ל-Looper. יש פקודה אחת שמתרחשת בתחילת הרצת האפליקציה, והיא מושפעת ממה שכתוב (או לא כתוב) ב-Manifest. הפקודה הראשונה של ה-AMS נקראת bindApplication. היא הטריגר שגורם למערכת ההפעלה ליצור את אובייקט ה-Application (כפי שנראה בהמשך), והיא מתרחשת עוד לפני שהאפליקציה מריצה UI כלשהו.</p>
 
-    <h4>ניתוח AndroidManifest.xml של Level 2 [cite: 149]</h4>
-    <pre><code dir="ltr">&lt;application [cite: 147]
-    android:theme="@style/AppTheme" [cite: 148]
-    android:label="@string/app_name" [cite: 148]
-    android:icon="@mipmap/ic_launcher" [cite: 150]
-    android:allowBackup="true" [cite: 151]
-    android:supportsRtl="true"&gt; [cite: 152]
+    <h4>ניתוח AndroidManifest.xml של Level 2</h4>
+    <pre><code dir="ltr">&lt;application 
+    android:theme="@style/AppTheme" 
+    android:label="@string/app_name" 
+    android:icon="@mipmap/ic_launcher" 
+    android:allowBackup="true" 
+    android:supportsRtl="true"&gt; 
 
-    &lt;activity android:name="sg.vantagepoint.uncrackable2.MainActivity"&gt; [cite: 153]
-        &lt;intent-filter&gt; [cite: 154]
-            &lt;action android:name="android.intent.action.MAIN" /&gt; [cite: 155]
-            &lt;category android:name="android.intent.category.LAUNCHER"/&gt; [cite: 156]
-        &lt;/intent-filter&gt; [cite: 157]
-    &lt;/activity&gt; [cite: 158]
-&lt;/application&gt; [cite: 159]</code></pre>
-    <p>המאפיין <code>android:name</code> היא נתון שמשמש ליצירת Entry Point. הפעם הוא קיים רק ברמת ה"חלון". [cite: 160] אין כאן מאפיין ששייך לשלב ה-bindApplication, לכן ה-Application יהיה ברירת מחדל, ואליו יתווספו מאפיינים גלובליים לאפליקציה. [cite: 161, 162]</p>
+    &lt;activity android:name="sg.vantagepoint.uncrackable2.MainActivity"&gt; 
+        &lt;intent-filter&gt; 
+            &lt;action android:name="android.intent.action.MAIN" /&gt; 
+            &lt;category android:name="android.intent.category.LAUNCHER"/&gt; 
+        &lt;/intent-filter&gt; 
+    &lt;/activity&gt; 
+&lt;/application&gt; </code></pre>
+    <p>המאפיין <code>android:name</code> היא נתון שמשמש ליצירת Entry Point. הפעם הוא קיים רק ברמת ה"חלון". אין כאן מאפיין ששייך לשלב ה-bindApplication, לכן ה-Application יהיה ברירת מחדל, ואליו יתווספו מאפיינים גלובליים לאפליקציה.</p>
 
-    <h4>ניתוח AndroidManifest.xml של הנוזקה [cite: 168]</h4>
-    <pre><code dir="ltr">&lt;application [cite: 167]
-    android:label="PDF Reader: Update" [cite: 169]
-    android:icon="@vista6/vista_res_0x7f060000" [cite: 169]
-    android:name="ihp.opjhprs.fsthjpoyr.rhhkkff" [cite: 169]
-    android:allowBackup="true" [cite: 169]
-    android:usesCleartextTraffic="true"&gt; [cite: 170]</code></pre>
-    <p>כאן יש תכונה שמשפיעה מאוד על שלב ה-bindApplication. התכונה <code>android:name</code> גורמת למערכת ההפעלה ליצור אובייקט Application מותאם אישית, ולא את אובייקט ברירת המחדל שראינו ב-Uncrackable. [cite: 171] הווה אומר בעצם, הוגדר כאן Entry Point מוקדם מאוד ברמת ה-Process, עוד לפני ה-Entry Point של ה-UI. [cite: 172, 173]</p>
-    <p>אם הקוד בשלב זה יכיל פעולות ארוכות, ה-UI Thread ייתקע, והמשתמש יראה מסך שחור וימחק את האפליקציה. [cite: 174] לכן, הקוד ב-Entry Point הזה חייב להיות קצר וקטלני. [cite: 175] להלן חלק מקוד ה-Entry Point הידני של הנוזקה: [cite: 176]</p>
-    <pre><code dir="ltr">/* JADX INFO: compiled from: StubApp.java [cite: 177]
-   JADX INFO: Loaded from: classes.dex */ [cite: 177]
-public class rhhkkff extends Application { [cite: 177]
-    @Override // android.content.ContextWrapper [cite: 179]
-    protected void attachBaseContext(Context base) { [cite: 179]
-        super.attachBaseContext(base); [cite: 180]
-        new eomqmgsskufu(base).oqwrkywwlykpu(); [cite: 181]
-        new tttlkqttg(base).mopksfpffv(); [cite: 182]
-        kjyylrrmxujekkg.wqlx(this, qhpsx.noxgiqtlgxejjlkguiqsl, qhpsx.pmoerwxrnviwturjgmsrs); [cite: 183, 184]
-    } [cite: 185]
-} [cite: 186]</code></pre>
-    <p>הניתוח הסטטי כאן מוגבל, כי הקוד עבר Obfuscation רציני. מה שכן אפשר לראות כאן מיד, שהקלאס הזה הוא Stub Unpacking (לפי השם בשורה הראשונה של ה-Info). [cite: 187, 188]</p>
-    <p>ה-Stub Unpacking עובד ב-3 שלבים מרכזיים: [cite: 189]</p>
+    <h4>ניתוח AndroidManifest.xml של הנוזקה</h4>
+    <pre><code dir="ltr">&lt;application 
+    android:label="PDF Reader: Update" 
+    android:icon="@vista6/vista_res_0x7f060000" 
+    android:name="ihp.opjhprs.fsthjpoyr.rhhkkff" 
+    android:allowBackup="true" 
+    android:usesCleartextTraffic="true"&gt; </code></pre>
+    <p>כאן יש תכונה שמשפיעה מאוד על שלב ה-bindApplication. התכונה <code>android:name</code> גורמת למערכת ההפעלה ליצור אובייקט Application מותאם אישית, ולא את אובייקט ברירת המחדל שראינו ב-Uncrackable. הווה אומר בעצם, הוגדר כאן Entry Point מוקדם מאוד ברמת ה-Process, עוד לפני ה-Entry Point של ה-UI.</p>
+    <p>אם הקוד בשלב זה יכיל פעולות ארוכות, ה-UI Thread ייתקע, והמשתמש יראה מסך שחור וימחק את האפליקציה. לכן, הקוד ב-Entry Point הזה חייב להיות קצר וקטלני. להלן חלק מקוד ה-Entry Point הידני של הנוזקה:</p>
+    <pre><code dir="ltr">/* JADX INFO: compiled from: StubApp.java 
+   JADX INFO: Loaded from: classes.dex */ 
+public class rhhkkff extends Application { 
+    @Override // android.content.ContextWrapper 
+    protected void attachBaseContext(Context base) { 
+        super.attachBaseContext(base); 
+        new eomqmgsskufu(base).oqwrkywwlykpu(); 
+        new tttlkqttg(base).mopksfpffv(); 
+        kjyylrrmxujekkg.wqlx(this, qhpsx.noxgiqtlgxejjlkguiqsl, qhpsx.pmoerwxrnviwturjgmsrs); 
+    } 
+} </code></pre>
+    <p>הניתוח הסטטי כאן מוגבל, כי הקוד עבר Obfuscation רציני. מה שכן אפשר לראות כאן מיד, שהקלאס הזה הוא Stub Unpacking (לפי השם בשורה הראשונה של ה-Info).</p>
+    <p>ה-Stub Unpacking עובד ב-3 שלבים מרכזיים:</p>
     <ol>
-        <li>טעינת קובץ המקור לזיכרון. [cite: 190]</li>
-        <li>שילוב המחלקות הזדוניות אל תוך סביבת הריצה של האפליקציה. [cite: 191]</li>
-        <li>העברת השליטה ל-Entry Point של התוכנית המקורית. [cite: 192]</li>
+        <li>טעינת קובץ המקור לזיכרון.</li>
+        <li>שילוב המחלקות הזדוניות אל תוך סביבת הריצה של האפליקציה.</li>
+        <li>העברת השליטה ל-Entry Point של התוכנית המקורית.</li>
     </ol>
-    <p>הקוד שלעיל מבצע בדיוק את השלבים האלה, אותם נשאיר לשלב ה-Frida Dynamic Analysis. [cite: 193]</p>
+    <p>הקוד שלעיל מבצע בדיוק את השלבים האלה, אותם נשאיר לשלב ה-Frida Dynamic Analysis.</p>
 
-    <h3>וידוי [cite: 194]</h3>
-    <p>ברגע הראשון שהסתכלתי על הקוד, לא הבנתי מי מריץ אותו. הוא נראה כמו 4 פונקציות "באוויר", בלי שאף פונקציית main קוראת להן! [cite: 195, 196] גיליתי שבאנדרואיד, ה-ART עובדת הפוך משאר סביבות הרצת הקוד שאנחנו מכירים. [cite: 201] אפילו מה-JVM בעצמו, אני חייב לקרוא בעצמי לפונקציה שכתבתי כדי שהיא תתחיל לרוץ. [cite: 202]</p>
-    <p>באנדרואיד לעומת זאת, כבר יש מי שקורא ל-Entry Point - אובייקט ה-Application או ה-Activity, וזה מתבצע בשלב שכבר ראינו - יצירת אובייקט ה-Application בעזרת פקודת bindApplication ששולח ה-AMS. [cite: 203, 204]</p>
-    <p>הדוגמה הבאה מקוד ה-Android Framework: [cite: 205]</p>
-    <pre><code dir="ltr">public Application newApplication(ClassLoader cl, String className, Context context) { [cite: 206]
-    return (Application) cl.loadClass(className).newInstance(); [cite: 209]
-} [cite: 207]
+    <h3>וידוי</h3>
+    <p>ברגע הראשון שהסתכלתי על הקוד, לא הבנתי מי מריץ אותו. הוא נראה כמו 4 פונקציות "באוויר", בלי שאף פונקציית main קוראת להן! גיליתי שבאנדרואיד, ה-ART עובדת הפוך משאר סביבות הרצת הקוד שאנחנו מכירים. אפילו מה-JVM בעצמו, אני חייב לקרוא בעצמי לפונקציה שכתבתי כדי שהיא תתחיל לרוץ.</p>
+    <p>באנדרואיד לעומת זאת, כבר יש מי שקורא ל-Entry Point - אובייקט ה-Application או ה-Activity, וזה מתבצע בשלב שכבר ראינו - יצירת אובייקט ה-Application בעזרת פקודת bindApplication ששולח ה-AMS.</p>
+    <p>הדוגמה הבאה מקוד ה-Android Framework:</p>
+    <pre><code dir="ltr">public Application newApplication(ClassLoader cl, String className, Context context) { 
+    return (Application) cl.loadClass(className).newInstance(); 
+} 
 // -----------------------------------------------------------------
-public Activity newActivity(ClassLoader cl, String className, Intent intent) { [cite: 210]
-    return (Activity) cl.loadClass(className).newInstance(); [cite: 211]
-} [cite: 212]</code></pre>
-    <p>הנוזקה הגדירה קלאס מותאם אישית בתור Entry Point ידנית, ולכן הוא יתלבש ישירות על אובייקט ה-Application. [cite: 213] כעת אפשר להבין שהקלאס שהוגדר כ-Process Entry Point באובייקט ה-Application, בעצם מורץ ברקע, וכל זה באמצעות קוד מערכת ההפעלה שמשתמש במנגנון Reflection. [cite: 215]</p>
-    <p>הדגמת "הלבשה" ידנית של פונקציות על גבי אובייקט ה-Application בתהליך אתחול ה-Process: [cite: 216]</p>
+public Activity newActivity(ClassLoader cl, String className, Intent intent) { 
+    return (Activity) cl.loadClass(className).newInstance(); 
+} </code></pre>
+    <p>הנוזקה הגדירה קלאס מותאם אישית בתור Entry Point ידנית, ולכן הוא יתלבש ישירות על אובייקט ה-Application. כעת אפשר להבין שהקלאס שהוגדר כ-Process Entry Point באובייקט ה-Application, בעצם מורץ ברקע, וכל זה באמצעות קוד מערכת ההפעלה שמשתמש במנגנון Reflection.</p>
+    <p>הדגמת "הלבשה" ידנית של פונקציות על גבי אובייקט ה-Application בתהליך אתחול ה-Process:</p>
     <ul>
-        <li><code>Application.attachBaseContext(...)</code> [cite: 217]</li>
-        <li><code>Application.onCreate()</code> [cite: 218]</li>
-        <li><code>Application.createPackageContext(...)</code> [cite: 219]</li>
-        <li><code>Application.getPackageName()</code> [cite: 220]</li>
+        <li><code>Application.attachBaseContext(...)</code></li>
+        <li><code>Application.onCreate()</code></li>
+        <li><code>Application.createPackageContext(...)</code></li>
+        <li><code>Application.getPackageName()</code></li>
     </ul>
 
-    <h2>אתגר הניתוח הדינמי [cite: 221]</h2>
-    <p>לאחר שהבנו שהנוזקה חוטפת את שלב ה-Bootstrap ורצה בתוך <code>attachBaseContext()</code>, עולה שאלה קריטית: איך בכלל אפשר לנתח אותה בזמן אמת? [cite: 222, 223] כאן נכנס לתמונה כלי ה-Dynamic Binary Instrumentation המוביל בתעשייה - Frida. [cite: 223, 224]</p>
-    <p>Frida הוא כלי המאפשר לחוקרים להזרים סקריפטים מותאמים אישית של JavaScript ישירות לתוך הזיכרון של תהליכים חיים, ובכך לבצע הזרקת סקריפט (Hooking) לפונקציות ולשנות את התנהגותן בזמן ריצה. [cite: 225] הבעיה היא הארכיטקטורה של הנוזקה, שדורשת מאיתנו לשנות את הדרך שבה אנחנו משתמשים ב-Frida. [cite: 226]</p>
+    <h2>אתגר הניתוח הדינמי</h2>
+    <p>לאחר שהבנו שהנוזקה חוטפת את שלב ה-Bootstrap ורצה בתוך <code>attachBaseContext()</code>, עולה שאלה קריטית: איך בכלל אפשר לנתח אותה בזמן אמת? כאן נכנס לתמונה כלי ה-Dynamic Binary Instrumentation המוביל בתעשייה - Frida.</p>
+    <p>Frida הוא כלי המאפשר לחוקרים להזרים סקריפטים מותאמים אישית של JavaScript ישירות לתוך הזיכרון של תהליכים חיים, ובכך לבצע הזרקת סקריפט (Hooking) לפונקציות ולשנות את התנהגותן בזמן ריצה. הבעיה היא הארכיטקטורה של הנוזקה, שדורשת מאיתנו לשנות את הדרך שבה אנחנו משתמשים ב-Frida.</p>
 
-    <h3>1. הגישה הרגילה והמכשול שלה: חיבור מאוחר(Attach) [cite: 231]</h3>
-    <p>במצב הרגיל (Attach), אנחנו מנסים להתחבר לאפליקציה אחרי שהיא כבר הופיעה על המסך (בשלב ה-UI). [cite: 231] ההתחברות מתבצעת הלכה למעשה רק אחרי שהתחיל ה-Entry Point עם אובייקט ה-Activity. [cite: 232]</p>
-    <p>בשלב זה, Frida שולחת פקודה לקרנל: "עצור את ה-Threads של האפליקציה", מזריקה את סוכן הניטור שלה (ה-Frida Agent), ומשחררת את הריצה. [cite: 233] לרוע המזל, זה כבר מאוחר מדי. מתודת ה-<code>attachBaseContext()</code> של הנוזקה כבר רצה והסתיימה מזמן, יחד עם אובייקט ה-Application. [cite: 234]</p>
+    <h3>1. הגישה הרגילה והמכשול שלה: חיבור מאוחר(Attach)</h3>
+    <p>במצב הרגיל (Attach), אנחנו מנסים להתחבר לאפליקציה אחרי שהיא כבר הופיעה על המסך (בשלב ה-UI). ההתחברות מתבצעת הלכה למעשה רק אחרי שהתחיל ה-Entry Point עם אובייקט ה-Activity.</p>
+    <p>בשלב זה, Frida שולחת פקודה לקרנל: "עצור את ה-Threads של האפליקציה", מזריקה את סוכן הניטור שלה (ה-Frida Agent), ומשחררת את הריצה. לרוע המזל, זה כבר מאוחר מדי. מתודת ה-<code>attachBaseContext()</code> של הנוזקה כבר רצה והסתיימה מזמן, יחד עם אובייקט ה-Application.</p>
 
-    <h3>2. הדרך לנצח את המירוץ: מצב Spawn [cite: 235]</h3>
-    <p>מכיוון שאין לנו שום יכולת אנושית (או טכנית במצב Attach) להיות מהירים יותר מפקודות ה-Bootstrap של ה-System Server, הדרך לנצח היא להקדים את טעינת האפליקציה בעזרת מצב Spawn. [cite: 236]</p>
-    <p>במצב Spawn, האפליקציה מופעלת כרגיל (מה שגורם ל-System Server לבקש Fork מתוך ה-Zygote), אך Frida מתערבת מיד לאחר ה-Fork. [cite: 237] היא תופסת את התהליך החדש ומעבירה אותו למצב השהייה, עוד לפני שהפקודה הראשונה של ActivityThread מתחילה לרוץ (לפני ה-Process Entry Point). [cite: 237, 238]</p>
-    <p>כך, כשהנוזקה תגיע לבסוף אל ה-<code>attachBaseContext()</code>, אנחנו כבר נהיה שם בפנים כדי לתפוס אותה בזמן אמת. [cite: 239]</p>
+    <h3>2. הדרך לנצח את המירוץ: מצב Spawn</h3>
+    <p>מכיוון שאין לנו שום יכולת אנושית (או טכנית במצב Attach) להיות מהירים יותר מפקודות ה-Bootstrap של ה-System Server, הדרך לנצח היא להקדים את טעינת האפליקציה בעזרת מצב Spawn.</p>
+    <p>במצב Spawn, האפליקציה מופעלת כרגיל (מה שגורם ל-System Server לבקש Fork מתוך ה-Zygote), אך Frida מתערבת מיד לאחר ה-Fork. היא תופסת את התהליך החדש ומעבירה אותו למצב השהייה, עוד לפני שהפקודה הראשונה של ActivityThread מתחילה לרוץ (לפני ה-Process Entry Point).</p>
+    <p>כך, כשהנוזקה תגיע לבסוף אל ה-<code>attachBaseContext()</code>, אנחנו כבר נהיה שם בפנים כדי לתפוס אותה בזמן אמת.</p>
 
-    <h3>3. שבירת חוקי המשחק: Zygote Hook [cite: 240]</h3>
-    <p>במקרים קיצוניים של נוזקות מתקדמות (או כאשר קיימות הגנות Anti-Analysis חזקות במיוחד), ניתן להשתמש בשיטה האגרסיבית ביותר: ה-Zygote Hook. [cite: 241] במקום להמתין ליצירת תהליך האפליקציה הספציפי, ה-Frida מזריקה את עצמה ישירות לתוך תהליך ה-Zygote המקורי עצמו. [cite: 242] המשמעות היא שכל אפליקציה עתידית שתרוץ במכשיר, תשתכפל ותיוולד כאשר ה-Frida Agent כבר נמצא ב-"DNA" שלה, עוד לפני שלב ה-Fork. [cite: 243]</p>
+    <h3>3. שבירת חוקי המשחק: Zygote Hook</h3>
+    <p>במקרים קיצוניים של נוזקות מתקדמות (או כאשר קיימות הגנות Anti-Analysis חזקות במיוחד), ניתן להשתמש בשיטה האגרסיבית ביותר: ה-Zygote Hook. במקום להמתין ליצירת תהליך האפליקציה הספציפי, ה-Frida מזריקה את עצמה ישירות לתוך תהליך ה-Zygote המקורי עצמו. המשמעות היא שכל אפליקציה עתידית שתרוץ במכשיר, תשתכפל ותיוולד כאשר ה-Frida Agent כבר נמצא ב-"DNA" שלה, עוד לפני שלב ה-Fork.</p>
 
-    <p><strong>ה-Hook במילים פשוטות:</strong> [cite: 244]<br>
-    נניח שההוק שלי מתחיל לרוץ מיד אחרי ה-Fork, מה הוא רואה? [cite: 245]</p>
+    <p><strong>ה-Hook במילים פשוטות:</strong><br>
+    נניח שההוק שלי מתחיל לרוץ מיד אחרי ה-Fork, מה הוא רואה?</p>
     <ul>
-        <li>שעוד מעט מתחילה סריקת ה-Manifest. [cite: 245]</li>
-        <li>הולך להיווצר אובייקט Application - ושם בדיוק נעצור אותו. [cite: 247]</li>
+        <li>שעוד מעט מתחילה סריקת ה-Manifest.</li>
+        <li>הולך להיווצר אובייקט Application - ושם בדיוק נעצור אותו.</li>
     </ul>
-    <p>נתפוס את מי שקרא ליצירת Application חדש, נכריח אותו ליצור אובייקט נקי, ונחזיר אותו ללא תלות בקוד הזדוני של האפליקציה. [cite: 247]</p>
-    <p>כדי להבין בדיוק מי יוצרת אובייקט חדש, חקרתי את הדרך שבה ה-ActivityThread בונה את האפליקציה, וגיליתי שהוא משתמש במחלקה פנימית בשם LoadedApk. [cite: 248] זיהיתי שהפונקציה <code>makeApplicationInner</code> (בתוך מחלקה זו) היא זו שקוראת פיזית ליצירת האובייקט (<code>newApplication</code>). [cite: 249, 250] היא מבצעת בדיקה פנימית על הפרמטר הראשון הבוליאני: [cite: 256]</p>
-    <pre><code dir="ltr">if (forceDefaultAppClass || (appClass == null)) { [cite: 257, 258]
-    appClass = "android.app.Application"; [cite: 259]
-} [cite: 260]</code></pre>
-    <p>אם הפרמטר הוא false ואין appClass מוגדר (כלומר, אף אחד לא הכניס מאפיין <code>android:name</code> ל-Application בתוך ה-Manifest), ייווצר אובייקט Application ברירת מחדל. [cite: 261] אך בגלל שהנוזקה כן קיימה והגדירה appClass זדוני, אנחנו נכריח את המשתנה <code>forceDefaultAppClass</code> להיות true בזמן ריצה, ומיד ייווצר אובייקט appClass חדש ונקי לחלוטין: [cite: 262]</p>
-    <pre><code dir="ltr">Java.perform(function() { [cite: 263]
-    var reset_entry_point = Java.use("android.app.LoadedApk"); [cite: 264]
+    <p>נתפוס את מי שקרא ליצירת Application חדש, נכריח אותו ליצור אובייקט נקי, ונחזיר אותו ללא תלות בקוד הזדוני של האפליקציה.</p>
+    <p>כדי להבין בדיוק מי יוצרת אובייקט חדש, חקרתי את הדרך שבה ה-ActivityThread בונה את האפליקציה, וגיליתי שהוא משתמש במחלקה פנימית בשם LoadedApk. זיהיתי שהפונקציה <code>makeApplicationInner</code> (בתוך מחלקה זו) היא זו שקוראת פיזית ליצירת האובייקט (<code>newApplication</code>). היא מבצעת בדיקה פנימית על הפרמטר הראשון הבוליאני:</p>
+    <pre><code dir="ltr">if (forceDefaultAppClass || (appClass == null)) { 
+    appClass = "android.app.Application"; 
+} </code></pre>
+    <p>אם הפרמטר הוא false ואין appClass מוגדר (כלומר, אף אחד לא הכניס מאפיין <code>android:name</code> ל-Application בתוך ה-Manifest), ייווצר אובייקט Application ברירת מחדל. אך בגלל שהנוזקה כן קיימה והגדירה appClass זדוני, אנחנו נכריח את המשתנה <code>forceDefaultAppClass</code> להיות true בזמן ריצה, ומיד ייווצר אובייקט appClass חדש ונקי לחלוטין:</p>
+    <pre><code dir="ltr">Java.perform(function() { 
+    var reset_entry_point = Java.use("android.app.LoadedApk"); 
 
-    reset_entry_point.makeApplicationInner.implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) { [cite: 265, 266]
-        // Force creation of a clean, default Application class. [cite: 267]
-        forceDefaultAppClass = true; [cite: 267]
-        return this.makeApplicationInner(forceDefaultAppClass, instrumentation, allowDuplicateInstances); [cite: 268, 269]
-    }; [cite: 270]
-}); [cite: 271]</code></pre>
-    <p>לאחר תיקון קל לתמיכה ב-overload כשיש מספר רב של פונקציות עם אותו השם, ה-Hook הנקודתי הצליח, (אך הוא צפוי להיכשל בהמשך, כשירוצו הבדיקות של הנוזקה בשלב ה-Activity Bootstrap ואז נעדיף אובייקט מותאם אישית): [cite: 272]</p>
+    reset_entry_point.makeApplicationInner.implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) { 
+        // Force creation of a clean, default Application class. 
+        forceDefaultAppClass = true; 
+        return this.makeApplicationInner(forceDefaultAppClass, instrumentation, allowDuplicateInstances); 
+    }; 
+}); </code></pre>
+    <p>לאחר תיקון קל לתמיכה ב-overload כשיש מספר רב של פונקציות עם אותו השם, ה-Hook הנקודתי הצליח, (אך הוא צפוי להיכשל בהמשך, כשירוצו הבדיקות של הנוזקה בשלב ה-Activity Bootstrap ואז נעדיף אובייקט מותאם אישית):</p>
     <img src="../../assets/images/frida-output-1.png" alt="Frida Terminal Output 1" class="article-image">
 
-    <h2>The Crashed Process [cite: 293]</h2>
-    <p>עד שגילינו ש-Application Bootstrap זה ה-Entry Point המוקדם ביותר של אפליקציית אנדרואיד - גיליתי שיש עוד Bootstrap נסתר, אז אל תלכו לשום מקום. [cite: 294]</p>
-    <p>להלן השגיאה מ-Frida: [cite: 295]</p>
-    <pre><code dir="ltr">Process crashed: java.lang.ClassNotFoundException: Didn't find class "com.clnvyokcv.bgvpowkic.util.SomeProvider" [cite: 296]</code></pre>
-    <p>השגיאה הזו הזכירה לי מידע שראיתי ב-VirusTotal של הנוזקה שה-Provider הוא <code>SomeProvider</code> (למרות שהשם כבר מרמז לבד). [cite: 297, 298] הוא מופיע גם ב-Manifest: [cite: 298]</p>
-    <pre><code dir="ltr">&lt;provider [cite: 299]
-    android:name="com.clnvyokcv.bgvpowkic.util.SomeProvider" [cite: 300]
-    android:exported="true" [cite: 301]
-    android:authorities="com.transportation.ukltd" [cite: 302]
-    android:grantUriPermissions="true"/&gt; [cite: 302]</code></pre>
-    <p>המשמעות היא, שיש קוד שרץ קודם שנוצר ה-Default Application! [cite: 303]</p>
+    <h2>The Crashed Process</h2>
+    <p>עד שגילינו ש-Application Bootstrap זה ה-Entry Point המוקדם ביותר של אפליקציית אנדרואיד - גיליתי שיש עוד Bootstrap נסתר, אז אל תלכו לשום מקום.</p>
+    <p>להלן השגיאה מ-Frida:</p>
+    <pre><code dir="ltr">Process crashed: java.lang.ClassNotFoundException: Didn't find class "com.clnvyokcv.bgvpowkic.util.SomeProvider" </code></pre>
+    <p>השגיאה הזו הזכירה לי מידע שראיתי ב-VirusTotal של הנוזקה שה-Provider הוא <code>SomeProvider</code> (למרות שהשם כבר מרמז לבד). הוא מופיע גם ב-Manifest:</p>
+    <pre><code dir="ltr">&lt;provider 
+    android:name="com.clnvyokcv.bgvpowkic.util.SomeProvider" 
+    android:exported="true" 
+    android:authorities="com.transportation.ukltd" 
+    android:grantUriPermissions="true"/&gt; </code></pre>
+    <p>המשמעות היא, שיש קוד שרץ קודם שנוצר ה-Default Application!</p>
 
-    <h3>Provider [cite: 304]</h3>
-    <p>זהו פיצ'ר שאנדרואיד הכניסה, כדי לייעל את העבודה לספריות צד שלישי - לאפשר טעינה אוטומטית של קוד שקודם לקוד האפליקציה. [cite: 305] נוזקות (ובעיקר Packers), משתמשות בו כדי לטעון את ה-DEX המוצפן, עוד לפני יצירת אובייקט ה-Application. [cite: 306, 307]</p>
+    <h3>Provider</h3>
+    <p>זהו פיצ'ר שאנדרואיד הכניסה, כדי לייעל את העבודה לספריות צד שלישי - לאפשר טעינה אוטומטית של קוד שקודם לקוד האפליקציה. נוזקות (ובעיקר Packers), משתמשות בו כדי לטעון את ה-DEX המוצפן, עוד לפני יצירת אובייקט ה-Application.</p>
 
     <ul>
-        <li><strong>שלב א'</strong> - נוצר Zygote Fork. [cite: 308]</li>
-        <li><strong>שלב ב'</strong> - הפונקציה <code>ActivityThread.main</code> מורצת (ע"י Reflection). [cite: 308, 309]</li>
-        <li><strong>שלב ג'</strong> - הפקודה הראשונה (<code>bindApplication</code>) של AMS נקראת אצל ה-Looper של ה-ActivityThread ובה הנתונים מה-Manifest (שנאספו ע"י PMS). [cite: 310, 311]</li>
-        <li><strong>שלב ד'</strong> - נוצר אובייקט Application בזכרון, אבל UI Thread עדיין לא מריץ אותו! [cite: 312]</li>
-        <li><strong>שלב ה'</strong> - כתגובה להודעה מה-AMS, הפונקציה <code>handleBindApplication</code> מורצת ע"י ActivityThread ה"סוכן" של System Server בתוך האפליקציה. [cite: 313]</li>
+        <li><strong>שלב א'</strong> - נוצר Zygote Fork.</li>
+        <li><strong>שלב ב'</strong> - הפונקציה <code>ActivityThread.main</code> מורצת (ע"י Reflection).</li>
+        <li><strong>שלב ג'</strong> - הפקודה הראשונה (<code>bindApplication</code>) של AMS נקראת אצל ה-Looper של ה-ActivityThread ובה הנתונים מה-Manifest (שנאספו ע"י PMS).</li>
+        <li><strong>שלב ד'</strong> - נוצר אובייקט Application בזכרון, אבל UI Thread עדיין לא מריץ אותו!</li>
+        <li><strong>שלב ה'</strong> - כתגובה להודעה מה-AMS, הפונקציה <code>handleBindApplication</code> מורצת ע"י ActivityThread ה"סוכן" של System Server בתוך האפליקציה.</li>
     </ul>
 
-    <p>הוא מבצע 2 פעולות: [cite: 314]</p>
+    <p>הוא מבצע 2 פעולות:</p>
     <ol>
-        <li>ביצוע <code>ContentProvider.onCreate</code> עבור כל ה-Providers שב-Manifest. [cite: 317]</li>
-        <li>ביצוע <code>Application.onCreate</code> עבור הרצת אובייקט Application. [cite: 318]</li>
+        <li>ביצוע <code>ContentProvider.onCreate</code> עבור כל ה-Providers שב-Manifest.</li>
+        <li>ביצוע <code>Application.onCreate</code> עבור הרצת אובייקט Application.</li>
     </ol>
 
-    <h3>פקודת ContentProvider.onCreate [cite: 323]</h3>
-    <p>אתחול ה-Providers ע"י פונקציית עזר בשם <code>installContentProviders</code>: [cite: 324]</p>
-    <pre><code dir="ltr">if (!data.restrictedBackupMode) { [cite: 325]
-    if (!ArrayUtils.isEmpty(data.providers)) { [cite: 326]
-        installContentProviders(app, data.providers); // &lt;--- [cite: 327]
-    } [cite: 328]
-} [cite: 329]</code></pre>
-    <p>כאן נטען SomeProvider שמריץ את <code>onCreate</code> (כל Provider בודד, חייב לרשת מ-ContentProvider ולממש את <code>onCreate</code>). [cite: 330, 331]</p>
-    <p><strong>שלב ו'</strong> - AMS שולח פקודה ל-ActivityThread, שמפעילה את ה-<code>Activity.onCreate</code> וגורמת להעלאת ה-UI של האפליקציה. [cite: 332, 333]</p>
+    <h3>פקודת ContentProvider.onCreate</h3>
+    <p>אתחול ה-Providers ע"י פונקציית עזר בשם <code>installContentProviders</code>:</p>
+    <pre><code dir="ltr">if (!data.restrictedBackupMode) { 
+    if (!ArrayUtils.isEmpty(data.providers)) { 
+        installContentProviders(app, data.providers); // &lt;--- 
+    } 
+} </code></pre>
+    <p>כאן נטען SomeProvider שמריץ את <code>onCreate</code> (כל Provider בודד, חייב לרשת מ-ContentProvider ולממש את <code>onCreate</code>).</p>
+    <p><strong>שלב ו'</strong> - AMS שולח פקודה ל-ActivityThread, שמפעילה את ה-<code>Activity.onCreate</code> וגורמת להעלאת ה-UI של האפליקציה.</p>
 
-    <h3>השלכות למחקר הדינמי [cite: 334]</h3>
-    <p>ברגע שהרצתי את ה-Hook, נוצר אובייקט Application בזכרון. אמנם כעת חסרה פונקציית הפענוח של קבצי ה-DEX שישבה בראש אובייקט ה-Application של הנוזקה (שדרסנו). [cite: 334] זה הוביל לתלונת ה-ClassLoader אודות קובץ ה-DEX האבוד. [cite: 335, 336]</p>
-    <p>בשלב המימוש, רציתי לזייף <code>MySomeProvider</code> תוך כדי ריצה ב-Frida, ולשלוח אותו ל-ClassLoader, כדי שלא יבכה שלא מצא אותו. [cite: 337] עם קצת ניסוי וטעיה, למדתי על הדינמיקה עם ה-ClassLoader. לא מספיק להזריק את ה-Class שלי ל-ART כי ה-ClassLoader מחפש Path של קובץ בדיסק הקשיח (ולא ב-RAM), ברגע טעינת ה-ActivityThread. [cite: 338, 339]</p>
+    <h3>השלכות למחקר הדינמי</h3>
+    <p>ברגע שהרצתי את ה-Hook, נוצר אובייקט Application בזכרון. אמנם כעת חסרה פונקציית הפענוח של קבצי ה-DEX שישבה בראש אובייקט ה-Application של הנוזקה (שדרסנו). זה הוביל לתלונת ה-ClassLoader אודות קובץ ה-DEX האבוד.</p>
+    <p>בשלב המימוש, רציתי לזייף <code>MySomeProvider</code> תוך כדי ריצה ב-Frida, ולשלוח אותו ל-ClassLoader, כדי שלא יבכה שלא מצא אותו. עם קצת ניסוי וטעיה, למדתי על הדינמיקה עם ה-ClassLoader. לא מספיק להזריק את ה-Class שלי ל-ART כי ה-ClassLoader מחפש Path של קובץ בדיסק הקשיח (ולא ב-RAM), ברגע טעינת ה-ActivityThread.</p>
 
-    <p><strong>תיאור ה-Hook במילים:</strong> [cite: 340]</p>
+    <p><strong>תיאור ה-Hook במילים:</strong></p>
     <ol>
-        <li>ליצור <code>SomeProvider.java</code> ולקמפל ידנית ל-DEX. [cite: 342]</li>
-        <li>לאתחל מופע חדש של DexClassLoader, שמירת ה-Path, הכנת MySomeProvider להזרקה ועדכון האב של ה-ClassLoader. [cite: 342]</li>
-        <li>עצירת שרשרת האספקה והזרקת ה-MySomeProvider שיצרתי, לתוך תהליך קבלת ה-DEX ל-ART (לא הרחבתי, כדי לא לגלוש מגבולות המאמר). [cite: 343]</li>
-        <li>כפיית אובייקט Default Application (כמו שכבר הכרנו). [cite: 344]</li>
+        <li>ליצור <code>SomeProvider.java</code> ולקמפל ידנית ל-DEX.</li>
+        <li>לאתחל מופע חדש של DexClassLoader, שמירת ה-Path, הכנת MySomeProvider להזרקה ועדכון האב של ה-ClassLoader.</li>
+        <li>עצירת שרשרת האספקה והזרקת ה-MySomeProvider שיצרתי, לתוך תהליך קבלת ה-DEX ל-ART (לא הרחבתי, כדי לא לגלוש מגבולות המאמר).</li>
+        <li>כפיית אובייקט Default Application (כמו שכבר הכרנו).</li>
     </ol>
 
-    <p>הקוד: [cite: 351]</p>
-    <pre><code dir="ltr">Java.perform(function() { [cite: 352]
-    var dexPath = "/sdcard/someprovider.dex"; [cite: 353]
+    <p>הקוד:</p>
+    <pre><code dir="ltr">Java.perform(function() { 
+    var dexPath = "/sdcard/someprovider.dex"; 
 
-    var ParentClassLoader = Java.use("java.lang.ClassLoader").getSystemClassLoader(); [cite: 354]
-    var ClassLoader = Java.use("dalvik.system.DexClassLoader"); [cite: 355, 356]
+    var ParentClassLoader = Java.use("java.lang.ClassLoader").getSystemClassLoader(); 
+    var ClassLoader = Java.use("dalvik.system.DexClassLoader"); 
 
-    var myLoader = ClassLoader.$new(dexPath, "/sdcard/", null, ParentClassLoader); [cite: 357]
-    var MySomeProvider = myLoader.loadClass("com.clnvyokcv.bgvpowkic.util.SomeProvider"); [cite: 358, 359]
+    var myLoader = ClassLoader.$new(dexPath, "/sdcard/", null, ParentClassLoader); 
+    var MySomeProvider = myLoader.loadClass("com.clnvyokcv.bgvpowkic.util.SomeProvider"); 
 // —----------------------------------------------------------
-    var BaseDexClassLoader = Java.use("dalvik.system.BaseDexClassLoader"); [cite: 360]
+    var BaseDexClassLoader = Java.use("dalvik.system.BaseDexClassLoader"); 
 
-    BaseDexClassLoader.findClass.implementation = function(name) { [cite: 361]
-        if (name === "com.clnvyokcv.bgvpowkic.util.SomeProvider") { [cite: 362]
-            return MySomeProvider; [cite: 363]
-        } [cite: 365]
-        return this.findClass(name); [cite: 364]
-    }; [cite: 366]
+    BaseDexClassLoader.findClass.implementation = function(name) { 
+        if (name === "com.clnvyokcv.bgvpowkic.util.SomeProvider") { 
+            return MySomeProvider; 
+        } 
+        return this.findClass(name); 
+    }; 
 // —----------------------------------------------------------
-    var reset_entry_point = Java.use("android.app.LoadedApk"); [cite: 367]
+    var reset_entry_point = Java.use("android.app.LoadedApk"); 
 
-    reset_entry_point.makeApplicationInner [cite: 368]
-    .overload('boolean', 'android.app.Instrumentation', 'boolean') [cite: 369]
-    .implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) { [cite: 369, 370, 371]
-        return this.makeApplicationInner(true, instrumentation, allowDuplicateInstances); [cite: 372, 373]
-    }; [cite: 374]
-}); [cite: 375]</code></pre>
+    reset_entry_point.makeApplicationInner 
+    .overload('boolean', 'android.app.Instrumentation', 'boolean') 
+    .implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) { 
+        return this.makeApplicationInner(true, instrumentation, allowDuplicateInstances); 
+    }; 
+}); </code></pre>
 
-    <p>הפלט: [cite: 376]</p>
+    <p>הפלט:</p>
     <img src="../../assets/images/frida-output-2.png" alt="Frida Final Terminal Output" class="article-image">
 
-    <h2>סיכום [cite: 395]</h2>
-    <p>ראינו איך מכשיר האנדרואיד שלנו, כבר לא כ"כ בטוח כמו שחשבנו. המורכבות שלו יוצרת "פתחים", שנוזקות מתקדמות יודעות לנצל. אותי זה הביא למסקנה - להשתמש בו לצרכי מחקר ופחות לצרכים אישיים ושימוש יומיומי (ולהעדיף פלאפון מקשים). [cite: 396]</p>
-    <p>מערכת מורכבת כמו אנדרואיד, מלאה ב-APIs שמקשרים לעוד APIs, והמון דברים קורים "מתחת לפני השטח". [cite: 397]</p>
-    <p>המחקר הוביל למסקנה, שבאנדרואיד אין "נקודת כניסה" אחת לאפליקציה, אלא שרשרת Bootstrap מרובת שלבים. [cite: 398] כל אחד מהשלבים מהווה שטח תקיפה בפני עצמו עבור נוזקות. [cite: 399]</p>
-    <p>מה שריגש אותי במחקר, הוא לראות איך שבריר שנייה בודד בזמן הריצה, יכול להרגיש כמו "אינסוף", של שעות ארוכות מול המסך. [cite: 400] כמו שכתוב בתורה, "יום לשנה" - יש דברים שקרו ביום אחד, ולוקח שנה לספר אותם. [cite: 401, 402]</p>
+    <h2>סיכום</h2>
+    <p>ראינו איך מכשיר האנדרואיד שלנו, כבר לא כ"כ בטוח כמו שחשבנו. המורכבות שלו יוצרת "פתחים", שנוזקות מתקדמות יודעות לנצל. אותי זה הביא למסקנה - להשתמש בו לצרכי מחקר ופחות לצרכים אישיים ושימוש יומיומי (ולהעדיף פלאפון מקשים).</p>
+    <p>מערכת מורכבת כמו אנדרואיד, מלאה ב-APIs שמקשרים לעוד APIs, והמון דברים קורים "מתחת לפני השטח".</p>
+    <p>המחקר הוביל למסקנה, שבאנדרואיד אין "נקודת כניסה" אחת לאפליקציה, אלא שרשרת Bootstrap מרובת שלבים. כל אחד מהשלבים מהווה שטח תקיפה בפני עצמו עבור נוזקות.</p>
+    <p>מה שריגש אותי במחקר, הוא לראות איך שבריר שנייה בודד בזמן הריצה, יכול להרגיש כמו "אינסוף", של שעות ארוכות מול המסך. כמו שכתוב בתורה, "יום לשנה" - יש דברים שקרו ביום אחד, ולוקח שנה לספר אותם.</p>
 
-    <h3>על המחבר [cite: 403]</h3>
-    <p>שי מרדכי, סטודנט לקראת סיום תואר ראשון במדעי המחשב במכון לב, משרת מילואים, נשוי ואב לשניים. [cite: 404] משלב לימודי רבנות בכולל, עם תשוקה עמוקה לחקר חולשות, Reverse Engineering ו-Android Internals. [cite: 405] אוהב לחקור לעומק מערכות הפעלה ולפרק בעיות מורכבות עד לשורשן. [cite: 407]</p>
-    <p>תודה גדולה לברק גונן - מרצה, חוקר, ובוגר 8200, שהצית בי את התשוקה לחקר מערכות הפעלה ו-RE. [cite: 408]</p>
+    <h3>על המחבר</h3>
+    <p>שי מרדכי, סטודנט לקראת סיום תואר ראשון במדעי המחשב במכון לב, משרת מילואים, נשוי ואב לשניים. משלב לימודי רבנות בכולל, עם תשוקה עמוקה לחקר חולשות, Reverse Engineering ו-Android Internals. אוהב לחקור לעומק מערכות הפעלה ולפרק בעיות מורכבות עד לשורשן.</p>
+    <p>תודה גדולה לברק גונן - מרצה, חוקר, ובוגר 8200, שהצית בי את התשוקה לחקר מערכות הפעלה ו-RE.</p>
 
-    <h3>מקורות מידע [cite: 409]</h3>
+    <h3>מקורות מידע</h3>
     <ul dir="ltr" style="text-align: left; font-size: 0.9em;">
-        <li>android/app/LoadedApk.java – Implementation of makeApplicationInner() [cite: 410]</li>
-        <li>android/app/Instrumentation.java – Implementation of newApplication() and newActivity() [cite: 411]</li>
-        <li>android/app/ActivityThread.java – Implementation of handleBindApplication() and installContentProviders() [cite: 412, 413]</li>
-        <li>dalvik/system/BaseDexClassLoader.java – Implementation of findClass() used for Dex loading. [cite: 414]</li>
-        <li>Android Developers: DexClassLoader [cite: 415]</li>
-        <li>Android Developers: Processes and Threads Overview. [cite: 416]</li>
-        <li>Android Developers: App Manifest Overview (&lt;application&gt; element). [cite: 417]</li>
-        <li>Android Developers: ContentProvider [cite: 418]</li>
-        <li>Android Developers: Create a content provider [cite: 423]</li>
-        <li>Stefano Santilli: Deep Dive into Android Boot Process (Part 1). [cite: 424]</li>
-        <li>Stefano Santilli: Android Boot Process (Part 2: From Zygote to SystemServer). [cite: 425]</li>
-        <li>Cleafy Labs: A Stealthy Threat Uncovered - TeaBot on Google Play Store. [cite: 426]</li>
-        <li>Frida Documentation: Modes of Operation (Spawn vs. Attach). [cite: 427]</li>
-        <li>Daniel Bergers: Security Notes 002: Getting Started with Frida. [cite: 428]</li>
-        <li>Frida Releases: Frida v17.6.0 updates. [cite: 428]</li>
-        <li>OWASP MASTG: UnCrackable Mobile Apps (Level 2). [cite: 429]</li>
-        <li>Axelle Apvrille: Reverse Android Malware Like a Jedi Master [cite: 430]</li>
-        <li>Axelle Apvrille: Live Reverse Engineering of a Trojanized Medical App. [cite: 431]</li>
-        <li>Malware Sample Hash (SHA-256): 262e1c40fb33ac2cfb766cb277505f6ebdf0851252a33a83859a3bfb3e54af8c (Available on VirusTotal / InQuest). [cite: 432, 433]</li>
+        <li>android/app/LoadedApk.java – Implementation of makeApplicationInner()</li>
+        <li>android/app/Instrumentation.java – Implementation of newApplication() and newActivity()</li>
+        <li>android/app/ActivityThread.java – Implementation of handleBindApplication() and installContentProviders()</li>
+        <li>dalvik/system/BaseDexClassLoader.java – Implementation of findClass() used for Dex loading.</li>
+        <li>Android Developers: DexClassLoader</li>
+        <li>Android Developers: Processes and Threads Overview.</li>
+        <li>Android Developers: App Manifest Overview (&lt;application&gt; element).</li>
+        <li>Android Developers: ContentProvider</li>
+        <li>Android Developers: Create a content provider</li>
+        <li>Stefano Santilli: Deep Dive into Android Boot Process (Part 1).</li>
+        <li>Stefano Santilli: Android Boot Process (Part 2: From Zygote to SystemServer).</li>
+        <li>Cleafy Labs: A Stealthy Threat Uncovered - TeaBot on Google Play Store.</li>
+        <li>Frida Documentation: Modes of Operation (Spawn vs. Attach).</li>
+        <li>Daniel Bergers: Security Notes 002: Getting Started with Frida.</li>
+        <li>Frida Releases: Frida v17.6.0 updates.</li>
+        <li>OWASP MASTG: UnCrackable Mobile Apps (Level 2).</li>
+        <li>Axelle Apvrille: Reverse Android Malware Like a Jedi Master</li>
+        <li>Axelle Apvrille: Live Reverse Engineering of a Trojanized Medical App.</li>
+        <li>Malware Sample Hash (SHA-256): 262e1c40fb33ac2cfb766cb277505f6ebdf0851252a33a83859a3bfb3e54af8c (Available on VirusTotal / InQuest).</li>
     </ul>
 </div>
 </body>
