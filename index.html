@@ -31,7 +31,11 @@
         .action-btn { background: var(--surface-color); color: var(--text-main); text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.9em; font-weight: 500; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
         .action-btn:hover { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { visibility: hidden; position: absolute; background-color: var(--surface-color); min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); border-radius: 8px; z-index: 100; top: 100%; left: 0; margin-top: 8px; overflow: hidden; opacity: 0; transform: translateY(-5px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; }
+        .dropdown-content { visibility: hidden; position: absolute; background-color: var(--surface-color); min-width: 250px; max-height: 350px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); border-radius: 8px; z-index: 100; top: 100%; left: 0; margin-top: 8px; opacity: 0; transform: translateY(-5px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; }
+        .dropdown-content::-webkit-scrollbar { width: 8px; }
+        .dropdown-content::-webkit-scrollbar-track { background: var(--surface-color); border-radius: 8px; }
+        .dropdown-content::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 8px; }
+        .dropdown-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
         .dropdown::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 15px; }
         .dropdown:hover .dropdown-content { visibility: visible; opacity: 1; transform: translateY(0); }
         .dropdown:hover .action-btn { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
@@ -104,8 +108,28 @@
             <div class="dropdown">
                 <a href="javascript:void(0)" class="action-btn">📝 Research Blog ▾</a>
                 <div class="dropdown-content">
-                    <a href="blog/en/index.html">🇺🇸 English (EN)</a>
-                    <a href="blog/he/index.html">🇮🇱 עברית (HE)</a>
+                    <a href="index.html">🏠 Home Index</a>
+                    <a href="android-bootstrap-hijacking.html">Android Bootstrap Hijacking</a>
+                    <a href="browser-privilege-boundary.html">Browser Privilege Boundary</a>
+                    <a href="compiler-sbcl-behavioral-research.html">Compiler SBCL Behavioral Research</a>
+                    <a href="flatpak-sandbox-isolation.html">Flatpak Sandbox Isolation</a>
+                    <a href="frida-in-race-level2.html">Frida IN-RACE Level 2</a>
+                    <a href="jni-unsafe-bridge.html">JNI Unsafe Bridge</a>
+                    <a href="life-of-a-packet-routing.html">Life of a Packet Routing</a>
+                    <a href="linux-internals-ostree-hibernation.html">Linux Internals OSTree Hibernation</a>
+                    <a href="malware-lab-kinoite.html">Malware Lab Kinoite</a>
+                    <a href="multi-stage-dll-re.html">Multi-stage DLL RE</a>
+                    <a href="multistage-network-ctf.html">Multistage Network CTF</a>
+                    <a href="myleads-saas-architecture.html">MyLeads SaaS Architecture</a>
+                    <a href="permission-paradox.html">Permission Paradox</a>
+                    <a href="pt-dns-rebinding-mitigation.html">PT DNS Rebinding Mitigation</a>
+                    <a href="pt-web-registration-diagnostic.html">PT Web Registration Diagnostic</a>
+                    <a href="re-intro-patching.html">RE Intro Patching</a>
+                    <a href="rust-envoy-tunnel.html">Rust Envoy Tunnel</a>
+                    <a href="scapy-tls-packet-crafter.html">Scapy TLS Packet Crafter</a>
+                    <a href="uncrackable-level1.html">Uncrackable Level 1</a>
+                    <a href="uncrackable-level2.html">Uncrackable Level 2</a>
+                    <a href="v8-engine-security.html">V8 Engine Security</a>
                 </div>
             </div>
             <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
