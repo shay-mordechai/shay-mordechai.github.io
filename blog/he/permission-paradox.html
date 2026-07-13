@@ -46,6 +46,46 @@
         
         blockquote { border-right: 4px solid #8b949e; background: #161b22; margin: 20px 0; padding: 15px; border-radius: 4px;}
         blockquote p { margin: 0; }
+
+        /* הגדרות טשטוש לחלקים בעריכה */
+        .blurred-section-container {
+            position: relative;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px dashed #30363d;
+        }
+        
+        .blurred-content-inner {
+            filter: blur(6px);
+            opacity: 0.35;
+            pointer-events: none;
+            user-select: none;
+        }
+        
+        .blur-message {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #161b22;
+            border: 2px solid #f85149;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            text-align: center;
+            width: 80%;
+            max-width: 350px;
+        }
+        .blur-message span {
+            color: #f85149;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -203,59 +243,67 @@ E AndroidRuntime:        at com.shay.permissionparadox.MyStubApplication.attachB
 
             <p><strong>מסקנה:</strong> מכיוון שהתהליך הנייטיבי חי ויורש File Descriptor פתוח לדרייבר ה-Binder, אנו מסיקים כי החסם הוא לוגי בשכבת ה-JVM.</p>
 
-            <h2>ניסוי 2: נתיב ה-Native Binder</h2>
-            <p><strong>המעקף (Direct SurfaceFlinger IPC):</strong> החלטנו לא לדבר עם ה-WMS בכלל. ה-WMS הוא "פקיד" שבודק דרכונים (Window Tokens). במקום זאת, ה-PoC שלנו משתמש ב-Native Binder כדי לייצר טרנזקציה שמכוונת ישירות ל-Handle של SurfaceFlinger (דרך הממשק <code>android.gui.ISurfaceComposer</code>). המטרה בשלב זה היא לבקש מ-SurfaceFlinger שיקצה לנו BufferQueue לשפוך אליו פיקסלים, תוך דילוג מוחלט על ה-WMS.</p>
-            
-            <p>חייבים IPC מתווך, כי האפליקציה יושבת ב-UID משלה, וכנ"ל ה-SYSTEM SERVER מן הסתם. דרך ה-NATIVE יש יותר מורכבות ואפשר לשלוט במידע ששולחים. האינטראקציה מול הדרייבר מבוססת על שלוש פעולות ליבה: פתיחת הדרייבר (<code>open</code>), הקצאת זיכרון משותף (<code>mmap</code>) לצורך ארכיטקטורת ה-Single-Copy, ושימוש בפקודת <code>ioctl</code> כדי להעביר את מבנה הנתונים <code>binder_write_read</code> אל הקרנל.</p>
+            <div class="blurred-section-container">
+                <div class="blur-message">
+                    <span>🚧 תחת עריכה 🚧</span>
+                    המשך המחקר (ניסוי 2 ואילך) טרם פורסם במלואו ועדיין בכתיבה.
+                </div>
+                
+                <div class="blurred-content-inner">
+                    <h2>ניסוי 2: נתיב ה-Native Binder</h2>
+                    <p><strong>המעקף (Direct SurfaceFlinger IPC):</strong> החלטנו לא לדבר עם ה-WMS בכלל. ה-WMS הוא "פקיד" שבודק דרכונים (Window Tokens). במקום זאת, ה-PoC שלנו משתמש ב-Native Binder כדי לייצר טרנזקציה שמכוונת ישירות ל-Handle של SurfaceFlinger (דרך הממשק <code>android.gui.ISurfaceComposer</code>). המטרה בשלב זה היא לבקש מ-SurfaceFlinger שיקצה לנו BufferQueue לשפוך אליו פיקסלים, תוך דילוג מוחלט על ה-WMS.</p>
+                    
+                    <p>חייבים IPC מתווך, כי האפליקציה יושבת ב-UID משלה, וכנ"ל ה-SYSTEM SERVER מן הסתם. דרך ה-NATIVE יש יותר מורכבות ואפשר לשלוט במידע ששולחים. האינטראקציה מול הדרייבר מבוססת על שלוש פעולות ליבה: פתיחת הדרייבר (<code>open</code>), הקצאת זיכרון משותף (<code>mmap</code>) לצורך ארכיטקטורת ה-Single-Copy, ושימוש בפקודת <code>ioctl</code> כדי להעביר את מבנה הנתונים <code>binder_write_read</code> אל הקרנל.</p>
 
-            <p><strong>שאלה:</strong> הבנו שכאשר 2 תהליכים חולקים את אותו מרחב זכרון (כמו למשל Dynamic Linker והאפליקציה), אז הם לא צריכים לתקשר דרך Binder. אם כך, כשמקצים זכרון משותף בעזרת <code>mmap</code>, מדוע צריך גם את ה-Binder? (<em>Why does Android mmap need Binder?</em>)</p>
+                    <p><strong>שאלה:</strong> הבנו שכאשר 2 תהליכים חולקים את אותו מרחב זכרון (כמו למשל Dynamic Linker והאפליקציה), אז הם לא צריכים לתקשר דרך Binder. אם כך, כשמקצים זכרון משותף בעזרת <code>mmap</code>, מדוע צריך גם את ה-Binder? (<em>Why does Android mmap need Binder?</em>)</p>
 
-            <p>אין בעיה, נניח ויש רק זיכרון משותף בין התהליכים:<br>
-            צריך שהקרנל יפקח על המידע שמועבר, כדי שהאפליקציה לא תשלח קוד זדוני ל-WMS למשל. צריך למנוע התנגשות תהליכונים – צריך Semaphore. צריך שמישהו "יצנתק" לתהליך שממתין לתשובה, כדי שהתהליך יהיה א-סינכרוני.<br>
-            <strong>זה בדיוק Binder. את כל הדברים האלה, עושה הקרנל.</strong></p>
+                    <p>אין בעיה, נניח ויש רק זיכרון משותף בין התהליכים:<br>
+                    צריך שהקרנל יפקח על המידע שמועבר, כדי שהאפליקציה לא תשלח קוד זדוני ל-WMS למשל. צריך למנוע התנגשות תהליכונים – צריך Semaphore. צריך שמישהו "יצנתק" לתהליך שממתין לתשובה, כדי שהתהליך יהיה א-סינכרוני.<br>
+                    <strong>זה בדיוק Binder. את כל הדברים האלה, עושה הקרנל.</strong></p>
 
-            <p>אז השאלה הבאה שנשאל היא: אם יש mmap ו-binder, למה צריך ioctl?<br>
-            והתשובה תהיה ש-mmap הוא לקריאה בלבד וצריך מבנה שיאפשר קריאה וכתיבה. זה בדיוק ה-semaphore. ה-<code>ioctl</code> אחראי לנעול את הטרנזקציה (תור ה-binder). הקרנל מוודא שאף תהליך אחר לא נוגע בבאפר של תהליך היעד באותו שבריר שנייה. אז יש לנו כאן תבנית עיצוב Observer מושלמת (בהשאלה מעולם ה-UI).</p>
+                    <p>אז השאלה הבאה שנשאל היא: אם יש mmap ו-binder, למה צריך ioctl?<br>
+                    והתשובה תהיה ש-mmap הוא לקריאה בלבד וצריך מבנה שיאפשר קריאה וכתיבה. זה בדיוק ה-semaphore. ה-<code>ioctl</code> אחראי לנעול את הטרנזקציה (תור ה-binder). הקרנל מוודא שאף תהליך אחר לא נוגע בבאפר של תהליך היעד באותו שבריר שנייה. אז יש לנו כאן תבנית עיצוב Observer מושלמת (בהשאלה מעולם ה-UI).</p>
 
-            <p>בנוסף, כדי לדבר ישירות עם האחראי לרנדור המסך - SurfaceFlinger, צריך לשלוח בקשה תקינה בתוך ה-Parcel buffer. במקום ש-JAVA יבקשו מ-WMS שיבקש מ-SurfaceFlinger, נבקש ישירות ממנו דרך ה-BINDER שיצרנו. כדי לדבר איתו ישירות, צריך לתת לו Buffer Queue שה-UI Thread שלי מאזין אליו, כדי לקבל את רנדור המסך הכבד, ולא ב-BINDER שיעמיס על ניהולו בקרנל.<br>
-            להגיד ל-SurfaceFlinger מהו מיקום החלון שאני רוצה שיפתח - זו חבילת טרנזקציה <code>SurfaceControl</code> / <code>ASurfaceTransaction</code>.</p>
+                    <p>בנוסף, כדי לדבר ישירות עם האחראי לרנדור המסך - SurfaceFlinger, צריך לשלוח בקשה תקינה בתוך ה-Parcel buffer. במקום ש-JAVA יבקשו מ-WMS שיבקש מ-SurfaceFlinger, נבקש ישירות ממנו דרך ה-BINDER שיצרנו. כדי לדבר איתו ישירות, צריך לתת לו Buffer Queue שה-UI Thread שלי מאזין אליו, כדי לקבל את רנדור המסך הכבד, ולא ב-BINDER שיעמיס על ניהולו בקרנל.<br>
+                    להגיד ל-SurfaceFlinger מהו מיקום החלון שאני רוצה שיפתח - זו חבילת טרנזקציה <code>SurfaceControl</code> / <code>ASurfaceTransaction</code>.</p>
 
-            <h3>כעת נעבור לבניית קוד ה-Native:</h3>
-            <p>השיטה - לכתוב סקריפט NATIVE ב-FRIDA שיסניף איך נראית פקודת טרנזקציה על ה-BINDER, בשלב הלגיטימי יותר, ה-ACTIVITY BOOTSTRAP, ששם כבר יש WINDOW TOKEN ו-WMS בכיף ישלח עבורנו את הטרנזקציה ל-SURFACEFLINGER.</p>
+                    <h3>כעת נעבור לבניית קוד ה-Native:</h3>
+                    <p>השיטה - לכתוב סקריפט NATIVE ב-FRIDA שיסניף איך נראית פקודת טרנזקציה על ה-BINDER, בשלב הלגיטימי יותר, ה-ACTIVITY BOOTSTRAP, ששם כבר יש WINDOW TOKEN ו-WMS בכיף ישלח עבורנו את הטרנזקציה ל-SURFACEFLINGER.</p>
 
-            <h2>איך ממשיכים מכאן (Action Plan)?</h2>
-            <p>כעת יש לך מערכת שלמה ומוכנה ליירוט. להלן השלבים המדויקים לביצוע המחקר בפועל כדי לעבור לשלב הבא של "פרדוקס ההרשאות":</p>
-            <ol>
-                <li><strong>שלב הדיג (Discovery):</strong>
-                    <ul>
-                        <li>ודא שבקובץ ה-<code>ipc_sniffer.js</code> מוגדר <code>TARGET_HANDLE = -1</code>.</li>
-                        <li>הרץ את סקריפט ה-Python (ההוסט).</li>
-                        <li>המתן עד שתקפוץ לך ההדפסה האדומה במסוף: <code>[!!!] DISCOVERY: SurfaceFlinger Interface found on Handle X [!!!]</code>.</li>
-                    </ul>
-                </li>
-                <li><strong>שלב הסינון והתפיסה (Golden Template):</strong>
-                    <ul>
-                        <li>סגור את הסקריפט (Ctrl+C).</li>
-                        <li>עדכן את קובץ ה-JS שלך עם ה-Handle שמצאת (לדוגמה: <code>const TARGET_HANDLE = 2;</code>).</li>
-                        <li>הפעל מחדש את סקריפט ה-Python.</li>
-                        <li>כעת, פתח את האפליקציה שלך (או כל אפליקציה אחרת) כדי לאלץ את שלב ה-Activity Bootstrap וקריאת ה-<code>WindowManager.addView</code>.</li>
-                        <li>תראה את פקודות ה-<code>CREATE_CONNECTION</code> נשלחות, ולאחריהן תקבל את זרם ה-Hex של הקצאת החלון בפועל.</li>
-                    </ul>
-                </li>
-                <li><strong>שלב הפריצה (Bypass WMS):</strong><br> ברגע שיהיה לך את ה-Hexdump של טרנזקציית יצירת החלון, תוכל להפסיק להאזין. השלב הבא במחקר שלך יהיה לקחת את ה"תבנית הבינארית" הזו, ולכתוב קוד צד-לקוח (למשל סקריפט C/C++ קטן שרץ מתוך ה-Shell) שיזריק בדיוק את הנתונים האלו ישירות ל-<code>/dev/binder</code>.<br>
-                פעולה זו תדלג לחלוטין על בדיקות ההרשאות הלוגיות של ה-Window Manager Service (כגון חובת נוכחות Window Token), ותאלץ את SurfaceFlinger להקצות לך שכבה גרפית חוקית ולצייר אותה למסך, ובכך תוכיח את קיומו של "פרדוקס ההרשאות" בפלטפורמה!</li>
-            </ol>
+                    <h2>איך ממשיכים מכאן (Action Plan)?</h2>
+                    <p>כעת יש לך מערכת שלמה ומוכנה ליירוט. להלן השלבים המדויקים לביצוע המחקר בפועל כדי לעבור לשלב הבא של "פרדוקס ההרשאות":</p>
+                    <ol>
+                        <li><strong>שלב הדיג (Discovery):</strong>
+                            <ul>
+                                <li>ודא שבקובץ ה-<code>ipc_sniffer.js</code> מוגדר <code>TARGET_HANDLE = -1</code>.</li>
+                                <li>הרץ את סקריפט ה-Python (ההוסט).</li>
+                                <li>המתן עד שתקפוץ לך ההדפסה האדומה במסוף: <code>[!!!] DISCOVERY: SurfaceFlinger Interface found on Handle X [!!!]</code>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>שלב הסינון והתפיסה (Golden Template):</strong>
+                            <ul>
+                                <li>סגור את הסקריפט (Ctrl+C).</li>
+                                <li>עדכן את קובץ ה-JS שלך עם ה-Handle שמצאת (לדוגמה: <code>const TARGET_HANDLE = 2;</code>).</li>
+                                <li>הפעל מחדש את סקריפט ה-Python.</li>
+                                <li>כעת, פתח את האפליקציה שלך (או כל אפליקציה אחרת) כדי לאלץ את שלב ה-Activity Bootstrap וקריאת ה-<code>WindowManager.addView</code>.</li>
+                                <li>תראה את פקודות ה-<code>CREATE_CONNECTION</code> נשלחות, ולאחריהן תקבל את זרם ה-Hex של הקצאת החלון בפועל.</li>
+                            </ul>
+                        </li>
+                        <li><strong>שלב הפריצה (Bypass WMS):</strong><br> ברגע שיהיה לך את ה-Hexdump של טרנזקציית יצירת החלון, תוכל להפסיק להאזין. השלב הבא במחקר שלך יהיה לקחת את ה"תבנית הבינארית" הזו, ולכתוב קוד צד-לקוח (למשל סקריפט C/C++ קטן שרץ מתוך ה-Shell) שיזריק בדיוק את הנתונים האלו ישירות ל-<code>/dev/binder</code>.<br>
+                        פעולה זו תדלג לחלוטין על בדיקות ההרשאות הלוגיות של ה-Window Manager Service (כגון חובת נוכחות Window Token), ותאלץ את SurfaceFlinger להקצות לך שכבה גרפית חוקית ולצייר אותה למסך, ובכך תוכיח את קיומו של "פרדוקס ההרשאות" בפלטפורמה!</li>
+                    </ol>
 
-            <h2>פרק ד' – ניתוח סטטי של ה-Payload (Static Analysis)</h2>
-            <p>XXXXXXXXXxx</p>
+                    <h2>פרק ד' – ניתוח סטטי של ה-Payload (Static Analysis)</h2>
+                    <p>XXXXXXXXXxx</p>
 
-            <h2>פרק ה' – אכיפת SELinux (SELinux Enforcement)</h2>
-            <p><strong>התנגשות מול חומת המציאות (The Enforcement):</strong> כאן מגיע ה-Climax של המחקר הנוכחי. מה קורה כש-SurfaceFlinger מקבל את הפנייה הישירה שלנו? בשלב הזה אתה חושף את תוצאות ה-PoC:</p>
-            <p>האם SurfaceFlinger זרק אותנו כי חסרה הרשאת SELinux ספציפית (<code>android.permission.ACCESS_SURFACE_FLINGER</code>)?<br>
-            או שאולי SurfaceFlinger עצמו ביצע חזרה למעלה (Call-back) כדי לוודא מול ה-WMS אם יש לנו Token תקין ל-Layer המבוקש?</p>
-            <p><strong>זהו "פרדוקס ההרשאות" בהתגלמותו:</strong> מצאת את הצינור הישיר למנוע הגרפי, אבל מודל האבטחה של אנדרואיד עטף גם אותו בחומות לוגיות (SELinux / Token validation).</p>
-
-        </div>
+                    <h2>פרק ה' – אכיפת SELinux (SELinux Enforcement)</h2>
+                    <p><strong>התנגשות מול חומת המציאות (The Enforcement):</strong> כאן מגיע ה-Climax של המחקר הנוכחי. מה קורה כש-SurfaceFlinger מקבל את הפנייה הישירה שלנו? בשלב הזה אתה חושף את תוצאות ה-PoC:</p>
+                    <p>האם SurfaceFlinger זרק אותנו כי חסרה הרשאת SELinux ספציפית (<code>android.permission.ACCESS_SURFACE_FLINGER</code>)?<br>
+                    או שאולי SurfaceFlinger עצמו ביצע חזרה למעלה (Call-back) כדי לוודא מול ה-WMS אם יש לנו Token תקין ל-Layer המבוקש?</p>
+                    <p><strong>זהו "פרדוקס ההרשאות" בהתגלמותו:</strong> מצאת את הצינור הישיר למנוע הגרפי, אבל מודל האבטחה של אנדרואיד עטף גם אותו בחומות לוגיות (SELinux / Token validation).</p>
+                </div>
+            </div>
+            </div>
     </div>
 </div>
 </body>
