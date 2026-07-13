@@ -38,17 +38,6 @@
         }
         .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
         .highlight-card { border-color: #58a6ff; background-color: rgba(88, 166, 255, 0.03); }
-        
-        /* Field Note Insight Styling inside Cards */
-        .research-insight {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #30363d;
-            color: #c9d1d9;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        .research-insight strong { color: #f85149; }
     </style>
 </head>
 <body>
@@ -61,7 +50,6 @@
     
     <div class="categories-container">
         
-        <!-- COLUMN 1: MALWARE ANALYSIS & LABS -->
         <div class='category-column'>
             <h2>Malware Analysis & Research</h2>
             
@@ -86,9 +74,6 @@
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025 | Browser Security</div>
                 <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
                     חקירת המנגנונים הארכיטקטוניים במנוע V8 והבנת וקטורי תקיפה (JIT Compilation).
-                    <div class="research-insight">
-                        <strong>תובנת מחקר:</strong> חוק ברזל בניתוח דינמי - ה-Hook לא יוצב על לוגיקת הנוזקה המעורבלת, אלא על פונקציות התשתית של ה-VM (כגון <code>new Function()</code> או <code>BaseDexClassLoader</code>) המבצעות את הטעינה בפועל.
-                    </div>
                 </div>
             </a>
             
@@ -97,9 +82,6 @@
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026 | Active Research</div>
                 <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
                     מחקר בנושא מנגנוני הרשאות, ניצול ערוצי IPC ועקיפת הגנות Dynamic Overlay באנדרואיד.
-                    <div class="research-insight">
-                        <strong>תובנת מחקר:</strong> ה-Sandbox באנדרואיד מוחל הרמטית ב-Fork של ה-Zygote. נוזקות מודרניות מהנדסות טרנזקציות Binder כדי לרכב על הרשאות ה-WMS. הניטור חייב להיעשות ב-Kernel Space.
-                    </div>
                 </div>
             </a>
 
@@ -112,7 +94,6 @@
             </a>
         </div>
         
-        <!-- COLUMN 2: REVERSE ENGINEERING -->
         <div class='category-column'>
             <h2>Reverse Engineering Writeups</h2>
             
@@ -157,7 +138,6 @@
             </a>
         </div>
         
-        <!-- COLUMN 3: LOW-LEVEL & OS INTERNALS -->
         <div class='category-column'>
             <h2>Low-Level & OS Internals</h2>
             
@@ -165,21 +145,15 @@
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026 | Low-Level, Android</div>
                 <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java.
-                    <div class="research-insight">
-                        <strong>תובנת מחקר:</strong> נוזקות מודרניות מריצות Payloads בתוך ה-Native Library Initialization. עקב כך, יש לכפות מצב Spawn ולהציב Hooks בנקודות מוקדמות כמו <code>JNI_onLoad</code> או <code>Application.onCreate</code>.
-                    </div>
+                    ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java, וכיצד נוזקות מנצלות קוד Native לעקיפת הגנות.
                 </div>
             </a>
             
             <a href="browser-privilege-boundary.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026 | AI Security</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026 | AI Security, Trust Boundaries</div>
                 <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    חשיפת פגיעות במנגנון ה-Sandbox של סוכני AI.
-                    <div class="research-insight">
-                        <strong>תובנת מחקר:</strong> נוזקות AI מתקדמות עוקפות את ה-VM המסורתי ומשתמשות ב-APIs של סוכנים (מנהרות MCP). הפתרון הוא הצבת Hooks ישירות על שכבת ה-Browser IPC (Mojo) לפני זליגת המידע.
-                    </div>
+                    חשיפת פגיעות במנגנון ה-Sandbox של סוכן ה-AI של Anthropic והבנת סכנות בהרשאות Cross-Boundary.
                 </div>
             </a>
             
@@ -216,7 +190,6 @@
             </a>
         </div>
 
-        <!-- COLUMN 4: NETWORK SECURITY & ARCHITECTURE (Rescued Files) -->
         <div class='category-column'>
             <h2>Network Security & Architecture</h2>
             
