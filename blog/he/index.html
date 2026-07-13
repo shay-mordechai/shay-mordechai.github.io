@@ -59,10 +59,11 @@
                 </div>
 
                 <div class="note-card">
-                    <div class="note-title">V8 Engine & Shellcode Extraction</div>
+                    <div class="note-title">VM Abstraction: JIT & Dynamic Loading</div>
                     <div class="note-text">
-                        <strong>נקודת החנק:</strong> קימפול JIT למקטעי <code>RWX</code>.<br>
-                        נוזקות Browser-based ו-Cross-platform מקמפלות נתונים לקוד מכונה בזמן אמת. מכיוון ששמות פונקציות מושמטים (Stripped), Breakpoints קלאסיים נכשלים. הפתרון הוא יירוט התהליך מוקדם יותר בשכבת ה-Framework (למשל: <code>fetch() ➔ .text() ➔ new Function()</code>) או ניטור Syscalls ברמת ה-OS.
+                        <strong>נקודת החנק:</strong> מנגנוני הטעינה הפנימיים של ה-VM (כגון <code>DexClassLoader</code> או JIT).<br>
+                        חוק ברזל בניתוח דינמי: אין טעם להציב Hook על פונקציות המעטפת (Wrappers) שהנוזקה כתבה, אלא על "שרירי הליבה" שה-Virtual Machine נאלץ להפעיל מאחורי הקלעים. <br>
+                        <strong>המשמעות ל-Triage:</strong> בדפדפן (V8), במקום לרדוף אחרי קוד מעורבל ננטר את התחנות לפני הקימפול ל-RWX (כמו <code>new Function()</code>). באנדרואיד (ART/Dalvik), כשנוזקה מנסה לטעון פיילוד חיצוני, ה-Hook לא יוצב על לוגיקת הנוזקה, אלא על פונקציות התשתית של ה-VM שמבצעות את העבודה השחורה, כגון <code>BaseDexClassLoader</code> או <code>DexFile.loadClass</code>. 
                     </div>
                 </div>
 
