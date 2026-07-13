@@ -73,12 +73,23 @@
                         נוזקות מתקדמות (כדוגמת RememberAll ו-OpenClaw) עוקפות את ה-VM המסורתי ומשתמשות ישירות ב-APIs של סוכני AI בעלי הרשאות (כגון מנהרות MCP) לגניבת מידע. ניתוח דינמי דרך ה-VM נכשל. הפתרון המחקרי הוא הצבת Hooks על שכבת ה-IPC (למשל Mojo), רגע לפני שהמידע נשאב למנהרת ה-MCP.
                     </div>
                 </div>
+
+                <!-- Note 4: Android Zygote & Sandbox Enforcement -->
+                <div class="note-card">
+                    <div class="note-title">Android Zygote Isolation & Binder Abuse</div>
+                    <div class="note-text">
+                        <strong>נקודת החנק:</strong> חלון ה-Fork של תהליך ה-Zygote.<br>
+                        ה-Sandbox של אנדרואיד מוחל הרמטית ברמת הקרנל (UID ו-SELinux) מיד ברגע ה-Fork של ה-Zygote. המשמעות היא שקירות הבידוד נקבעים "עוד בלידה", וכל Thread שהנוזקה תנסה לפתוח יהיה כבול ומחויב אוטומטית לאותה מגבלה מקומית צרה.<br>
+                        <strong>המשמעות ל-Triage:</strong> מאחר והבידוד על ה-Threads מוחלט, נוזקות מודרניות לא מנסות "לשבור" את חומות הזיכרון באופן ישיר. במקום זאת, כדי לצאת מהמגבלה הן חייבות לאתר "חורים לוגיים" וצינורות תקשורת שגוגל קדחה מראש בארכיטקטורה לטובת חוויית משתמש (UX). הן מנצלות את ערוצי ה-IPC הלגיטימיים האלו כדי להנדס לאחור טרנזקציות Binder ולרכב על הרשאות של תהליכי מערכת חזקים (כמו ה-WMS). הניטור המחקרי חייב להשתנות בהתאם: לעבור מיירוט מקומי בתוך ה-Threads של האפליקציה, למעקב רחב אחר טרנזקציות ה-Binder ב-Kernel Space.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="categories-container">
         
+        <!-- COLUMN 1: MALWARE ANALYSIS & LABS -->
         <div class='category-column'>
             <h2>Malware Analysis & Research</h2>
             <a href="android-bootstrap-hijacking.html" class="article-card highlight-card">
