@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <title>Shay Mordechai | Android Malware Researcher</title>
     <style>
-        /* [UI Adjustments] Kept original styling, just refined colors for emphasis */
         body { margin: 0; font-family: Arial, sans-serif; background-color: #0d1117; color: #c9d1d9; }
         
         /* Top Navigation for Index */
@@ -13,25 +12,43 @@
         .top-nav a { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
         .top-nav a:hover { text-decoration: underline; }
 
-        /* Styles for Field Notes Section - New Addition */
-        .field-notes-wrapper { max-width: 1400px; margin: 0 auto 40px auto; padding: 0 20px; box-sizing: border-box;}
-        .field-notes-section { background: #161b22; border: 1px solid #30363d; border-right: 4px solid #f85149; border-radius: 8px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-        .field-notes-section h2 { color: #f85149; margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; font-size: 1.5rem; display: flex; align-items: center; gap: 10px;}
-        .field-notes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .note-card { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 15px; position: relative; }
-        .note-card::before { content: '■'; font-size: 0.8em; position: absolute; right: -1px; top: -1px; color: #f85149; }
-        .note-title { color: #58a6ff; font-weight: bold; font-size: 1.05rem; margin-bottom: 8px; border-bottom: 1px dashed #30363d; padding-bottom: 5px;}
-        .note-text { font-size: 0.9rem; line-height: 1.5; color: #c9d1d9; }
-        .note-text strong { color: #fff; }
-
-        .categories-container { display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .category-column { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
-        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.5rem; margin-top: 0; }
-        .article-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; text-decoration: none; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
-        .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
-        .highlight-card { border-color: #58a6ff; background-color: rgba(88, 166, 255, 0.05); }
+        /* Grid Layout - Scalable up to 4 columns */
+        .categories-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 25px; 
+            max-width: 1600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
         
-        @media (max-width: 900px) { .categories-container { flex-direction: column; } }
+        .category-column { display: flex; flex-direction: column; gap: 15px; }
+        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.4rem; margin-top: 0; }
+        
+        /* Article Cards */
+        .article-card { 
+            background-color: #161b22; 
+            border: 1px solid #30363d; 
+            border-radius: 6px; 
+            padding: 16px; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            transition: border-color 0.2s, transform 0.2s; 
+        }
+        .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
+        .highlight-card { border-color: #58a6ff; background-color: rgba(88, 166, 255, 0.03); }
+        
+        /* Field Note Insight Styling inside Cards */
+        .research-insight {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #30363d;
+            color: #c9d1d9;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .research-insight strong { color: #f85149; }
     </style>
 </head>
 <body>
@@ -42,152 +59,216 @@
 
 <div id="content" style="max-width: 100%; padding:0;">
     
-    <div class="field-notes-wrapper">
-        <div class="field-notes-section">
-            <h2>🛠️ Malware Analysis Field Notes (רשומות מהשטח)</h2>
-            <div style="font-size: 0.95rem; color: #8b949e; margin-bottom: 15px;">
-                ריכוז תובנות טקטיות מהנדסה לאחור וניתוח דינמי של וקטורי תקיפה מודרניים. מתוך מחקרי המעבדה:
-            </div>
-            
-            <div class="field-notes-grid">
-                <div class="note-card">
-                    <div class="note-title">Android Native & Evasion Frameworks</div>
-                    <div class="note-text">
-                        <strong>נקודת החנק:</strong> טעינת ספריות Native ב-<code>JNI_onLoad</code>.<br>
-                        נוזקות מודרניות מריצות Payloads בתוך ה-Native Library Initialization כדי לחמוק מניתוח. הצבת Hook ב-<code>Activity.onCreate</code> היא מאוחרת מדי. הדרך לתפוס את ההרצה היא לכפות מצב Spawn ולהציב Hooks בנקודות מוקדמות יותר כמו <code>Application.onCreate</code> או אתחול <code>ContentProvider</code>.
-                    </div>
-                </div>
-
-                <div class="note-card">
-                    <div class="note-title">VM Abstraction: JIT & Dynamic Loading</div>
-                    <div class="note-text">
-                        <strong>נקודת החנק:</strong> מנגנוני הטעינה הפנימיים של ה-VM (כגון <code>DexClassLoader</code> או JIT).<br>
-                        חוק ברזל בניתוח דינמי: אין טעם להציב Hook על פונקציות המעטפת (Wrappers) שהנוזקה כתבה, אלא על "שרירי הליבה" שה-Virtual Machine נאלץ להפעיל מאחורי הקלעים. <br>
-                        <strong>המשמעות ל-Triage:</strong> בדפדפן (V8), במקום לרדוף אחרי קוד מעורבל ננטר את התחנות לפני הקימפול ל-RWX (כמו <code>new Function()</code>). באנדרואיד (ART/Dalvik), כשנוזקה מנסה לטעון פיילוד חיצוני, ה-Hook לא יוצב על לוגיקת הנוזקה, אלא על פונקציות התשתית של ה-VM שמבצעות את העבודה השחורה, כגון <code>BaseDexClassLoader</code> או <code>DexFile.loadClass</code>. 
-                    </div>
-                </div>
-
-                <div class="note-card">
-                    <div class="note-title">Agentic AI & Protocol Tunneling</div>
-                    <div class="note-text">
-                        <strong>נקודת החנק:</strong> שכבת ה-Browser IPC.<br>
-                        נוזקות מתקדמות (כדוגמת RememberAll ו-OpenClaw) עוקפות את ה-VM המסורתי ומשתמשות ישירות ב-APIs של סוכני AI בעלי הרשאות (כגון מנהרות MCP) לגניבת מידע. ניתוח דינמי דרך ה-VM נכשל. הפתרון המחקרי הוא הצבת Hooks על שכבת ה-IPC (למשל Mojo), רגע לפני שהמידע נשאב למנהרת ה-MCP.
-                    </div>
-                </div>
-
-                <!-- Note 4: Android Zygote & Sandbox Enforcement -->
-                <div class="note-card">
-                    <div class="note-title">Android Zygote Isolation & Binder Abuse</div>
-                    <div class="note-text">
-                        <strong>נקודת החנק:</strong> חלון ה-Fork של תהליך ה-Zygote.<br>
-                        ה-Sandbox של אנדרואיד מוחל הרמטית ברמת הקרנל (UID ו-SELinux) מיד ברגע ה-Fork של ה-Zygote. המשמעות היא שקירות הבידוד נקבעים "עוד בלידה", וכל Thread שהנוזקה תנסה לפתוח יהיה כבול ומחויב אוטומטית לאותה מגבלה מקומית צרה.<br>
-                        <strong>המשמעות ל-Triage:</strong> מאחר והבידוד על ה-Threads מוחלט, נוזקות מודרניות לא מנסות "לשבור" את חומות הזיכרון באופן ישיר. במקום זאת, כדי לצאת מהמגבלה הן חייבות לאתר "חורים לוגיים" וצינורות תקשורת שגוגל קדחה מראש בארכיטקטורה לטובת חוויית משתמש (UX). הן מנצלות את ערוצי ה-IPC הלגיטימיים האלו כדי להנדס לאחור טרנזקציות Binder ולרכב על הרשאות של תהליכי מערכת חזקים (כמו ה-WMS). הניטור המחקרי חייב להשתנות בהתאם: לעבור מיירוט מקומי בתוך ה-Threads של האפליקציה, למעקב רחב אחר טרנזקציות ה-Binder ב-Kernel Space.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="categories-container">
         
         <!-- COLUMN 1: MALWARE ANALYSIS & LABS -->
         <div class='category-column'>
             <h2>Malware Analysis & Research</h2>
+            
             <a href="android-bootstrap-hijacking.html" class="article-card highlight-card">
                 <div style="font-weight:bold; color:#58a6ff; font-size:1.1rem;">★ Android Bootstrap Hijacking (Digital Whisper)</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">27 במאי 2026 | Android Internals, Malware Execution</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מחקר מעמיק על ניצול תהליך האתחול של אנדרואיד על ידי נוזקות (Malware) להשגת ביצוע מוקדם, תוך שימוש בכלים כמו Frida ו-JADX.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    מחקר מעמיק על ניצול תהליך האתחול של אנדרואיד על ידי נוזקות (Malware) להשגת ביצוע מוקדם, תוך שימוש בכלים כמו Frida ו-JADX.
+                </div>
             </a>
+            
             <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="article-card highlight-card">
                 <div style="font-weight:bold; color:#58a6ff; font-size:1.1rem;">🔬 Android Malware Reverse Engineering Lab</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">GitHub Repository | Active</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">המעבדה הפעילה שלי לחקר נוזקות מובייל. כוללת ניתוח של Banking Trojans, כתיבת חוקי YARA, ודרילים ב-Dynamic Instrumentation עם Frida.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    המעבדה הפעילה שלי לחקר נוזקות מובייל. כוללת ניתוח של Banking Trojans, כתיבת חוקי YARA, ודרילים ב-Dynamic Instrumentation עם Frida.
+                </div>
             </a>
+            
             <a href="v8-engine-security.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine Execution & Sandbox Security</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025 | Browser Security & Malware Analysis</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת המנגנונים הארכיטקטוניים במנוע V8 והבנת וקטורי תקיפה המאפשרים לנתוני Data להפוך דינמית לקוד רץ (JIT Compilation).</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025 | Browser Security</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    חקירת המנגנונים הארכיטקטוניים במנוע V8 והבנת וקטורי תקיפה (JIT Compilation).
+                    <div class="research-insight">
+                        <strong>תובנת מחקר:</strong> חוק ברזל בניתוח דינמי - ה-Hook לא יוצב על לוגיקת הנוזקה המעורבלת, אלא על פונקציות התשתית של ה-VM (כגון <code>new Function()</code> או <code>BaseDexClassLoader</code>) המבצעות את הטעינה בפועל.
+                    </div>
+                </div>
             </a>
-            <a href="malware-lab-kinoite.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025 | Environment Setup</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">תהליך ההקמה והקונפיגורציה של סביבת מערכת הפעלה Immutable המיועדת ספציפית למחקר נוזקות בצורה מאובטחת.</div>
-            </a>
+            
             <a href="permission-paradox.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Permission Paradox</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026 | Active Research</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מחקר פעיל בנושא מנגנוני הרשאות, ניצול ערוצי IPC ועקיפת הגנות Dynamic Overlay באנדרואיד. יפורסם בקרוב!</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    מחקר בנושא מנגנוני הרשאות, ניצול ערוצי IPC ועקיפת הגנות Dynamic Overlay באנדרואיד.
+                    <div class="research-insight">
+                        <strong>תובנת מחקר:</strong> ה-Sandbox באנדרואיד מוחל הרמטית ב-Fork של ה-Zygote. נוזקות מודרניות מהנדסות טרנזקציות Binder כדי לרכב על הרשאות ה-WMS. הניטור חייב להיעשות ב-Kernel Space.
+                    </div>
+                </div>
+            </a>
+
+            <a href="malware-lab-kinoite.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025 | Environment Setup</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    תהליך ההקמה והקונפיגורציה של סביבת מערכת הפעלה Immutable המיועדת ספציפית למחקר נוזקות בצורה מאובטחת.
+                </div>
             </a>
         </div>
         
+        <!-- COLUMN 2: REVERSE ENGINEERING -->
         <div class='category-column'>
             <h2>Reverse Engineering Writeups</h2>
+            
             <a href="frida-in-race-level2.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Frida in Race - UnCrackable Level 2</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 באפריל 2026 | Mobile Security, Dynamic Analysis</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח דינמי באמצעות Frida לעקיפת מנגנוני Anti-Debugging ו-Root Detection בסביבת אנדרואיד.</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 באפריל 2026 | Mobile Security</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    ניתוח דינמי באמצעות Frida לעקיפת מנגנוני Anti-Debugging ו-Root Detection בסביבת אנדרואיד.
+                </div>
             </a>
+            
             <a href="uncrackable-level2.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 2 - Mobile Security Writeup</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 באפריל 2026 | Android RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">פירוק והנדסה לאחור של אפליקציית אנדרואיד בעלת הגנות מתקדמות באמצעות ניתוח סטטי ודינמי.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    פירוק והנדסה לאחור של אפליקציית אנדרואיד בעלת הגנות מתקדמות באמצעות ניתוח סטטי ודינמי.
+                </div>
             </a>
+            
             <a href="uncrackable-level1.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 1 - Mobile Security Writeup</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">22 באפריל 2026 | Android RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">פתרון הנדסה לאחור הכולל עקיפת מנגנוני Root Detection וניתוח קוד מקור.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    פתרון הנדסה לאחור הכולל עקיפת מנגנוני Root Detection וניתוח קוד מקור.
+                </div>
             </a>
+            
             <a href="multi-stage-dll-re.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: Multi-Stage DLL Decryption</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 באפריל 2024 | Windows Desktop RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הנדסה לאחור של תוכנית הטוענת DLLs מרובים בזמן ריצה, טכניקה נפוצה ב-Windows Malware (Droppers).</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    הנדסה לאחור של תוכנית הטוענת DLLs מרובים בזמן ריצה, טכניקה נפוצה ב-Windows Malware (Droppers).
+                </div>
             </a>
+            
             <a href="re-intro-patching.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: PE Extraction & Patching</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 בפברואר 2024 | Binary Analysis</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח קבצים בינאריים, חילוץ PE מקובץ PDF חשוד, וביצוע Patching לקוד.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    ניתוח קבצים בינאריים, חילוץ PE מקובץ PDF חשוד, וביצוע Patching לקוד.
+                </div>
             </a>
         </div>
         
+        <!-- COLUMN 3: LOW-LEVEL & OS INTERNALS -->
         <div class='category-column'>
             <h2>Low-Level & OS Internals</h2>
+            
             <a href="jni-unsafe-bridge.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026 | Low-Level, Android</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java, וכיצד נוזקות מנצלות קוד Native לעקיפת הגנות.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java.
+                    <div class="research-insight">
+                        <strong>תובנת מחקר:</strong> נוזקות מודרניות מריצות Payloads בתוך ה-Native Library Initialization. עקב כך, יש לכפות מצב Spawn ולהציב Hooks בנקודות מוקדמות כמו <code>JNI_onLoad</code> או <code>Application.onCreate</code>.
+                    </div>
+                </div>
             </a>
+            
             <a href="browser-privilege-boundary.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026 | AI Security, Trust Boundaries</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חשיפת פגיעות במנגנון ה-Sandbox של סוכן ה-AI של Anthropic והבנת סכנות בהרשאות Cross-Boundary.</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026 | AI Security</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    חשיפת פגיעות במנגנון ה-Sandbox של סוכני AI.
+                    <div class="research-insight">
+                        <strong>תובנת מחקר:</strong> נוזקות AI מתקדמות עוקפות את ה-VM המסורתי ומשתמשות ב-APIs של סוכנים (מנהרות MCP). הפתרון הוא הצבת Hooks ישירות על שכבת ה-Browser IPC (Mojo) לפני זליגת המידע.
+                    </div>
+                </div>
             </a>
-            <a href="linux-internals-ostree-hibernation.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Linux Internals: OSTree & Hibernation</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">OS Architecture</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת מנגנוני מערכת הפעלה, ניהול זיכרון (mmap, swap) ו-Hibernation בסביבת Fedora Kinoite.</div>
-            </a>
-            <a href="flatpak-sandbox-isolation.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak Sandbox Isolation</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Linux Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת מנגנוני בידוד, הרשאות ואבטחת סביבת הריצה של Flatpak.</div>
-            </a>
+            
             <a href="compiler-sbcl-behavioral-research.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Breaking the Compilation Boundary (SBCL)</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">יולי 2025 | Compiler Internals</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">זיהוי שגיאות לוגיות בזמן קומפילציה. רלוונטי להבנת נוזקות שרשרת אספקה (Supply Chain Malware) מתקדמות.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    זיהוי שגיאות לוגיות בזמן קומפילציה. רלוונטי להבנת נוזקות שרשרת אספקה (Supply Chain Malware) מתקדמות.
+                </div>
             </a>
+
+            <a href="linux-internals-ostree-hibernation.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Linux Internals: OSTree & Hibernation</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">OS Architecture</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    חקירת מנגנוני מערכת הפעלה, ניהול זיכרון (mmap, swap) ו-Hibernation בסביבת Fedora Kinoite.
+                </div>
+            </a>
+            
+            <a href="flatpak-sandbox-isolation.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak Sandbox Isolation</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Linux Security</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    חקירת מנגנוני בידוד, הרשאות ואבטחת סביבת הריצה של Flatpak ברמת מערכת ההפעלה.
+                </div>
+            </a>
+
             <a href="rust-envoy-tunnel.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall (Rust & Envoy)</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">8 במרץ 2026 | Infrastructure Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מניעת הדלפת מידע תצורה והגנה משטח Fingerprinting.</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    בניית פילטר WASM לאפליקציית Envoy למניעת הדלפת מידע תצורה והגנה משטח Fingerprinting.
+                </div>
             </a>
-            <a href="pt-dns-rebinding-mitigation.html" class="article-card" style="display:none;"></a>
-            <a href="pt-web-registration-diagnostic.html" class="article-card" style="display:none;"></a>
-            <a href="myleads-saas-architecture.html" class="article-card" style="display:none;"></a>
-            <a href="life-of-a-packet-routing.html" class="article-card" style="display:none;"></a>
-            <a href="scapy-tls-packet-crafter.html" class="article-card" style="display:none;"></a>
-            <a href="multistage-network-ctf.html" class="article-card" style="display:none;"></a>
         </div>
+
+        <!-- COLUMN 4: NETWORK SECURITY & ARCHITECTURE (Rescued Files) -->
+        <div class='category-column'>
+            <h2>Network Security & Architecture</h2>
+            
+            <a href="myleads-saas-architecture.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Zero Trust AI SaaS Architecture</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Cloud Architecture</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    עיצוב ופריסת ארכיטקטורת Zero Trust מאובטחת בענן (AWS), מבוססת Docker ופילטר חכם של WASM DLP.
+                </div>
+            </a>
+
+            <a href="scapy-tls-packet-crafter.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Scapy TLS Packet Crafter</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Python Tooling & Networks</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    כלי מחקר אוטומטי שכתבתי בפייתון באמצעות Scapy המאפשר יצירת מנות TLS דטרמיניסטיות לחקר פרוטוקולים.
+                </div>
+            </a>
+
+            <a href="multistage-network-ctf.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Multi-Stage Network CTF</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Offensive Networking</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    בניית פלטפורמת סימולציה למתקפות רשת מתקדמות הכוללת Covert Channels, יירוט MITM ועקיפות PKI.
+                </div>
+            </a>
+
+            <a href="life-of-a-packet-routing.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Life of a Packet: Routing Internals</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Network Fundamentals</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    צלילה לעומק תהליך הניתוב של מנות ברשת (Routing), משכבת הקרנל ועד ליציאה לחוט הפיזי.
+                </div>
+            </a>
+
+            <a href="pt-dns-rebinding-mitigation.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding Mitigation</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Penetration Testing</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    ניתוח דינמי של תקיפות DNS Rebinding מורכבות והטמעת הגנות מתאימות ברמת הרשת (Network Level).
+                </div>
+            </a>
+
+            <a href="pt-web-registration-diagnostic.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web Registration Diagnostic</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Web Security & PT</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
+                    מבדקי חדירה (PT) למערכות הרשמה ווביות, כולל ניתוח עקיפות לוגיקת צד-שרת (Server-Side Logic Bypasses).
+                </div>
+            </a>
+        </div>
+        
     </div>
 </div>
 </body>
