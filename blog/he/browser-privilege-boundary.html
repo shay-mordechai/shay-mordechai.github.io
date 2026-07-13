@@ -30,12 +30,22 @@
     <p>לפני כחודש פרסמתי מאמר שניתח את האתגר של הרצת Agentic AI בתוך הדפדפן. לאחרונה, חברות כמו Anthropic החלו ליישם פתרונות של <strong>self-hosted sandboxes</strong>. הפתרון מבוסס על מתן הרשאות ספציפיות, נקודתיות ומוגדרות מראש, באמצעות מודל <strong>MCP Tunnels</strong>.</p>
     <p>עם זאת, הפתרון הזה מעלה סימני שאלה: האם MCP Tunnels הם באמת הפתרון הסופי? "מרבה APIs מרבה דאגה", וייתכן מאוד שבקרוב נשמע על פירצות אבטחה חדשות שמתמקדות דווקא במנהרות ה-MCP האלו.</p>
 
-    <!-- Adding Malware Analysis insights based on the RememberAll case study -->
-    <h2>5.7.26 תובנה ל-Malware Analysis:</h2>
+    <!-- Refactored Malware Analysis section to include both case studies -->
+    <h2>תובנות ל-Malware Analysis:</h2>
+    
+    <h3>🗓️ 5.7.26 — מקרה בוחן: הנוזקה RememberAll</h3>
     <ul>
         <li>הנוזקה RememberAll שנחשפה ע"י Alice, מהווה מקרה בוחן לבעיה הזו.</li>
         <li>הנוזקה מנצלת את ה"חורים" שמשאיר ה-AI Agent בדפדפן.</li>
         <li>מנהרות ה-MCP הפכו ל"מנהרות" שדרכם ניתן להגיע מהדפדפן למערכת הקבצים.</li>
+    </ul>
+
+    <h3>🗓️ 13.7.26 — מקרה בוחן: שרשרת התקיפה ב-OpenClaw</h3>
+    <ul>
+        <li>שרשרת התקיפה שגילה החוקר <strong>Chinmohan Nayak</strong> בעוזר ה-AI של <code>OpenClaw</code> מהווה דוגמה קלאסית לקריסת גבולות האבטחה האלו בשטח.</li>
+        <li>התוקף ניצל חולשת <code>OS Command Injection</code> דרך וקטור פשוט של הודעת WhatsApp חיצונית כדי להריץ פקודות בתוך הסביבה המבודדת של ה-AI, ומשם תקף את מערכת הקבצים.</li>
+        <li>הפריצה האמיתית של ה-Sandbox התבצעה דרך חור לוגי במנגנון ה-Bind Mounts (חולשת <code>Parent Directory Bypass</code>). המערכת ניסתה להגן על קבצים רגישים באמצעות רשימה שחורה (Denylist) שחסמה תיקיות כמו <code>~/.ssh</code>, אך אפשרה גישה לתיקיית האב <code>/home</code> או <code>/var</code>.</li>
+        <li>דרך החור הזה ב-Sandbox, הקוד הזדוני ניגש ישירות ל-<code>Docker Socket</code> של המחשב המארח, והשיג בריחה מלאה מהקונטיינר אל השרת (Full Host Escape).</li>
     </ul>
 </div>
 </body>
