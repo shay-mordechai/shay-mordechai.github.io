@@ -14,12 +14,34 @@
             margin: 25px 0;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
+        /* Added styling for the Digital Whisper link box */
+        .dw-link-box {
+            background-color: rgba(88, 166, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #58a6ff;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .dw-link-box a {
+            color: #58a6ff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .dw-link-box a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 <div id="content">
     <h1>Android Bootstrap Hijacking</h1>
-    <p><em>מאת שי מרדכי | יוני 2026, גליון 186</em></p>
+    <p><em>מאת שי מרדכי | 27 במאי 2026, גיליון 187</em></p>
+
+    <div class="dw-link-box">
+        <strong>הערה:</strong> מאמר זה פורסם במקור במגזין Digital Whisper. לקריאת הגרסה המעוצבת והמלאה (PDF):
+        <a href="https://digitalwhisper.co.il/files/Zines/0xBB/DW187-1-AndroidBootstrapHijacking.pdf" target="_blank">לחצו כאן</a>.
+    </div>
 
     <h2>תקציר מנהלים</h2>
     <p>הרבה מאוד משתמשי אנדרואיד (ואפילו מפתחים) לא מודעים לנתון הבא: "עולם האנדרואיד" כפי שאנחנו מכירים אותו, לא באמת קיים ברגע שהמכשיר נדלק. בשניות הראשונות, הטלפון שלכם פשוט פלטפורמת Linux רגילה לחלוטין.</p>
@@ -258,6 +280,7 @@ public Activity newActivity(ClassLoader cl, String className, Intent intent) {
     var ParentClassLoader = Java.use("java.lang.ClassLoader").getSystemClassLoader(); 
     var ClassLoader = Java.use("dalvik.system.DexClassLoader"); 
 
+    // Initialize custom class loader
     var myLoader = ClassLoader.$new(dexPath, "/sdcard/", null, ParentClassLoader); 
     var MySomeProvider = myLoader.loadClass("com.clnvyokcv.bgvpowkic.util.SomeProvider"); 
 // —----------------------------------------------------------
@@ -275,6 +298,7 @@ public Activity newActivity(ClassLoader cl, String className, Intent intent) {
     reset_entry_point.makeApplicationInner 
     .overload('boolean', 'android.app.Instrumentation', 'boolean') 
     .implementation = function(forceDefaultAppClass, instrumentation, allowDuplicateInstances) { 
+        // Enforce the default application class
         return this.makeApplicationInner(true, instrumentation, allowDuplicateInstances); 
     }; 
 }); </code></pre>
