@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</title>
+    <title>MyLeads AI — Secure AI Platform & Systems Architecture Case Study</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
         /* CSS Variables for Dark/Light Mode Support */
@@ -112,127 +112,134 @@
 <div id="content" style="direction: rtl; text-align: right;">
     <a href="index.html" style="font-weight: bold; display: inline-block; margin-bottom: 20px; font-size: 1.1rem;">&rarr; חזרה למאמרים ופרויקטים</a>
 
-    <h1>MyLeads AI — Security Architecture Case Study (AppSec Perspective)</h1>
-    <h2 style="color: var(--text-muted); font-size: 1.2rem; margin-top: -10px; margin-bottom: 20px;">Secure-by-Design SaaS with CI/CD Security, Hybrid Zero Trust Infrastructure & AI Integration</h2>
+    <h1>MyLeads AI — Secure AI Platform & Systems Architecture Case Study</h1>
+    <h2 style="color: var(--text-muted); font-size: 1.15rem; margin-top: -10px; margin-bottom: 20px;">Secure AI Platform Architecture with Linux Systems Engineering, Zero Trust Infrastructure, Performance Optimization & AI Workflows</h2>
     <p><em>מאת שי מרדכי | 9 במרץ 2026</em></p>
 
     <div class="insight-box">
         <h3 style="margin-top: 0; color: var(--accent-color);">0. Executive Summary</h3>
-        <p><strong>MyLeads AI</strong> היא מערכת SaaS מבוססת AI לניהול לידים, שנבנתה מתוך הנחה אחת מרכזית:</p>
-        <p><em>כל מערכת חשופה לאיום כברירת מחדל — ולכן אבטחה חייבת להיות חלק מהארכיטקטורה, לא תוספת לאחר פריסה (Post-deployment afterthought).</em></p>
-        <p>המערכת תוכננה סביב שלושה עקרונות:</p>
+        <p><strong>MyLeads AI</strong> היא פלטפורמת AI מבוזרת שנבנתה כמחקר הנדסי סביב תכנון מערכות מאובטחות, ביצועים, בידוד תהליכים וניהול משאבים בסביבת Production.</p>
+        <p>המטרה המרכזית הייתה לבחון כיצד ניתן לתכנן מערכת מודרנית המשלבת:</p>
         <ul>
-            <li><strong>Secure SDLC</strong> מלא עם CI/CD אוטומטי שחוסם פריסות שגויות.</li>
-            <li><strong>Hybrid Zero Trust Cloud Architecture</strong> (חישוב זול ועוצמתי ב-Hetzner עם ניהול סודות מאובטח ב-AWS).</li>
-            <li><strong>AI-powered application workflows</strong> עם בידוד קלט ומודעות ל-abuse scenarios.</li>
+            <li><strong>Linux-based runtime isolation</strong> וניהול משאבים קפדני (Resource Limits).</li>
+            <li><strong>Secure distributed architecture</strong> עם גבולות Zero Trust מוחלטים.</li>
+            <li><strong>AI workloads</strong> עם הגנה מפני Abuse וזליגת מידע (Data Leakage).</li>
+            <li><strong>Production engineering</strong> באמצעות תהליכי CI/CD, Observability ו-Hardening.</li>
         </ul>
     </div>
 
     <div style="text-align: center; margin: 40px 0;">
-        <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת האבטחה של MyLeads AI">
-        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור Zero Trust</p>
+        <img src="../../assets/images/image_ac7aca.png" alt="תרשים ארכיטקטורת המערכת של MyLeads AI">
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: 8px;">איור 1: ארכיטקטורת הייצור (Zero Trust & Distributed Systems)</p>
     </div>
 
-    <h2>1. Threat Model Overview</h2>
-    <p>בשלב התכנון זוהו שלוש קטגוריות סיכון מרכזיות:</p>
-
-    <h3>1.1 External Attack Surface</h3>
+    <h2>1. Systems Engineering Overview</h2>
+    <p>המערכת תוכננה מתוך גישה של <strong>Bottom-Up Engineering</strong>: הבנת שכבות המערכת מניהול ה-Runtime והקרנל, דרך ניהול משאבים, ועד לשכבת הענן והאפליקציה.</p>
     <ul>
-        <li>Internet-facing SaaS application</li>
+        <li><strong>Linux process isolation:</strong> שימוש ב-Rootless Containers להפרדת תהליכים (Process boundaries) ללא הרשאות חריגות.</li>
+        <li><strong>Container runtime security:</strong> צמצום שטח התקיפה הפנימי ברמת מערכת ההפעלה.</li>
+        <li><strong>Memory and resource management:</strong> הקצאה מדויקת של זיכרון למניעת הפעלת ה-OOM-Killer בקרנל של לינוקס.</li>
+        <li><strong>Network boundaries & Service communication:</strong> הפרדה לוגית ותקשורת מבודדת בין רכיבי ה-Backend, ה-Workers ומסד הנתונים.</li>
+        <li><strong>Secure deployment pipelines:</strong> אוטומציה ואכיפת בטיחות כבר בשלב ה-Build.</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. Threat Model Overview</h2>
+    <p>בשלב התכנון זוהו שלוש קטגוריות סיכון מרכזיות למערכת מבוזרת:</p>
+
+    <h3>2.1 External Attack Surface</h3>
+    <ul>
         <li>Automated bot scanning (סריקות בוטים אוטומטיות לזיהוי חולשות)</li>
         <li>API abuse attempts & Network-layer DDoS</li>
     </ul>
 
-    <h3>1.2 Application Layer Risks</h3>
+    <h3>2.2 Application Layer Risks</h3>
     <ul>
         <li>Authentication bypass & Session Hijacking</li>
         <li>IDOR (Insecure Direct Object Reference) / Broken Access Control</li>
         <li>Webhook spoofing (זיוף בקשות ממערכות צד ג')</li>
-        <li>Input-based injection vectors</li>
     </ul>
 
-    <h3>1.3 AI & Automation Risks</h3>
+    <h3>2.3 AI & Automation Risks</h3>
     <ul>
         <li>Prompt injection</li>
         <li>Data leakage via AI outputs (PII Exposure)</li>
-        <li>Misuse of AI-generated business decisions</li>
     </ul>
 
-    <hr>
-
-    <h2>2. Secure SDLC & CI/CD Security Model</h2>
+    <h2>3. Secure SDLC & CI/CD Security Model</h2>
     <p>המערכת נבנתה סביב צינור פריסה (pipeline) קשיח מבוסס:</p>
     <ul>
         <li><strong>GitHub Actions</strong> (build/test/deploy orchestration)</li>
-        <li><strong>Pytest</strong> (backend validation)</li>
-        <li><strong>Vitest + Playwright</strong> (frontend + E2E validation)</li>
+        <li><strong>Pytest & Playwright</strong> (Backend/Frontend validation)</li>
         <li><strong>Database Schema Gatekeeper:</strong> שילוב <code>alembic check</code> כחובת מעבר ב-Pipeline למניעת CrashLoopBackOff בייצור עקב חוסר סנכרון סכימות.</li>
     </ul>
-    <p><strong>Security Design Principle:</strong> ה-pipeline אינו רק כלי DevOps — אלא security enforcement layer. כל שינוי עובר validation לפני build artifact generation, קיימת הפרדת backend/frontend pipelines לצמצום blast radius, ונמנעת פריסה של state לא מאומת.</p>
 
-    <h2>3. Hybrid Zero Trust Cloud Architecture</h2>
-    <h3>3.1 Network Exposure & Access Control</h3>
-    <p>בעקבות סריקות עוינות בימים הראשונים, המערכת נבנתה כך שאין פתיחת inbound ports (<code>0.0.0.0/0</code> ריק לחלוטין). כל התעבורה נכנסת דרך <strong>Cloudflare Tunnel</strong> בלבד (outbound-only model).</p>
-    <p>גישה ניהולית (SSH) מחייבת הזדהות מול Cloudflare דרך חשבון <strong>ProtonMail</strong> ייעודי, ומאובטחת באמצעות MFA קשיח (<strong>Hardware Security Key</strong>).</p>
-    <p><strong>&rarr; המשמעות:</strong> אין IP ציבורי שניתן לתקוף ישירות, ואין אפשרות לעקוף את מנגנון הניהול ללא מפתח חומרה פיזי.</p>
+    <h2>4. Hybrid Zero Trust Cloud Architecture</h2>
+    <h3>4.1 Network Exposure & Access Control</h3>
+    <p>המערכת נבנתה כך שאין פתיחת inbound ports (<code>0.0.0.0/0</code> ריק לחלוטין). התעבורה נכנסת דרך <strong>Cloudflare Tunnel</strong> בלבד (outbound-only model).</p>
+    <p>גישה ניהולית (SSH) מחייבת הזדהות מול Cloudflare דרך חשבון <strong>ProtonMail</strong> ייעודי, ומאובטחת באמצעות MFA קשיח (<strong>Hardware Security Key</strong>). אין אפשרות לעקוף את מנגנון הניהול ללא מפתח חומרה פיזי.</p>
 
-    <h3>3.2 Runtime Isolation & Resource Exhaustion Protection</h3>
+    <h3>4.2 Runtime Isolation & Resource Protection</h3>
     <ul>
         <li>Containers מופעלים ב-<strong>Rootless Podman</strong> על גבי Enterprise Linux, למניעת Privilege Escalation (הסלמת הרשאות) במקרה של Container Escape.</li>
-        <li>הגבלת משאבים קשיחה למניעת קריסות שרשרת (OOM-Killer): ה-Worker מוגבל ל-<code>--memory="400m"</code> ו-<code>--memory-swap="2.4g"</code>.</li>
-        <li>ניקוי מטמונים (<code>drop_caches</code>) מתבצע אוטומטית לפני משיכת אימג'ים כבדים.</li>
+        <li>הגבלת משאבים קשיחה (cgroups) למניעת קריסות שרשרת: ה-Worker מוגבל ל-<code>--memory="400m"</code> ו-<code>--memory-swap="2.4g"</code>.</li>
     </ul>
 
-    <h2>4. Secrets & Identity Security (Hybrid Cloud)</h2>
-    <h3>4.1 Secret Management Model</h3>
+    <h2>5. Secrets & Identity Security (Hybrid Cloud)</h2>
     <p>במקום שימוש ב-<code>.env</code> סטטי על דיסק, סודות נטענים בזמן runtime מתוך <strong>AWS SSM Parameter Store</strong> ומפוענחים על ידי <strong>AWS KMS</strong>, ונשארים אך ורק בזיכרון ה-RAM של האפליקציה.</p>
-    <p><strong>&rarr; הפחתת סיכון של:</strong> LFI, SSRF-to-file exfiltration, ו-repo leakage.</p>
+    <p>בנוסף, מתבצע שימוש ב-<strong>IMDSv2</strong> בלבד (token-based metadata access) המפחית דרמטית סיכוני SSRF metadata abuse.</p>
 
-    <h3>4.2 AWS Metadata Protection</h3>
-    <p>שימוש ב-<strong>IMDSv2</strong> בלבד (token-based metadata access) המפחית דרמטית סיכוני SSRF metadata abuse.</p>
+    <h2>6. Authentication & Session Security Design</h2>
+    <p>האותנטיקציה פועלת במבנה אטומי למניעת OTP Replay Attacks: ה-OTP נמחק מה-DB ומבוצע <code>db.commit()</code> לפני הנפקת ה-JWT. ייצור ה-OTP מבוסס על ה-CSPRNG של מערכת ההפעלה.</p>
+    <p>כל החלטת הרשאה מבוססת <strong>JWT claims</strong> בלבד דרך מנגנון <code>get_current_user</code> ריכוזי, החוסם את הבקשה בשכבת הניתוב לפני הגישה ללוגיקה העסקית (מונע IDOR).</p>
 
-    <h2>5. Authentication & Session Security Design</h2>
-    <h3>5.1 Session Integrity</h3>
-    <p>שימוש ב-<strong>httpOnly JWT cookies</strong> עם <code>SameSite=Strict</code> למניעת client-side token exposure (XSS).</p>
-
-    <h3>5.2 Atomic MFA Operations</h3>
-    <p>כדי למנוע OTP Replay Attacks, האותנטיקציה פועלת במבנה אטומי: ה-OTP נמחק מה-DB ומבוצע <code>db.commit()</code> לפני הנפקת ה-JWT. ייצור ה-OTP מבוסס על ה-CSPRNG של מערכת ההפעלה (ספריית <code>secrets</code>).</p>
-
-    <h3>5.3 Authorization Model</h3>
-    <p>כל החלטת הרשאה מבוססת <strong>JWT claims</strong> בלבד דרך מנגנון <code>get_current_user</code> ריכוזי, החוסם את הבקשה בשכבת הניתוב לפני הגישה ללוגיקה העסקית.</p>
-    <p><strong>&rarr; Mitigates:</strong> IDOR, privilege escalation, ו-broken object-level authorization.</p>
-
-    <h2>6. Real-World AppSec Mitigations</h2>
-    <h3>6.1 WASM DLP Firewall (Information Disclosure Prevention)</h3>
+    <h2>7. Real-World AppSec Mitigations</h2>
+    <h3>7.1 WASM DLP Firewall (Information Disclosure Prevention)</h3>
     <p>פילטר <strong>WebAssembly (WASM)</strong> שכתבתי ב-<strong>Rust</strong> פועל כ-Sidecar בתוך Envoy Proxy. הארכיטקטורה עובדת במוד <strong>Fail-Closed</strong>: ה-WASM מצנזר בזמן אמת שגיאות 5xx ומעלים Stack Traces שעלולים להדליף מידע פנימי.</p>
 
-    <h3>6.2 Proxy-Aware Rate Limiting</h3>
-    <p>כדי למנוע חסימה גלובלית (Global DoS) של כל המשתמשים דרך כתובת ה-Loopback של ה-Tunnel, ה-Rate Limiter שולף את כתובת התוקף האמיתית מתוך ההדר <code>CF-Connecting-IP</code>.</p>
-
-    <h3>6.3 PDF Generation Security</h3>
-    <p>מניעת SSRF/Path Traversal ביצירת מסמכים על ידי שימוש במנוע ה-<strong>FPDF</strong>, המדפיס תאי טקסט גולמיים בלבד וללא מפענחי HTML או יכולות רשת.</p>
+    <h3>7.2 Proxy-Aware Rate Limiting</h3>
+    <p>ה-Rate Limiter שולף את כתובת התוקף האמיתית מתוך ההדר <code>CF-Connecting-IP</code> כדי למנוע חסימה גלובלית (Global DoS) של כל המשתמשים דרך כתובת ה-Loopback של ה-Tunnel.</p>
 
     <hr>
 
-    <h2>7. Open Findings & Continuous Hardening</h2>
-    <p>במסגרת פילוסופיית ה-<em>Secure-by-Design</em> ושקיפות ארכיטקטונית, ממצאים פתוחים (Open Findings) מתועדים ומנוהלים באופן אקטיבי, ולא מוסתרים:</p>
+    <h2>8. Performance & Runtime Engineering (The C++ Expansion)</h2>
+    <p>מעבר לשיקולי אבטחה, המערכת תוכננה עם דגש רב על יעילות Runtime, ניהול משאבים, והכנה ל-Scaling פנימי. זיהוי צווארי בקבוק (Bottlenecks) הראה שעיבוד משימות AI ואודיו כבדות דורש אופטימיזציה ברמת המערכת.</p>
+    
+    <p><strong>High-Performance Processing Engine (In Development):</strong><br>
+    כדי לפתור זאת, שכבת העיבוד הקריטית עוברת מיגרציה למנוע עיבוד ב-<strong>C++</strong> מותאם אישית. מהלך זה ממחיש את המעבר מארכיטקטורת ענן High-Level לעבודת Low-Level Systems:</p>
     <ul>
-        <li><strong>SEC-015 (Webhook Spoofing):</strong> ה-endpoint של Twilio כרגע מעבד בקשות ללא אימות חתימה קריפטוגרפית. התיקון המתוכנן הוא להטמיע Twilio Signature Validation Middleware שיבדוק את ההדר <code>X-Twilio-Signature</code> בכל בקשה נכנסת.</li>
+        <li><strong>mmap & Shared Memory:</strong> העברת נתונים בין רכיבי המערכת בארכיטקטורת Zero-copy לחסכון בהעתקות זיכרון יקרות.</li>
+        <li><strong>IPC (Inter-Process Communication):</strong> פיתוח מנגנון תקשורת מהירה ויעילה בין ה-Workers.</li>
+        <li><strong>Worker Pool & Thread Affinity:</strong> שיוך תהליכונים לליבות ספציפיות (Core Pinning) למניעת Context-Switching מיותר על ידי ה-OS Scheduler.</li>
+        <li><strong>Linux Syscalls:</strong> עבודה ישירה מול הקרנל לניהול משאבים (Memory Pools) מינימליסטי המונע פגיעה בביצועים עקב Garbage Collection או Fragmentation.</li>
+    </ul>
+
+    <hr>
+
+    <h2>9. Open Findings & Continuous Hardening</h2>
+    <p>במסגרת פילוסופיית שקיפות הנדסית, ממצאים פתוחים מנוהלים באופן אקטיבי:</p>
+    <ul>
+        <li><strong>SEC-015 (Webhook Spoofing):</strong> ה-endpoint של Twilio כרגע מעבד בקשות ללא אימות חתימה קריפטוגרפית. התיקון המתוכנן הוא להטמיע Twilio Signature Validation Middleware.</li>
         <li><strong>SEC-012 (Path Traversal):</strong> ייצוא מסמכים משתמש כעת ב-<code>os.path.join</code>. כדי למנוע Directory Traversal, יוטמע מנגנון <code>secure_filename</code>.</li>
     </ul>
 
-    <h2>8. Summary of Security Controls</h2>
+    <h2>10. Summary of Engineering & Security Controls</h2>
     <table>
         <thead>
             <tr>
-                <th>Security Layer (שכבת אבטחה)</th>
-                <th>Mitigation Strategy (אסטרטגיית הגנה)</th>
+                <th>Domain (תחום הנדסי)</th>
+                <th>Implementation & Strategy (אסטרטגיה ומימוש)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <td><strong>Systems & Performance</strong></td>
+                <td>Linux Cgroups, Custom C++ Processing Engine (Planned), Zero-copy IPC, Memory pools</td>
+            </tr>
+            <tr>
                 <td><strong>Network Security</strong></td>
-                <td>Zero open ports, Cloudflare Tunnel ingress routing</td>
+                <td>Zero open ports, Cloudflare Tunnel ingress routing, Envoy Proxy</td>
             </tr>
             <tr>
                 <td><strong>Administrative Access</strong></td>
@@ -244,31 +251,23 @@
             </tr>
             <tr>
                 <td><strong>Runtime Isolation</strong></td>
-                <td>Rootless Podman, strict memory capping (<code>--memory="400m"</code>)</td>
+                <td>Rootless Podman, strict memory limits (<code>--memory="400m"</code>)</td>
             </tr>
             <tr>
                 <td><strong>Secure SDLC</strong></td>
                 <td>Automated GitHub Actions pipelines, integrated <code>alembic check</code></td>
             </tr>
             <tr>
-                <td><strong>Data Protection</strong></td>
-                <td>Fernet AES-128 symmetric encryption with lazy initialization</td>
-            </tr>
-            <tr>
                 <td><strong>DLP Proxying</strong></td>
                 <td>Envoy WASM filter written in Rust for real-time traffic sanitization</td>
-            </tr>
-            <tr>
-                <td><strong>Session Control</strong></td>
-                <td>CSPRNG single-use OTP validation, atomic "Delete-Before-Issue"</td>
             </tr>
         </tbody>
     </table>
 
     <div class="insight-box purple">
-        <h2 style="margin-top: 0; color: var(--accent-purple);">9. Conclusion</h2>
-        <p><strong>MyLeads AI</strong> מדגים גישה של: <em>Security as Architecture, not as Post-Deployment Hardening.</em></p>
-        <p>המערכת נבנתה סביב עקרונות תשתיתיים של Hybrid Zero Trust, Least Privilege, Secure SDLC, Runtime isolation, ו-AI-aware security design.</p>
+        <h2 style="margin-top: 0; color: var(--accent-purple);">11. Conclusion</h2>
+        <p><strong>MyLeads AI</strong> היא הרבה מעבר ל"עוד אפליקציה" — היא הוכחת יכולת (Proof of Capability) בתכנון והנדסת מערכות (Systems Engineering).</p>
+        <p>המערכת מדגימה כיצד עקרונות של Low-Level Linux Runtime, תקשורת בינ-תהליכית (IPC) וניהול זיכרון נכון, משתלבים יחד עם ארכיטקטורת ענן, הגנות Zero Trust, ופיתוח מודרני מבוסס AI.</p>
     </div>
 </div>
 </body>
