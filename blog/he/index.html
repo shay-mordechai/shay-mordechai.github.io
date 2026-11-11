@@ -3,245 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <title>Shay Mordechai | Application Security Engineer</title>
+    <title>Shay Mordechai | ארכיון מחקרים ופרויקטים</title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background-color: #0d1117; color: #c9d1d9; }
         
-        /* Top Navigation for Index */
-        .top-nav { background: #161b22; border-bottom: 1px solid #30363d; padding: 15px 20px; text-align: center; margin-bottom: 30px; }
-        .top-nav a { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
-        .top-nav a:hover { text-decoration: underline; }
-
-        /* Grid Layout - Scalable up to 4 columns */
+        .timeline-section { max-width: 1200px; margin: 40px auto; padding: 20px 30px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; text-align: center; }
+        .timeline-container { display: flex; justify-content: space-between; position: relative; margin-top: 30px; padding: 0 40px; }
+        .timeline-container::before { content: ''; position: absolute; top: 15px; left: 40px; right: 40px; height: 2px; background: #30363d; z-index: 1; }
+        .timeline-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; flex: 1; text-decoration: none; }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #30363d; border: 2px solid #161b22; transition: background 0.2s, transform 0.2s; }
+        .timeline-node:hover .timeline-dot { background: var(--accent-color, #58a6ff); transform: scale(1.3); }
+        .timeline-date { font-size: 0.8rem; color: #8b949e; margin-top: 8px; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+        .timeline-title { font-size: 0.85rem; color: #c9d1d9; margin-top: 5px; max-width: 160px; text-align: center; line-height: 1.3; }
+        .timeline-node:hover .timeline-title { color: #fff; }
+        
+        /* 4-Column CSS Grid Layout */
         .categories-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            grid-template-columns: repeat(4, 1fr); 
             gap: 25px; 
-            max-width: 1600px; 
+            max-width: 1500px; 
             margin: 0 auto; 
             padding: 20px; 
         }
         
         .category-column { display: flex; flex-direction: column; gap: 15px; }
-        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.4rem; margin-top: 0; }
+        .category-column h2 { border-bottom: 2px solid #30363d; padding-bottom: 10px; color: #c9d1d9; font-size: 1.4rem; text-align: right; margin-top: 0; }
         
-        /* Article Cards */
         .article-card { 
             background-color: #161b22; 
             border: 1px solid #30363d; 
             border-radius: 6px; 
             padding: 16px; 
             text-decoration: none; 
+            width: 100%; 
+            box-sizing: border-box; 
             display: flex; 
             flex-direction: column; 
             transition: border-color 0.2s, transform 0.2s; 
+            text-align: right; 
         }
         .article-card:hover { border-color: #8b949e; transform: translateY(-2px); }
         .highlight-card { border-color: #58a6ff; background-color: rgba(88, 166, 255, 0.03); }
+
+        @media (max-width: 1200px) { .categories-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 900px) { 
+            .categories-container { grid-template-columns: 1fr; } 
+            .timeline-container { flex-direction: column; gap: 20px; padding: 0; } 
+            .timeline-container::before { display: none; } 
+        }
     </style>
 </head>
 <body>
-
-<div class="top-nav">
-    <a href="../../index.html">🏠 עמוד הבית (Portfolio)</a>
-</div>
-
 <div id="content" style="max-width: 100%; padding:0;">
-    
+    <a href="../../index.html" style="color: #58a6ff; text-decoration: none; font-weight: bold; display: inline-block; margin: 20px 20px 0 0; font-size: 1.1rem;">&rarr; חזרה לפורטפוליו המרכזי</a>
+        
+    <h1 style="text-align: center; margin: 20px 0 10px 0; color: #fff;">ארכיון מחקרים ופרויקטים</h1>
+    <p style="text-align: center; color: #8b949e; max-width: 700px; margin: 0 auto 30px auto; line-height: 1.5;">
+        מהנדס אבטחת יישומים (AppSec Engineer) המתמחה ב-Secure SDLC, מעקות בטיחות (AI Guardrails) וחקר חולשות. להלן אבני הדרך המרכזיות ופירוט המחקרים הטכניים:
+    </p>
+
+    <div class="timeline-section">
+        <h3 style="margin: 0 0 10px 0; color: #fff; font-size: 1.1rem;">📈 אבני דרך והתפתחות המחקר</h3>
+        <div class="timeline-container">
+            <a href="uncrackable-level1.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Feb 2024</div>
+                <div class="timeline-title">ניתוח OWASP Mobile</div>
+            </a>
+            <a href="scapy-tls-packet-crafter.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jun 2025</div>
+                <div class="timeline-title">מנוע תקשורת TLS</div>
+            </a>
+            <a href="compiler-sbcl-behavioral-research.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jul 2025</div>
+                <div class="timeline-title">חולשת קומפיילר (CERT-IL)</div>
+            </a>
+            <a href="v8-engine-security.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Mar 2026</div>
+                <div class="timeline-title">מנגנוני בידוד V8</div>
+            </a>
+            <a href="pt-dns-rebinding-mitigation.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Apr 2026</div>
+                <div class="timeline-title">מעקף DNS Rebinding</div>
+            </a>
+            <a href="android-bootstrap-hijacking.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">May 2026</div>
+                <div class="timeline-title">פרסום Digital Whisper</div>
+            </a>
+        </div>
+    </div>
+
     <div class="categories-container">
         
+        <!-- Column 1 -->
         <div class='category-column'>
-            <h2>Mobile AppSec & Sandboxing</h2>
-            
+            <h2>אבטחת יישומים ונוזקות</h2>
             <a href="android-bootstrap-hijacking.html" class="article-card highlight-card">
                 <div style="font-weight:bold; color:#58a6ff; font-size:1.1rem;">★ Android Bootstrap Hijacking (Digital Whisper)</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">27 במאי 2026 | Android Internals, AppSec</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    מחקר מעמיק על ניצול תהליך האתחול של אנדרואיד על ידי נוזקות (Malware) להשגת ביצוע מוקדם, תוך שימוש בכלים כמו Frida ו-JADX.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">May 27, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מחקר מעמיק על ניצול תהליך האתחול של אנדרואיד על ידי נוזקות להשגת ביצוע מוקדם, תוך פריצת גבולות אמון.</div>
             </a>
-            
-            <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="article-card highlight-card">
-                <div style="font-weight:bold; color:#58a6ff; font-size:1.1rem;">🔬 Android Security Reverse Engineering Lab</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">GitHub Repository | Active</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    המעבדה הפעילה שלי לחקר נוזקות מובייל. כוללת ניתוח של Banking Trojans, כתיבת חוקי YARA, ודרילים ב-Dynamic Instrumentation עם Frida.
-                </div>
-            </a>
-            
-            <a href="v8-engine-security.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine Execution & Sandbox Security</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">24 בדצמבר 2025 | Browser Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    חקירת המנגנונים הארכיטקטוניים במנוע V8 והבנת וקטורי תקיפה (JIT Compilation).
-                </div>
-            </a>
-            
             <a href="permission-paradox.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">The Permission Paradox</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 במאי 2026 | Active Research</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    מחקר בנושא מנגנוני הרשאות, ניצול ערוצי IPC ועקיפת הגנות Dynamic Overlay באנדרואיד.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">May 28, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מחקר בנושא מנגנוני הרשאות, ניצול ערוצי IPC ועקיפת הגנות Dynamic Overlay באנדרואיד.</div>
             </a>
-
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank" class="article-card highlight-card">
+                <div style="font-weight:bold; color:#58a6ff; font-size:1.1rem;">🔬 Android Malware Reverse Engineering Lab</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">GitHub Repository</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">המעבדה הפעילה שלי לחקר נוזקות מובייל, כתיבת חוקי YARA ו-Dynamic Instrumentation עם Frida.</div>
+            </a>
             <a href="malware-lab-kinoite.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 בדצמבר 2025 | Environment Setup</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    תהליך ההקמה והקונפיגורציה של סביבת מערכת הפעלה Immutable המיועדת ספציפית למחקר ביקורתי בצורה מאובטחת.
-                </div>
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">בניית סביבת Malware Analysis מבודדת</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Dec 30, 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הקמה וקונפיגורציה של סביבת מערכת הפעלה Immutable (Fedora Kinoite) המיועדת ספציפית למחקר ביקורתי מאובטח.</div>
             </a>
         </div>
         
+        <!-- Column 2 -->
         <div class='category-column'>
-            <h2>Vulnerability Research & RE</h2>
-            
+            <h2>הנדסה לאחור (Writeups)</h2>
             <a href="frida-in-race-level2.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Frida in Race - UnCrackable Level 2</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">28 באפריל 2026 | Mobile Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    ניתוח דינמי באמצעות Frida לעקיפת מנגנוני Anti-Debugging ו-Root Detection בסביבת אנדרואיד.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 28, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח דינמי באמצעות Frida לעקיפת מנגנוני Anti-Debugging ו-Root Detection בסביבת אנדרואיד.</div>
             </a>
-            
             <a href="uncrackable-level2.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 2 - Mobile Security Writeup</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">30 באפריל 2026 | Android RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    פירוק והנדסה לאחור של אפליקציית אנדרואיד בעלת הגנות מתקדמות באמצעות ניתוח סטטי ודינמי.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 30, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">פירוק והנדסה לאחור של אפליקציית אנדרואיד בעלת הגנות מתקדמות ומנגנוני Native JNI.</div>
             </a>
-            
             <a href="uncrackable-level1.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">UnCrackable Level 1 - Mobile Security Writeup</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">22 באפריל 2026 | Android RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    פתרון הנדסה לאחור הכולל עקיפת מנגנוני Root Detection וניתוח קוד מקור.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 22, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">פתרון הנדסה לאחור הכולל עקיפת מנגנוני Root Detection ואיתור סודות מוצפנים בזיכרון.</div>
             </a>
-            
             <a href="multi-stage-dll-re.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: Multi-Stage DLL Decryption</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 באפריל 2024 | Windows Desktop RE</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    הנדסה לאחור של תוכנית הטוענת DLLs מרובים בזמן ריצה, טכניקה נפוצה ב-Windows Droppers.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 19, 2024</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">הנדסה לאחור של תוכנית הטוענת DLLs מרובים בזמן ריצה, טכניקה נפוצה ב-Windows Droppers.</div>
             </a>
-            
             <a href="re-intro-patching.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Desktop RE Writeup: PE Extraction & Patching</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">29 בפברואר 2024 | Binary Analysis</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    ניתוח קבצים בינאריים, חילוץ PE מקובץ PDF חשוד, וביצוע Patching לקוד.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Feb 29, 2024</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח קבצים בינאריים, חילוץ PE מקובץ PDF חשוד, וביצוע Patching באסמבלי לעקיפת לוגיקה.</div>
             </a>
         </div>
         
+        <!-- Column 3 -->
         <div class='category-column'>
-            <h2>Architecture & AI Guardrails</h2>
-            
-            <a href="jni-unsafe-bridge.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">26 במרץ 2026 | Low-Level, Android</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java, וכיצד נוזקות מנצלות קוד Native לעקיפת הגנות.
-                </div>
-            </a>
-            
+            <h2>Low-Level ומערכות הפעלה</h2>
             <a href="browser-privilege-boundary.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Browser Privilege Boundary: כש-AI הופך לסוכן</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">19 במאי 2026 | AI Security, Trust Boundaries</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    חשיפת פגיעות במנגנון ה-Sandbox של סוכן ה-AI של Anthropic והבנת סכנות בהרשאות Cross-Boundary.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">May 19, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חשיפת פגיעות במנגנון ה-Sandbox של סוכן ה-AI של Anthropic והבנת סכנות בהרשאות Cross-Boundary בדפדפן.</div>
             </a>
-            
+            <a href="jni-unsafe-bridge.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">JNI as (Un-)Safe Bridge</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Mar 26, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח פגיעויות זיכרון בשימוש בממשק ה-JNI של Java, וכיצד נוזקות מנצלות קוד Native לעקיפת הגנות.</div>
+            </a>
+            <a href="v8-engine-security.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">V8 Engine's (Dis-)Security</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Dec 24, 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת המנגנונים הארכיטקטוניים במנוע V8, בידוד Sandbox, והבנת וקטורי תקיפה (JIT Compilation).</div>
+            </a>
             <a href="compiler-sbcl-behavioral-research.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Breaking the Compilation Boundary (SBCL)</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">יולי 2025 | Compiler Internals</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    זיהוי שגיאות לוגיות בזמן קומפילציה. רלוונטי להבנת נוזקות שרשרת אספקה (Supply Chain Malware) מתקדמות.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Jul 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">זיהוי שגיאות לוגיות בזמן קומפילציה באמצעות Semantic Fuzzing. רלוונטי להבנת איומי שרשרת אספקה.</div>
             </a>
-
             <a href="linux-internals-ostree-hibernation.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Linux Internals: OSTree & Hibernation</div>
                 <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">OS Architecture</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    חקירת מנגנוני מערכת הפעלה, ניהול זיכרון (mmap, swap) ו-Hibernation בסביבת Fedora Kinoite.
-                </div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת מנגנוני מערכת הפעלה, ניהול זיכרון (mmap, swap) ו-Hibernation בסביבת לינוקס.</div>
             </a>
-            
             <a href="flatpak-sandbox-isolation.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Flatpak Sandbox Isolation</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Linux Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    חקירת מנגנוני בידוד, הרשאות ואבטחת סביבת הריצה של Flatpak ברמת מערכת ההפעלה.
-                </div>
-            </a>
-
-            <a href="rust-envoy-tunnel.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall (Rust & Envoy)</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">8 במרץ 2026 | Infrastructure Security</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    בניית פילטר WASM לאפליקציית Envoy למניעת הדלפת מידע תצורה, עקיפת Fingerprinting ו-DLP Outbound.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Mar 29, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">חקירת מנגנוני בידוד, הרשאות ואבטחת סביבת הריצה של Flatpak ברמת מערכת ההפעלה ומנגנוני ה-IPC.</div>
             </a>
         </div>
 
+        <!-- Column 4 -->
         <div class='category-column'>
-            <h2>DevSecOps & Network Security</h2>
-            
+            <h2>ארכיטקטורה ואבטחת רשת</h2>
+            <a href="rust-envoy-tunnel.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Data Hop Firewall: Rust & Envoy Wasm Filter</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Mar 8, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בניית פילטר Wasm רב-עוצמה לאפליקציית Envoy למניעת הדלפת מידע תצורה, הגנה מ-Fingerprinting וביצוע Outbound DLP.</div>
+            </a>
             <a href="myleads-saas-architecture.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Zero Trust AI SaaS Architecture</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Cloud Architecture</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    עיצוב ופריסת ארכיטקטורת Zero Trust מאובטחת בענן (Terraform/FastAPI), מבוססת Docker ופילטר חכם של Wasm DLP.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Mar 9, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">עיצוב ופריסת ארכיטקטורת Zero Trust מאובטחת בענן, מבוססת Docker ופילטר חכם למניעת תקיפות פרומפט והדלפת מידע בין דיירים.</div>
             </a>
-
+            <a href="pt-dns-rebinding-mitigation.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding & LANjack Mitigation</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 26, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">ניתוח דינמי של תקיפות DNS Rebinding מורכבות והטמעת הגנות מתאימות ברמת הרשת (Network Level).</div>
+            </a>
+            <a href="pt-web-registration-diagnostic.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web API Registration Diagnostic</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Apr 16, 2026</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">מבדקי חדירה (PT) ודיאגנוסטיקה למערכות הרשמה ווביות, ניתוח לוגיקת צד-שרת (Server-Side Logic).</div>
+            </a>
+            <a href="multistage-network-ctf.html" class="article-card">
+                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Multi-Stage Network CTF Framework</div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Jun 17, 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">בניית פלטפורמת סימולציה למתקפות רשת מתקדמות הכוללת Covert Channels, יירוט MITM ועקיפות מנגנוני PKI.</div>
+            </a>
             <a href="scapy-tls-packet-crafter.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Scapy TLS Packet Crafter</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Python Tooling & Networks</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    כלי מחקר אוטומטי שכתבתי בפייתון באמצעות Scapy המאפשר יצירת מנות TLS דטרמיניסטיות לחקר פרוטוקולים.
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Jun 17, 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">כלי מחקר אוטומטי שכתבתי בפייתון באמצעות Scapy המאפשר יצירת מנות TLS דטרמיניסטיות לחקר פרוטוקולים והצפנה.</div>
             </a>
-
-            <a href="multistage-network-ctf.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Multi-Stage Network CTF</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Offensive Networking</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    בניית פלטפורמת סימולציה למתקפות רשת מתקדמות הכוללת Covert Channels, יירוט MITM ועקיפות PKI.
-                </div>
-            </a>
-
             <a href="life-of-a-packet-routing.html" class="article-card">
                 <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Life of a Packet: Routing Internals</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Network Fundamentals</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    צלילה לעומק תהליך הניתוב של מנות ברשת (Routing), משכבת הקרנל ועד ליציאה לחוט הפיזי.
-                </div>
-            </a>
-
-            <a href="pt-dns-rebinding-mitigation.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">DNS Rebinding Mitigation</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Penetration Testing</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    ניתוח דינמי של תקיפות DNS Rebinding מורכבות והטמעת הגנות מתאימות ברמת הרשת (Network Level).
-                </div>
-            </a>
-
-            <a href="pt-web-registration-diagnostic.html" class="article-card">
-                <div style="font-weight:bold; color:#fff; font-size:1.1rem;">Web Registration Diagnostic</div>
-                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Web Security & PT</div>
-                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">
-                    מבדקי חדירה (PT) למערכות הרשמה ווביות, כולל ניתוח עקיפות לוגיקת צד-שרת (Server-Side Logic Bypasses).
-                </div>
+                <div style="font-size:0.8rem; color:#8b949e; margin-top:5px; font-family: monospace;">Dec 18, 2025</div>
+                <div style="font-size:0.9rem; margin-top:10px; color:#8b949e; line-height:1.4;">צלילה לעומק תהליך הניתוב של מנות ברשת (Routing), משכבת הקרנל ועד ליציאה לחוט הפיזי להבנת וקטורי תקיפה נמוכים.</div>
             </a>
         </div>
-        
     </div>
 </div>
 </body>
