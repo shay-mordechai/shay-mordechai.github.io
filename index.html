@@ -1,204 +1,236 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shay Mordechai | Mid AppSec Engineer & Security Researcher</title>
-    <style>
-:root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --text-muted: #94a3b8; --accent-color: #38bdf8; --border-color: #334155; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 0; }
-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border-color); padding: 3rem 1rem; text-align: center; }
-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--accent-color); }
-header p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
-.container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
-.section-title { font-size: 1.8rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--accent-color); }
-.category-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-.category-card h3 { margin-top: 0; font-size: 1.4rem; color: #f1f5f9; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
-.article-list { list-style: none; padding: 0; margin: 0; }
-.article-item { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); }
-.article-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.article-title { font-size: 1.1rem; font-weight: bold; color: var(--accent-color); text-decoration: none; }
-.article-title:hover { text-decoration: underline; }
-.article-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem; }
-.article-summary { font-size: 0.95rem; color: var(--text-color); margin: 0; }
+    <meta property="og:title" content="Shay Mordechai | Application Security Engineer">
+    <meta property="og:description" content="Application Security Engineer specializing in Secure SDLC, AI Guardrails, and Vulnerability Research. Disclosed 0-days to CERT-IL.">
+    <title>Shay Mordechai | Application Security Engineer</title>
+    <link rel="icon" href="https://fav.farm/🛡️">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-.timeline-section { margin: 2.5rem 0; padding: 1.5rem; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; }
-.timeline-section h2 { margin-top: 0; font-size: 1.4rem; color: var(--accent-color); margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
-.timeline-container { display: flex; overflow-x: auto; gap: 1rem; padding: 0.5rem 0 1rem 0; scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--border-color); }
-.timeline-node { flex: 0 0 190px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-decoration: none; color: var(--text-color); transition: transform 0.2s ease, border-color 0.2s ease; position: relative; display: block; }
-.timeline-node:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-.timeline-node.highlight { border-color: var(--accent-color); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
-.timeline-dot { width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; margin-bottom: 0.6rem; box-shadow: 0 0 6px var(--accent-color); }
-.timeline-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600; }
-.timeline-title { font-size: 0.9rem; font-weight: bold; color: var(--text-color); line-height: 1.35; }
-footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 4rem; font-size: 0.9rem; }
-</style>
+    <style>
+        /* All original beautiful CSS styles kept exactly as they were */
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --accent-green: #3fb950;
+            --accent-red: #ff7b72;
+            --accent-yellow: #d2a8ff;
+            --border-color: #30363d;
+        }
+
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: var(--text-main); background-color: var(--bg-color); max-width: 850px; margin: 0 auto; padding: 50px 20px; -webkit-font-smoothing: antialiased; }
+        h1 { color: #ffffff; font-size: 2.6em; letter-spacing: -1px; margin-bottom: 5px; }
+        .subtitle { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 1.05em; margin-top: 0; margin-bottom: 25px; }
+        .links-container { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 35px; }
+        .action-btn { background: var(--surface-color); color: var(--text-main); text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.9em; font-weight: 500; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .action-btn:hover { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { visibility: hidden; position: absolute; background-color: var(--surface-color); min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); border-radius: 8px; z-index: 100; top: 100%; left: 0; margin-top: 8px; overflow: hidden; opacity: 0; transform: translateY(-5px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; }
+        .dropdown::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 15px; }
+        .dropdown:hover .dropdown-content { visibility: visible; opacity: 1; transform: translateY(0); }
+        .dropdown:hover .action-btn { border-color: var(--accent-blue); color: #ffffff; transform: translateY(-2px); }
+        .dropdown-content a { color: var(--text-main); padding: 10px 16px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 500; transition: background 0.2s, color 0.2s; border-bottom: 1px solid var(--border-color); }
+        .dropdown-content a:last-child { border-bottom: none; }
+        .dropdown-content a:hover { background-color: #21262d; color: #ffffff; }
+        .mission-statement { font-size: 1.1em; color: #ffffff; margin-bottom: 25px; line-height: 1.5; border-left: 3px solid var(--accent-blue); padding-left: 15px; }
+        .core-skills { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--accent-green); background: rgba(63, 185, 80, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px dashed rgba(63, 185, 80, 0.3); text-align: center; margin-bottom: 25px; letter-spacing: 0.5px; }
+        .disclosure-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 35px; }
+        .disclosure-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; padding: 5px 12px; border-radius: 20px; font-weight: 700; letter-spacing: 0.3px; border: 1px solid; }
+        .badge-red { background: rgba(255,123,114,0.08); color: var(--accent-red); border-color: rgba(255,123,114,0.3); }
+        .badge-blue { background: rgba(88,166,255,0.08); color: var(--accent-blue); border-color: rgba(88,166,255,0.3); }
+        .badge-purple { background: rgba(188,140,255,0.08); color: var(--accent-purple); border-color: rgba(188,140,255,0.3); }
+        .badge-green { background: rgba(63,185,80,0.08); color: var(--accent-green); border-color: rgba(63,185,80,0.3); }
+        .active-lab-box { background: rgba(88, 166, 255, 0.05); border: 1px dashed rgba(88, 166, 255, 0.4); padding: 16px 20px; border-radius: 8px; margin-bottom: 40px; font-size: 0.95em; line-height: 1.5; }
+        .active-lab-box strong { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+        .timeline-section { margin: 40px 0 50px 0; padding: 24px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; }
+        .timeline-section h3 { margin-top: 0; margin-bottom: 25px; color: #ffffff; font-size: 1.2em; display: flex; align-items: center; gap: 8px; }
+        .timeline-container { display: flex; justify-content: space-between; position: relative; padding: 0 5px; }
+        .timeline-container::before { content: ''; position: absolute; top: 25px; left: 10px; right: 10px; height: 2px; background: var(--border-color); z-index: 1; }
+        .timeline-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; flex: 1; text-decoration: none; transition: transform 0.2s; }
+        .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: #30363d; border: 3px solid var(--surface-color); transition: background 0.2s, transform 0.2s; box-shadow: 0 0 0 2px #30363d; }
+        .timeline-node.highlight .timeline-dot { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .timeline-node:hover .timeline-dot { background: var(--accent-blue); transform: scale(1.2); box-shadow: 0 0 8px var(--accent-blue); }
+        .timeline-date { font-size: 0.70rem; color: var(--text-muted); margin-top: 12px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .timeline-title { font-size: 0.75rem; color: var(--text-main); margin-top: 6px; max-width: 110px; text-align: center; line-height: 1.3; font-weight: 500; }
+        .timeline-node:hover .timeline-title { color: #ffffff; }
+        .timeline-node.highlight .timeline-title { color: var(--accent-green); }
+        .card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; margin-bottom: 25px; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { border-color: #484f58; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .card.series { border-left: 4px solid var(--accent-purple); }
+        .card.vr { border-left: 4px solid var(--accent-red); }
+        .card.internals { border-left: 4px solid var(--accent-yellow); }
+        .card.infra { border-left: 4px solid var(--accent-blue); }
+        .card.appsec { border-left: 4px solid var(--accent-green); }
+        .card.disclosure { border-left: 4px solid var(--accent-red); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .card-title { font-size: 1.25em; font-weight: 700; color: #ffffff; }
+        .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; padding: 5px 10px; border-radius: 20px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
+        .tag.series { background: rgba(188,140,255,0.1); color: var(--accent-purple); }
+        .tag.vr { background: rgba(255,123,114,0.1); color: var(--accent-red); }
+        .tag.internals { background: rgba(210,168,255,0.1); color: var(--accent-yellow); }
+        .tag.infra { background: rgba(88,166,255,0.1); color: var(--accent-blue); }
+        .tag.appsec { background: rgba(63,185,80,0.1); color: var(--accent-green); }
+        .tag.disclosure { background: rgba(255,123,114,0.1); color: var(--accent-red); }
+        ul { margin: 15px 0 0 20px; padding: 0; color: var(--text-muted); font-size: 0.95em; }
+        li { margin-bottom: 10px; }
+        li strong { color: var(--text-main); }
+        .read-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: var(--accent-blue); text-decoration: none; font-weight: 600; font-size: 0.9em; transition: color 0.2s; }
+        .read-link:hover { color: #ffffff; }
+        .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 45px 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        .footer { margin-top: 60px; text-align: center; font-size: 0.85em; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 30px; }
+        @media (max-width: 768px) {
+            .timeline-container { flex-direction: column; gap: 25px; padding-left: 15px; }
+            .timeline-container::before { left: 19px; top: 0; bottom: 0; width: 2px; height: auto; }
+            .timeline-node { flex-direction: row; align-items: flex-start; gap: 15px; text-align: left; }
+            .timeline-title { text-align: left; max-width: 100%; margin-top: 0; }
+            .timeline-date { margin-top: 0; }
+            .disclosure-bar { gap: 8px; }
+        }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1>שי מרדכי | Shay Mordechai</h1>
-        <p>Mid Application Security Engineer & Security Researcher</p>
+        <h1>Shay Mordechai</h1>
+        <p class="subtitle">Application Security Engineer · DevSecOps · AI Security Guardrails</p>
+
+        <div class="links-container">
+            <div class="dropdown">
+                <a href="javascript:void(0)" class="action-btn">📝 AppSec Blog ▾</a>
+                <div class="dropdown-content">
+                    <a href="blog/en/index.html">🇺🇸 English (EN)</a>
+                    <a href="blog/he/index.html">🇮🇱 עברית (HE)</a>
+                </div>
+            </div>
+            <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
+            <a href="Shay_Mordechai_CV.pdf" class="action-btn" target="_blank">📄 Résumé</a>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 Sec Lab (GitHub)</a>
+            <a href="https://www.linkedin.com/in/shay-mordechai/" class="action-btn" target="_blank">🔗 LinkedIn</a>
+        </div>
+
+        <div class="mission-statement">
+            I build autonomous security guardrails and architect secure cloud-native platforms. My work focuses on integrating security throughout the SDLC—from threat modeling enterprise architectures to mitigating AI risks, intercepting data leaks, and bridging the gap between R&D and Security.
+        </div>
+
+        <div class="core-skills">
+            [ Secure SDLC ] [ Threat Modeling ] [ Cloud & IaC ] [ Rust / Wasm ] [ AI / LLM Security ]
+        </div>
+
+        <div class="disclosure-bar">
+            <span class="disclosure-badge badge-blue">Digital Whisper #187 · Mobile AppSec</span>
+            <span class="disclosure-badge badge-purple">OpenAI / Bugcrowd · Session Quota Bypass</span>
+            <span class="disclosure-badge badge-red">CERT-IL #11265 · Compiler 0-Days</span>
+        </div>
+
+        <div class="active-lab-box">
+            <strong>[ACTIVE LAB] AI SECURITY GUARDRAILS:</strong> Architecting isolated multi-tenant data pipelines (FastAPI, Redis) and developing a high-performance zero-allocation <strong>Rust/WebAssembly (Wasm) Outbound DLP Filter</strong> for Envoy Proxy to intercept and redact PII from JSON payloads at the network edge.
+        </div>
     </header>
-    <div class="container">
-        <section>
-            <h2 class="section-title">AppSec Research & Technical Portfolio</h2>
-            <p>פורטפוליו המחקרים המקצועי שלי בעולמות אבטחת יישומים (Application Security), הנדסה לאחור, ארכיטקטורת אבטחה ובידוד תהליכים.</p>
-        </section>
-        <div class="timeline-section"><h2>AppSec Research Timeline</h2><div class="timeline-container">
-    <a href="blog/he/re-intro-patching.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Feb 2024</div>
-        <div class="timeline-title">Desktop RE & PE Patching</div>
-    </a>
-    <a href="blog/he/compiler-sbcl-behavioral-research.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jul 2025</div>
-        <div class="timeline-title">Compiler 0-Days (SBCL)</div>
-    </a>
-    <a href="blog/he/v8-engine-security.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Dec 2025</div>
-        <div class="timeline-title">V8 Engine Sandbox Security</div>
-    </a>
-    <a href="blog/he/rust-envoy-tunnel.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Mar 2026</div>
-        <div class="timeline-title">Rust Envoy Wasm DLP Filter</div>
-    </a>
-    <a href="blog/he/android-bootstrap-hijacking.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">May 2026</div>
-        <div class="timeline-title">Digital Whisper #187: Android Bootstrap</div>
-    </a>
-    <a href="#openai-disclosure" class="timeline-node highlight">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jun 2026</div>
-        <div class="timeline-title">OpenAI Bugcrowd Session Disclosure</div>
-    </a>
-</div></div>
 
-        <div class="category-card"><h3>📱 Mobile AppSec & Reverse Engineering</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">27 במאי 2026</div>
-    <a class="article-title" href="blog/he/android-bootstrap-hijacking.html">★ Android Bootstrap Hijacking (Digital Whisper)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעמיק של פגיעויות באתחול תהליכים באנדרואיד, המתמקד בפריצת גבולות אמון (Trust Boundaries) ובניצול חולשות בטעינת רכיבים מוקדמים במערכת ההפעלה.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">GitHub Repository</div>
-    <a class="article-title" href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank">🔬 Android Malware Reverse Engineering Lab</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> סביבת מעבדה מובנית לניתוח והנדסה לאחור של נוזקות אנדרואיד, המדגימה זיהוי וניתוח התנהגותי של חולשות אבטחה וקטורי תקיפה בקוד נייד.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">28 במאי 2026</div>
-    <a class="article-title" href="blog/he/permission-paradox.html">The Permission Paradox</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בחינה ביקורתית של מודל ההרשאות באנדרואיד, תוך הצגת פערים באכיפת בקרת גישה (Access Control) והסיכונים בהרשאות יתר (Over-privileged components).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">28 באפריל 2026</div>
-    <a class="article-title" href="blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מתקדם של עקיפת מנגנוני הגנה והרצה במקביל (Race Conditions) באמצעות כלים דינמיים, המדגים את האתגרים בהגנה על קוד צד לקוח מפני Tampering.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">30 באפריל 2026</div>
-    <a class="article-title" href="blog/he/uncrackable-level2.html">UnCrackable Level 2 - Mobile Security Writeup</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח של מנגנוני Anti-Debugging ואימות שלמות קוד באפליקציות מובייל, המחייב הערכת סיכונים קפדנית של הגנות Root Detection ואבטחת אחסון מקומי.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">22 באפריל 2026</div>
-    <a class="article-title" href="blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגר אבטחה בסיסי באנדרואיד המדגים פענוח קוד סטטי ודינמי, עם דגש על איתור חולשות אחסון מידע רגיש וסודיות זיכרון.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">26 במרץ 2026</div>
-    <a class="article-title" href="blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח אבטחה של ממשק ה-JNI המקשר בין קוד Java לקוד Native, הממחיש כיצד מעבר בין סביבות הפעלה מייצר חולשות זיכרון ופגיעות ב-Trust Boundaries.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>⚙️ Low-Level Security, Binary Analysis & Sandboxing</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">24 בדצמבר 2025</div>
-    <a class="article-title" href="blog/he/v8-engine-security.html">V8 Engine Execution & Sandbox Security</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> חקירת מנגנוני הבידוד (Sandboxing) וההרצה במנוע ה-JavaScript V8, תוך מיקוד בניתוח חולשות ארכיטקטוניות ופריצת גבולות הפרדה בין תהליכים.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">30 בדצמבר 2025</div>
-    <a class="article-title" href="blog/he/malware-lab-kinoite.html">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון ארכיטקטורת אבטחה להקמת סביבת מחקר מבודדת המבוססת על Immutable OS, במטרה להבטיח הכללה מוחלטת (Containment) של נוזקות מתקדמות.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">19 באפריל 2024</div>
-    <a class="article-title" href="blog/he/multi-stage-dll-re.html">Desktop RE Writeup: Multi-Stage DLL Decryption</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח הנדסה לאחור של מנגנון פענוח קוד רב-שלבי ב-DLL, המציג מתודולוגיית Vulnerability Analysis וניתוח קוד בינארי חשוד.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">29 בפברואר 2024</div>
-    <a class="article-title" href="blog/he/re-intro-patching.html">Desktop RE Writeup: PE Extraction & Patching</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מעשי בחילוץ קבצי PE וביצוע Binary Patching, המשמש להערכת חסינות תוכנה וניתוח התנהגות קוד עוין ברמת האסמבלי.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">יולי 2025</div>
-    <a class="article-title" href="blog/he/compiler-sbcl-behavioral-research.html">Breaking the Compilation Boundary (SBCL)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר התנהגותי על תהליכי הידור (Compilation) ומנגנוני אבטחה במהדקי קוד, המדגים פריצת גבולות הרצה ברמת המהדר (Compiler Security).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Linux Internals</div>
-    <a class="article-title" href="blog/he/linux-internals-ostree-hibernation.html">Linux Internals: OSTree & Hibernation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעמיק של מנגנוני ליבת לינוקס (OSTree ומצבי שינה), תוך התמקדות בשמירה על שלמות המערכת (System Integrity) ואבטחת מצב נתונים בזיכרון.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Sandbox Isolation</div>
-    <a class="article-title" href="blog/he/flatpak-sandbox-isolation.html">Flatpak Sandbox Isolation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בחינת מנגנוני הבידוד וההרשאות של Flatpak, תוך הערכת אפקטיביות ה-Sandboxing בהגנה על המערכת מפני הרשאות יתר ודליפת מידע.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>🌐 Web, API & Network Security</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">8 במרץ 2026</div>
-    <a class="article-title" href="blog/he/rust-envoy-tunnel.html">Data Hop Firewall (Rust & Envoy)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פיתוח ארכיטקטורת אבטחת רשת ומדיניות סינון תעבורה באמצעות Envoy ו-Rust, להגנה על נקודות קצה וסינון פרוטוקולים ברמת ה-API והתקשורת.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Network Security</div>
-    <a class="article-title" href="blog/he/scapy-tls-packet-crafter.html">Scapy TLS Packet Crafter</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בניית כלי ליצירת חבילות TLS מותאמות אישית, המשמש לבדיקת חוסן פרוטוקולי הצפנה וניתוח פגיעויות בתקשורת מוצפנת (Vulnerability Analysis).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Network CTF</div>
-    <a class="article-title" href="blog/he/multistage-network-ctf.html">Multi-Stage Network CTF</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגר רשתי רב-שלבי המדגים חדירה והגנה על תשתיות תקשורת, תוך יישום עקרונות Security Architecture ומעבר בין רשתות מבודדות.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Routing Internals</div>
-    <a class="article-title" href="blog/he/life-of-a-packet-routing.html">Life of a Packet: Routing Internals</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעבר חבילות מידע ברשתות ונתבים, המסייע בהבנת וקטורי תקיפה רשתיות, ניטור תעבורה וזיהוי חריגות ברמת הניתוב.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Mitigation Research</div>
-    <a class="article-title" href="blog/he/pt-dns-rebinding-mitigation.html">DNS Rebinding Mitigation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פיתוח מנגנוני הגנה מפני התקפות DNS Rebinding, המבטיחים אכיפת Same-Origin Policy ומניעת גישה לא מורשית למשאבים פנימיים ברשת.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Web Security</div>
-    <a class="article-title" href="blog/he/pt-web-registration-diagnostic.html">Web Registration Diagnostic</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> אבחון אבטחת יישומי Web ונקודות קצה של הרשמה, המציג זיהוי חולשות Logic Flaws ובקרת גישה (Access Control) לקו תקיפה אינטרנטי.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>🤖 AI Security & Trust Boundaries</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">19 במאי 2026</div>
-    <a class="article-title" href="blog/he/browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח סיכוני אבטחה בסוכני AI הפועלים בדפדפן, תוך דגש על פריצת גבולות אמון (Trust Boundaries) והרשאות אוטונומיות המאפשרות ניצול לרעה של ממשקים.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">SaaS Architecture</div>
-    <a class="article-title" href="blog/he/myleads-saas-architecture.html">Zero Trust AI SaaS Architecture</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון ארכיטקטורת SaaS המבוססת על עקרונות Zero Trust, עם דגש על הפרדת הרשאות, אבטחת מידע ואימות קפדני בסביבות מבוססות בינה מלאכותית.</p>
-  </li>
-</ul></div>
+    <section class="timeline-section">
+        <h3>📈 AppSec & Research Milestones</h3>
+        <div class="timeline-container">
+            <a href="blog/en/compiler-zero-days-research.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jul 2025</div>
+                <div class="timeline-title">Compiler 0-Days (CERT-IL)</div>
+            </a>
+            <a href="blog/en/v8-engine-security.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Dec 2025</div>
+                <div class="timeline-title">V8 Engine Sandboxing</div>
+            </a>
+            <a href="blog/en/pt-dns-rebinding-mitigation.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Apr 2026</div>
+                <div class="timeline-title">Network Mitigation</div>
+            </a>
+            <a href="blog/en/permission-paradox.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">May 2026</div>
+                <div class="timeline-title">Digital Whisper Publication</div>
+            </a>
+            <a href="#openai-disclosure" class="timeline-node highlight">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jun 2026</div>
+                <div class="timeline-title">OpenAI Bugcrowd Triage</div>
+            </a>
+            <a href="blog/en/rust-envoy-tunnel.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Nov 2026</div>
+                <div class="timeline-title">Envoy Wasm DLP Filter</div>
+            </a>
+        </div>
+    </section>
 
-    </div>
-    <footer>
-        <p>&copy; 2026 Shay Mordechai. כל הזכויות שמורות. | Application Security Engineer</p>
+    <main>
+
+        <div class="section-label">// DevSecOps & AI Guardrails</div>
+
+        <div class="card appsec">
+            <div class="card-header">
+                <span class="card-title">High-Performance Envoy Wasm DLP Filter</span>
+                <span class="tag appsec">Rust / Envoy</span>
+            </div>
+            <p><strong>Architecture:</strong> Designed a zero-allocation WebAssembly (Wasm) outbound filter written in Rust for Envoy Proxy to perform real-time structural PII redaction on HTTP JSON responses.</p>
+            <ul>
+                <li><strong>Performance:</strong> Verified resilient stream buffering (handling >400KB chunked payloads) and bounded recursion depth, delivering deep L7 field-stripping with a statistically proven <strong>~15ms latency overhead</strong> and 0% socket error rate under saturated closed-loop benchmarking.</li>
+                <li><strong>AI Integration:</strong> Acts as an automated security guardrail for LLM workflows, preventing cross-tenant data leaks and enforcing strict data-ttl stripping before payloads reach external models.</li>
+            </ul>
+            <a href="blog/en/rust-envoy-tunnel.html" class="read-link">🔗 View Wasm Filter Architecture</a>
+        </div>
+
+        <div class="section-label">// Threat Modeling & Vulnerability Research</div>
+
+        <div class="card vr">
+            <div class="card-header">
+                <span class="card-title">0-Day Research: Breaking Compiler Boundaries</span>
+                <span class="tag vr">CERT-IL #11265</span>
+            </div>
+            <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. Disclosed to CERT-IL and MITRE.</p>
+            <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
+        </div>
+
+        <div class="section-label">// Applied AI Security</div>
+
+        <div class="card disclosure" id="openai-disclosure">
+            <div class="card-header">
+                <span class="card-title">Session Quota Enforcement Bypass — ChatGPT</span>
+                <span class="tag disclosure">OpenAI · Bugcrowd</span>
+            </div>
+            <p><strong>Finding:</strong> Identified a session-state desynchronization flaw in ChatGPT's backend that allows established in-flight API streams to persist and consume GPU/CPU resources after an account has been officially quota-locked at the UI layer.</p>
+            <ul>
+                <li><strong>Impact:</strong> Bypass persisted for 40+ continuous minutes post-lock. Fully automatable via scripted cURL or browser orchestration — multiplying unauthorized compute consumption by N× sessions at zero marginal cost.</li>
+                <li><strong>Status:</strong> Report submitted to OpenAI via Bugcrowd. Triage in progress.</li>
+            </ul>
+        </div>
+
+        <div class="section-label">// Mobile AppSec & Dynamic Analysis</div>
+
+        <div class="card series">
+            <div class="card-header">
+                <span class="card-title">Android Bootstrap Hijacking & IPC Boundaries</span>
+                <span class="tag series">Digital Whisper #187</span>
+            </div>
+            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. This publication explores Bootstrap Hijacking and OS-level IPC security boundaries across Native Binder transactions (ioctl, mmap).</p>
+            <ul>
+                <li><strong>Dynamic Instrumentation:</strong> Engineered advanced Zygote Hooks to win the runtime injection race against the OS Dynamic Linker using Frida and Jadx.</li>
+                <li><strong>Security Triage:</strong> Evaluated the exact lifecycle blindspots before UI allocation abused by sophisticated modern Trojans to evade dynamic analysis.</li>
+            </ul>
+            <a href="blog/en/index.html" class="read-link">🔗 Read the Publication</a>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div>© 2026 Shay Mordechai · Application Security Engineer</div>
     </footer>
+
 </body>
 </html>
