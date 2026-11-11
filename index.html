@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="Shay Mordechai | Android Malware Researcher">
-    <meta property="og:description" content="Malware Researcher specializing in Android internals, reverse engineering, and AI Security. Published researcher and tool developer.">
-    <title>Shay Mordechai | Android Malware Researcher</title>
+    <meta property="og:title" content="Shay Mordechai | Application Security Engineer">
+    <meta property="og:description" content="Application Security Engineer specializing in Secure SDLC, AI Guardrails, and Vulnerability Research. Disclosed 0-days to CERT-IL.">
+    <title>Shay Mordechai | Application Security Engineer</title>
     <link rel="icon" href="https://fav.farm/🛡️">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
@@ -98,11 +98,11 @@
 
     <header>
         <h1>Shay Mordechai</h1>
-        <p class="subtitle">Android Malware Researcher · Reverse Engineer · AI Security</p>
+        <p class="subtitle">Application Security Engineer · DevSecOps · AI Security Guardrails</p>
 
         <div class="links-container">
             <div class="dropdown">
-                <a href="javascript:void(0)" class="action-btn">📝 Research Blog ▾</a>
+                <a href="javascript:void(0)" class="action-btn">📝 AppSec Blog ▾</a>
                 <div class="dropdown-content">
                     <a href="blog/en/index.html">🇺🇸 English (EN)</a>
                     <a href="blog/he/index.html">🇮🇱 עברית (HE)</a>
@@ -110,93 +110,94 @@
             </div>
             <a href="mailto:shay.mordechai@proton.me" class="action-btn">📧 Contact</a>
             <a href="Shay_Mordechai_CV.pdf" class="action-btn" target="_blank">📄 Résumé</a>
-            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 Malware Lab (GitHub)</a>
+            <a href="https://github.com/shay-mordechai/malware-reversing-labs" class="action-btn" target="_blank">📂 Sec Lab (GitHub)</a>
             <a href="https://www.linkedin.com/in/shay-mordechai/" class="action-btn" target="_blank">🔗 LinkedIn</a>
         </div>
 
         <div class="mission-statement">
-            I reverse engineer Android malware to understand how modern threats evade analysis, execute before application initialization, and abuse operating system internals. I investigate where security assumptions break—across OS boundaries and AI systems.
+            I build autonomous security guardrails and architect secure cloud-native platforms. My work focuses on integrating security throughout the SDLC—from threat modeling enterprise architectures to mitigating AI risks, intercepting data leaks, and bridging the gap between R&D and Security.
         </div>
 
         <div class="core-skills">
-            [ Malware Analysis ] [ Reverse Engineering ] [ Android Internals ] [ Frida / DBI ] [ AI Security ]
+            [ Secure SDLC ] [ Threat Modeling ] [ Cloud & IaC ] [ Rust / Wasm ] [ AI / LLM Security ]
         </div>
 
         <div class="disclosure-bar">
-            <span class="disclosure-badge badge-blue">Digital Whisper #187 · Android Malware</span>
+            <span class="disclosure-badge badge-blue">Digital Whisper #187 · Mobile AppSec</span>
             <span class="disclosure-badge badge-purple">OpenAI / Bugcrowd · Session Quota Bypass</span>
             <span class="disclosure-badge badge-red">CERT-IL #11265 · Compiler 0-Days</span>
         </div>
 
         <div class="active-lab-box">
-            <strong>[ACTIVE LAB] CURRENT RESEARCH:</strong> Reverse-engineering <code>libbinder.so</code> (ARM64) extracted from a physical Samsung S20 to analyze <code>/dev/binder</code> ioctl transaction flows, investigating the structural boundaries of UI allocation during the application bootstrap and how early-stage malware hooks these processes.
+            <strong>[ACTIVE LAB] AI SECURITY GUARDRAILS:</strong> Architecting isolated multi-tenant data pipelines (FastAPI, Redis) and developing a high-performance zero-allocation <strong>Rust/WebAssembly (Wasm) Outbound DLP Filter</strong> for Envoy Proxy to intercept and redact PII from JSON payloads at the network edge.
         </div>
     </header>
 
     <section class="timeline-section">
-        <h3>📈 Research Evolution & Milestones</h3>
+        <h3>📈 AppSec & Research Milestones</h3>
         <div class="timeline-container">
-            <a href="blog/en/re-intro-patching.html" class="timeline-node">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">Feb 2024</div>
-                <div class="timeline-title">Desktop RE</div>
-            </a>
             <a href="blog/en/compiler-zero-days-research.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Jul 2025</div>
-                <div class="timeline-title">Compiler 0-Days</div>
+                <div class="timeline-title">Compiler 0-Days (CERT-IL)</div>
             </a>
             <a href="blog/en/v8-engine-security.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Dec 2025</div>
-                <div class="timeline-title">V8 Engine Security</div>
+                <div class="timeline-title">V8 Engine Sandboxing</div>
             </a>
             <a href="blog/en/pt-dns-rebinding-mitigation.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Apr 2026</div>
-                <div class="timeline-title">LANjack Mitigation</div>
+                <div class="timeline-title">Network Mitigation</div>
             </a>
             <a href="blog/en/permission-paradox.html" class="timeline-node">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">May 2026</div>
-                <div class="timeline-title">Android Bootstrap Hijacking</div>
+                <div class="timeline-title">Digital Whisper Publication</div>
             </a>
             <a href="#openai-disclosure" class="timeline-node highlight">
                 <div class="timeline-dot"></div>
                 <div class="timeline-date">Jun 2026</div>
-                <div class="timeline-title">OpenAI Disclosure</div>
+                <div class="timeline-title">OpenAI Bugcrowd Triage</div>
+            </a>
+            <a href="blog/en/rust-envoy-tunnel.html" class="timeline-node">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Nov 2026</div>
+                <div class="timeline-title">Envoy Wasm DLP Filter</div>
             </a>
         </div>
     </section>
 
     <main>
 
-        <div class="section-label">// Active Research & Malware Analysis</div>
+        <div class="section-label">// DevSecOps & AI Guardrails</div>
 
-        <div class="card series">
+        <div class="card appsec">
             <div class="card-header">
-                <span class="card-title">Featured Publication: Android Bootstrap Hijacking</span>
-                <span class="tag series">Digital Whisper</span>
+                <span class="card-title">High-Performance Envoy Wasm DLP Filter</span>
+                <span class="tag appsec">Rust / Envoy</span>
             </div>
-            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. But what happens if malware injects itself into the <code>Zygote</code> process before the UI is even allocated? This research explores Bootstrap Hijacking, analyzing the precise timing races between OS initialization and dynamic analysis tools like Frida.</p>
-            <p style="color: var(--text-muted); font-size: 0.95em; margin-top: 15px;"><em>Focuses on advanced evasion techniques used by modern Android Banking Trojans and the abuse of <code>attachBaseContext()</code>.</em></p>
-            <a href="blog/en/index.html" class="read-link">🔗 Read the Publication</a>
-        </div>
-
-        <div class="card internals">
-            <div class="card-header">
-                <span class="card-title">Android Internals & Mobile Reverse Engineering Lab</span>
-                <span class="tag internals">Dynamic Instrumentation</span>
-            </div>
+            <p><strong>Architecture:</strong> Designed a zero-allocation WebAssembly (Wasm) outbound filter written in Rust for Envoy Proxy to perform real-time structural PII redaction on HTTP JSON responses.</p>
             <ul>
-                <li><strong>Banking Trojans (Anatsa 2024):</strong> Mapped the Android boot chain to analyze early payload unpacking techniques exploiting the lifecycle blindspot before UI allocation.</li>
-                <li><strong>Dynamic Binary Instrumentation:</strong> Defeating root detection, ptrace anti-debugging, and strict SSL pinning using custom Frida scripts.</li>
-                <li><strong>Timing Races:</strong> Engineered advanced Zygote Hooks and Spawn techniques to win the runtime injection race against the OS Dynamic Linker.</li>
+                <li><strong>Performance:</strong> Verified resilient stream buffering (handling >400KB chunked payloads) and bounded recursion depth, delivering deep L7 field-stripping with a statistically proven <strong>~15ms latency overhead</strong> and 0% socket error rate under saturated closed-loop benchmarking.</li>
+                <li><strong>AI Integration:</strong> Acts as an automated security guardrail for LLM workflows, preventing cross-tenant data leaks and enforcing strict data-ttl stripping before payloads reach external models.</li>
             </ul>
-            <a href="https://github.com/shay-mordechai/malware-reversing-labs/tree/main" target="_blank" class="read-link">📖 View Mobile Reverse Engineering Labs on GitHub</a>
+            <a href="blog/en/rust-envoy-tunnel.html" class="read-link">🔗 View Wasm Filter Architecture</a>
         </div>
 
-        <div class="section-label">// AI Security & Responsible Disclosure</div>
+        <div class="section-label">// Threat Modeling & Vulnerability Research</div>
+
+        <div class="card vr">
+            <div class="card-header">
+                <span class="card-title">0-Day Research: Breaking Compiler Boundaries</span>
+                <span class="tag vr">CERT-IL #11265</span>
+            </div>
+            <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. Disclosed to CERT-IL and MITRE.</p>
+            <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
+        </div>
+
+        <div class="section-label">// Applied AI Security</div>
 
         <div class="card disclosure" id="openai-disclosure">
             <div class="card-header">
@@ -210,35 +211,25 @@
             </ul>
         </div>
 
-        <div class="section-label">// Vulnerability Research</div>
+        <div class="section-label">// Mobile AppSec & Dynamic Analysis</div>
 
-        <div class="card vr">
+        <div class="card series">
             <div class="card-header">
-                <span class="card-title">0-Day Research: Breaking Compiler Boundaries</span>
-                <span class="tag vr">CERT-IL #11265</span>
+                <span class="card-title">Android Bootstrap Hijacking & IPC Boundaries</span>
+                <span class="tag series">Digital Whisper #187</span>
             </div>
-            <p><strong>Abstract:</strong> A deep dive into the underlying logic of compilation pipelines. Utilizing AI-augmented semantic fuzzing, this research exposed critical scope isolation anomalies and memory crash conditions within the SBCL compiler. Disclosed to CERT-IL and MITRE.</p>
-            <a href="blog/en/compiler-zero-days-research.html" class="read-link">🔬 View Compiler Fuzzing Showcase</a>
-        </div>
-
-        <div class="section-label">// Infrastructure & Diagnostics</div>
-
-        <div class="card appsec">
-            <div class="card-header">
-                <span class="card-title">Secure AI SaaS Architecture & Diagnostics</span>
-                <span class="tag appsec">Architecture</span>
-            </div>
-            <p>Built experimental workflows and secure infrastructure designs emphasizing zero-trust and execution isolation.</p>
+            <p><strong>Abstract:</strong> The Android security model assumes applications behave predictably once the framework loads. This publication explores Bootstrap Hijacking and OS-level IPC security boundaries across Native Binder transactions (ioctl, mmap).</p>
             <ul>
-                <li><strong>WASM DLP Firewall:</strong> Custom Rust filter inside Envoy Proxy intercepting 5xx responses and stripping stack traces (CWE-209).</li>
-                <li><strong>AWS Resource Exhaustion Triage:</strong> RCA on a cascading Podman failure triggering an OOM-Killer event and 20,000 KMS/STS API calls via an infinite restart loop.</li>
+                <li><strong>Dynamic Instrumentation:</strong> Engineered advanced Zygote Hooks to win the runtime injection race against the OS Dynamic Linker using Frida and Jadx.</li>
+                <li><strong>Security Triage:</strong> Evaluated the exact lifecycle blindspots before UI allocation abused by sophisticated modern Trojans to evade dynamic analysis.</li>
             </ul>
+            <a href="blog/en/index.html" class="read-link">🔗 Read the Publication</a>
         </div>
 
     </main>
 
     <footer class="footer">
-        <div>© 2026 Shay Mordechai · Malware Researcher</div>
+        <div>© 2026 Shay Mordechai · Application Security Engineer</div>
     </footer>
 
 </body>
