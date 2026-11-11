@@ -3,202 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שי מרדכי | פורטפוליו מחקרי אבטחה (AppSec)</title>
+    <title>Shay Mordechai | Mid AppSec Engineer & Security Researcher</title>
     <style>
-:root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --text-muted: #94a3b8; --accent-color: #38bdf8; --border-color: #334155; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 0; }
-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border-color); padding: 3rem 1rem; text-align: center; }
-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--accent-color); }
-header p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
-.container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
-.section-title { font-size: 1.8rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--accent-color); }
-.category-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-.category-card h3 { margin-top: 0; font-size: 1.4rem; color: #f1f5f9; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
-.article-list { list-style: none; padding: 0; margin: 0; }
-.article-item { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); }
-.article-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.article-title { font-size: 1.1rem; font-weight: bold; color: var(--accent-color); text-decoration: none; }
-.article-title:hover { text-decoration: underline; }
-.article-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem; }
-.article-summary { font-size: 0.95rem; color: var(--text-color); margin: 0; }
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --text-muted: #94a3b8; --accent-color: #38bdf8; --border-color: #334155; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 0; }
+        header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border-color); padding: 3rem 1rem; text-align: center; }
+        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--accent-color); }
+        header p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
+        .section-title { font-size: 1.8rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--accent-color); }
+        .category-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .category-card h3 { margin-top: 0; font-size: 1.4rem; color: #f1f5f9; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+        .article-list { list-style: none; padding: 0; margin: 0; }
+        .article-item { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); }
+        .article-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .article-title { font-size: 1.1rem; font-weight: bold; color: var(--accent-color); text-decoration: none; }
+        .article-title:hover { text-decoration: underline; }
+        .article-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .article-summary { font-size: 0.95rem; color: var(--text-color); margin: 0; }
 
-.timeline-section { margin: 2.5rem 0; padding: 1.5rem; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; }
-.timeline-section h2 { margin-top: 0; font-size: 1.4rem; color: var(--accent-color); margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
-.timeline-container { display: flex; overflow-x: auto; gap: 1rem; padding: 0.5rem 0 1rem 0; scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--border-color); }
-.timeline-node { flex: 0 0 190px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-decoration: none; color: var(--text-color); transition: transform 0.2s ease, border-color 0.2s ease; position: relative; display: block; }
-.timeline-node:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-.timeline-node.highlight { border-color: var(--accent-color); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
-.timeline-dot { width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; margin-bottom: 0.6rem; box-shadow: 0 0 6px var(--accent-color); }
-.timeline-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600; }
-.timeline-title { font-size: 0.9rem; font-weight: bold; color: var(--text-color); line-height: 1.35; }
-footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 4rem; font-size: 0.9rem; }
-</style>
+        .timeline-section { margin: 2.5rem 0; padding: 1.5rem; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; }
+        .timeline-section h2 { margin-top: 0; font-size: 1.4rem; color: var(--accent-color); margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .timeline-container { display: flex; overflow-x: auto; gap: 1rem; padding: 0.5rem 0 1rem 0; scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--border-color); }
+        .timeline-node { flex: 0 0 190px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-decoration: none; color: var(--text-color); transition: transform 0.2s ease, border-color 0.2s ease; position: relative; display: block; }
+        .timeline-node:hover { transform: translateY(-3px); border-color: var(--accent-color); }
+        .timeline-node.highlight { border-color: var(--accent-color); background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
+        .timeline-dot { width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; margin-bottom: 0.6rem; box-shadow: 0 0 6px var(--accent-color); }
+        .timeline-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600; }
+        .timeline-title { font-size: 0.9rem; font-weight: bold; color: var(--text-color); line-height: 1.35; }
+        footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 4rem; font-size: 0.9rem; }
+    </style>
 </head>
 <body>
     <header>
         <h1>שי מרדכי | Shay Mordechai</h1>
-        <p>Senior Application Security (AppSec) Engineer & Security Researcher</p>
+        <p>Mid Application Security Engineer & Security Researcher</p>
     </header>
+    
     <div class="container">
         <section>
             <h2 class="section-title">AppSec Research & Technical Portfolio</h2>
             <p>פורטפוליו המחקרים המקצועי שלי בעולמות אבטחת יישומים (Application Security), הנדסה לאחור, ארכיטקטורת אבטחה ובידוד תהליכים.</p>
         </section>
-        <div class="timeline-section"><h2>ציר זמן מחקרי אבטחה</h2><div class="timeline-container">
-    <a href="blog/he/re-intro-patching.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">פברואר 2024</div>
-        <div class="timeline-title">הנדסה לאחור ו-Patching לבינאריים</div>
-    </a>
-    <a href="blog/he/compiler-sbcl-behavioral-research.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">יולי 2025</div>
-        <div class="timeline-title">מחקר הידור ופריצת גבולות (SBCL)</div>
-    </a>
-    <a href="blog/he/v8-engine-security.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">דצמבר 2025</div>
-        <div class="timeline-title">אבטחה ובידוד מנוע V8</div>
-    </a>
-    <a href="blog/he/rust-envoy-tunnel.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">מרץ 2026</div>
-        <div class="timeline-title">פילטר Wasm ל-Envoy ב-Rust</div>
-    </a>
-    <a href="blog/he/android-bootstrap-hijacking.html" class="timeline-node">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">מאי 2026</div>
-        <div class="timeline-title">Digital Whisper #187: חטיפת אתחול באנדרואיד</div>
-    </a>
-    <a href="#openai-disclosure" class="timeline-node highlight">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">יוני 2026</div>
-        <div class="timeline-title">חשיפת חולשת Session Quota ב-OpenAI</div>
-    </a>
-</div></div>
+        
+        <div class="timeline-section">
+            <h2>AppSec Research Timeline</h2>
+            <div class="timeline-container">
+                <a href="blog/he/re-intro-patching.html" class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Feb 2024</div>
+                    <div class="timeline-title">Desktop RE & PE Patching</div>
+                </a>
+                <a href="blog/he/compiler-sbcl-behavioral-research.html" class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Jul 2025</div>
+                    <div class="timeline-title">Compiler 0-Days (SBCL)</div>
+                </a>
+                <a href="blog/he/v8-engine-security.html" class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Dec 2025</div>
+                    <div class="timeline-title">V8 Engine Sandbox Security</div>
+                </a>
+                <a href="blog/he/rust-envoy-tunnel.html" class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Mar 2026</div>
+                    <div class="timeline-title">Rust Envoy Wasm DLP Filter</div>
+                </a>
+                <a href="blog/he/android-bootstrap-hijacking.html" class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">May 2026</div>
+                    <div class="timeline-title">Digital Whisper #187: Android Bootstrap</div>
+                </a>
+                <a href="#openai-disclosure" class="timeline-node highlight">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Jun 2026</div>
+                    <div class="timeline-title">OpenAI Bugcrowd Session Disclosure</div>
+                </a>
+            </div>
+        </div>
 
-        <div class="category-card"><h3>📱 Mobile AppSec & Reverse Engineering</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">27 במאי 2026</div>
-    <a class="article-title" href="blog/he/android-bootstrap-hijacking.html">★ Android Bootstrap Hijacking (Digital Whisper)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעמיק של פגיעויות באתחול תהליכים באנדרואיד, המתמקד בפריצת גבולות אמון (Trust Boundaries) ובניצול חולשות בטעינת רכיבים מוקדמים במערכת ההפעלה.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">GitHub Repository</div>
-    <a class="article-title" href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank">🔬 Android Malware Reverse Engineering Lab</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> סביבת מעבדה מובנית לניתוח והנדסה לאחור של נוזקות אנדרואיד, המדגימה זיהוי וניתוח התנהגותי של חולשות אבטחה וקטורי תקיפה בקוד נייד.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">28 במאי 2026</div>
-    <a class="article-title" href="blog/he/permission-paradox.html">The Permission Paradox</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בחינה ביקורתית של מודל ההרשאות באנדרואיד, תוך הצגת פערים באכיפת בקרת גישה (Access Control) והסיכונים בהרשאות יתר (Over-privileged components).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">28 באפריל 2026</div>
-    <a class="article-title" href="blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מתקדם של עקיפת מנגנוני הגנה והרצה במקביל (Race Conditions) באמצעות כלים דינמיים, המדגים את האתגרים בהגנה על קוד צד לקוח מפני Tampering.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">30 באפריל 2026</div>
-    <a class="article-title" href="blog/he/uncrackable-level2.html">UnCrackable Level 2 - Mobile Security Writeup</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח של מנגנוני Anti-Debugging ואימות שלמות קוד באפליקציות מובייל, המחייב הערכת סיכונים קפדנית של הגנות Root Detection ואבטחת אחסון מקומי.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">22 באפריל 2026</div>
-    <a class="article-title" href="blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגר אבטחה בסיסי באנדרואיד המדגים פענוח קוד סטטי ודינמי, עם דגש על איתור חולשות אחסון מידע רגיש וסודיות זיכרון.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">26 במרץ 2026</div>
-    <a class="article-title" href="blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח אבטחה של ממשק ה-JNI המקשר בין קוד Java לקוד Native, הממחיש כיצד מעבר בין סביבות הפעלה מייצר חולשות זיכרון ופגיעות ב-Trust Boundaries.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>⚙️ Low-Level Security, Binary Analysis & Sandboxing</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">24 בדצמבר 2025</div>
-    <a class="article-title" href="blog/he/v8-engine-security.html">V8 Engine Execution & Sandbox Security</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> חקירת מנגנוני הבידוד (Sandboxing) וההרצה במנוע ה-JavaScript V8, תוך מיקוד בניתוח חולשות ארכיטקטוניות ופריצת גבולות הפרדה בין תהליכים.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">30 בדצמבר 2025</div>
-    <a class="article-title" href="blog/he/malware-lab-kinoite.html">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון ארכיטקטורת אבטחה להקמת סביבת מחקר מבודדת המבוססת על Immutable OS, במטרה להבטיח הכללה מוחלטת (Containment) של נוזקות מתקדמות.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">19 באפריל 2024</div>
-    <a class="article-title" href="blog/he/multi-stage-dll-re.html">Desktop RE Writeup: Multi-Stage DLL Decryption</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח הנדסה לאחור של מנגנון פענוח קוד רב-שלבי ב-DLL, המציג מתודולוגיית Vulnerability Analysis וניתוח קוד בינארי חשוד.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">29 בפברואר 2024</div>
-    <a class="article-title" href="blog/he/re-intro-patching.html">Desktop RE Writeup: PE Extraction & Patching</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מעשי בחילוץ קבצי PE וביצוע Binary Patching, המשמש להערכת חסינות תוכנה וניתוח התנהגות קוד עוין ברמת האסמבלי.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">יולי 2025</div>
-    <a class="article-title" href="blog/he/compiler-sbcl-behavioral-research.html">Breaking the Compilation Boundary (SBCL)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר התנהגותי על תהליכי הידור (Compilation) ומנגנוני אבטחה במהדקי קוד, המדגים פריצת גבולות הרצה ברמת המהדר (Compiler Security).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Linux Internals</div>
-    <a class="article-title" href="blog/he/linux-internals-ostree-hibernation.html">Linux Internals: OSTree & Hibernation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעמיק של מנגנוני ליבת לינוקס (OSTree ומצבי שינה), תוך התמקדות בשמירה על שלמות המערכת (System Integrity) ואבטחת מצב נתונים בזיכרון.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Sandbox Isolation</div>
-    <a class="article-title" href="blog/he/flatpak-sandbox-isolation.html">Flatpak Sandbox Isolation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בחינת מנגנוני הבידוד וההרשאות של Flatpak, תוך הערכת אפקטיביות ה-Sandboxing בהגנה על המערכת מפני הרשאות יתר ודליפת מידע.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>🌐 Web, API & Network Security</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">8 במרץ 2026</div>
-    <a class="article-title" href="blog/he/rust-envoy-tunnel.html">Data Hop Firewall (Rust & Envoy)</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פיתוח ארכיטקטורת אבטחת רשת ומדיניות סינון תעבורה באמצעות Envoy ו-Rust, להגנה על נקודות קצה וסינון פרוטוקולים ברמת ה-API והתקשורת.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Network Security</div>
-    <a class="article-title" href="blog/he/scapy-tls-packet-crafter.html">Scapy TLS Packet Crafter</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> בניית כלי ליצירת חבילות TLS מותאמות אישית, המשמש לבדיקת חוסן פרוטוקולי הצפנה וניתוח פגיעויות בתקשורת מוצפנת (Vulnerability Analysis).</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Network CTF</div>
-    <a class="article-title" href="blog/he/multistage-network-ctf.html">Multi-Stage Network CTF</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגר רשתי רב-שלבי המדגים חדירה והגנה על תשתיות תקשורת, תוך יישום עקרונות Security Architecture ומעבר בין רשתות מבודדות.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Routing Internals</div>
-    <a class="article-title" href="blog/he/life-of-a-packet-routing.html">Life of a Packet: Routing Internals</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעבר חבילות מידע ברשתות ונתבים, המסייע בהבנת וקטורי תקיפה רשתיות, ניטור תעבורה וזיהוי חריגות ברמת הניתוב.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Mitigation Research</div>
-    <a class="article-title" href="blog/he/pt-dns-rebinding-mitigation.html">DNS Rebinding Mitigation</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> פיתוח מנגנוני הגנה מפני התקפות DNS Rebinding, המבטיחים אכיפת Same-Origin Policy ומניעת גישה לא מורשית למשאבים פנימיים ברשת.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">Web Security</div>
-    <a class="article-title" href="blog/he/pt-web-registration-diagnostic.html">Web Registration Diagnostic</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> אבחון אבטחת יישומי Web ונקודות קצה של הרשמה, המציג זיהוי חולשות Logic Flaws ובקרת גישה (Access Control) לקו תקיפה אינטרנטי.</p>
-  </li>
-</ul></div>
-<div class="category-card"><h3>🤖 AI Security & Trust Boundaries</h3><ul class="article-list">
-  <li class="article-item">
-    <div class="article-meta">19 במאי 2026</div>
-    <a class="article-title" href="blog/he/browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח סיכוני אבטחה בסוכני AI הפועלים בדפדפן, תוך דגש על פריצת גבולות אמון (Trust Boundaries) והרשאות אוטונומיות המאפשרות ניצול לרעה של ממשקים.</p>
-  </li>
-  <li class="article-item">
-    <div class="article-meta">SaaS Architecture</div>
-    <a class="article-title" href="blog/he/myleads-saas-architecture.html">Zero Trust AI SaaS Architecture</a>
-    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון ארכיטקטורת SaaS המבוססת על עקרונות Zero Trust, עם דגש על הפרדת הרשאות, אבטחת מידע ואימות קפדני בסביבות מבוססות בינה מלאכותית.</p>
-  </li>
-</ul></div>
+        <div class="category-card">
+            <h3>📱 Mobile AppSec & Reverse Engineering</h3>
+            <ul class="article-list">
+                <li class="article-item">
+                    <div class="article-meta">27 במאי 2026</div>
+                    <a class="article-title" href="blog/he/android-bootstrap-hijacking.html">★ Android Bootstrap Hijacking (Digital Whisper)</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מעמיק של חולשות באתחול תהליכים מוקדם (Early Process Initialization), תוך התמקדות בהפרות של גבולות אמון (Trust Boundaries) ופגמים בטעינת רכיבים במערכת ההפעלה.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">GitHub Repository</div>
+                    <a class="article-title" href="https://github.com/shay-mordechai/malware-reversing-labs" target="_blank">🔬 Android Malware Reverse Engineering Lab</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> סביבת מעבדה מובנית להנדסה לאחור של נוזקות אנדרואיד, המדגימה ניתוח התנהגותי (Behavioral Analysis) של איומי מובייל מתקדמים.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">28 במאי 2026</div>
+                    <a class="article-title" href="blog/he/permission-paradox.html">The Permission Paradox</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> הערכה ביקורתית של מודל ההרשאות באנדרואיד, המדגישה פערי בקרת גישה (Access Control) ורכיבים בעלי הרשאות יתר (Over-privileged components).</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">28 באפריל 2026</div>
+                    <a class="article-title" href="blog/he/frida-in-race-level2.html">Frida in Race - UnCrackable Level 2</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מתקדם על עקיפת הגנות Anti-Tampering ותנאי תחרות (Race Conditions) באמצעות תשתיות ניתוח דינמי (Dynamic Instrumentation).</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">30 באפריל 2026</div>
+                    <a class="article-title" href="blog/he/uncrackable-level2.html">UnCrackable Level 2 - Mobile Security Writeup</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מנגנוני Anti-Debugging ובדיקות שלמות קוד (Code Integrity) באפליקציות מובייל, המחייב הערכת סיכונים קפדנית של בקרות זיהוי Root.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">22 באפריל 2026</div>
+                    <a class="article-title" href="blog/he/uncrackable-level1.html">UnCrackable Level 1 - Mobile Security Writeup</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגרי אבטחה בסיסיים באנדרואיד המדגים ניתוח סטטי ודינמי, תוך התמקדות באיתור חולשות אחסון מידע רגיש (Sensitive Storage Flaws).</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">26 במרץ 2026</div>
+                    <a class="article-title" href="blog/he/jni-unsafe-bridge.html">JNI as (Un-)Safe Bridge</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> הערכת אבטחה של ממשק JNI (Java Native Interface), הממחישה סיכוני בטיחות זיכרון (Memory Safety) ופריצת גבולות אמון בקריאות משולבות.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="category-card">
+            <h3>⚙️ Low-Level Security, Binary Analysis & Sandboxing</h3>
+            <ul class="article-list">
+                <li class="article-item">
+                    <div class="article-meta">24 בדצמבר 2025</div>
+                    <a class="article-title" href="blog/he/v8-engine-security.html">V8 Engine Execution & Sandbox Security</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> חקירת מנגנוני הבידוד (Sandboxing) של מנוע V8, מיקוד בניתוח חולשות ארכיטקטוניות ופריצת בידוד תהליכים בזמן ריצה.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">30 בדצמבר 2025</div>
+                    <a class="article-title" href="blog/he/malware-lab-kinoite.html">בניית סביבת Malware Analysis מבודדת עם Fedora Kinoite</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון מעבדת ניתוח נוזקות מאובטחת המבוססת על מערכת הפעלה Immutable (קריאה בלבד) להבטחת הכלה (Containment) מוחלטת ובידוד תהליכים.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">19 באפריל 2024</div>
+                    <a class="article-title" href="blog/he/multi-stage-dll-re.html">Desktop RE Writeup: Multi-Stage DLL Decryption</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> הנדסה לאחור של מנגנוני פענוח קוד (DLL) רב-שלביים, המציגה מתודולוגיות Vulnerability Analysis ובדיקת קבצים בינאריים בזמן הרצה.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">29 בפברואר 2024</div>
+                    <a class="article-title" href="blog/he/re-intro-patching.html">Desktop RE Writeup: PE Extraction & Patching</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר מעשי בחילוץ חתימות PE וביצוע Binary Patching להערכת עמידות תוכנה (Software Resilience) וניתוח התנהגות קוד עוין.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">יולי 2025</div>
+                    <a class="article-title" href="blog/he/compiler-sbcl-behavioral-research.html">Breaking the Compilation Boundary (SBCL)</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> מחקר התנהגותי על תהליכי קומפילציה ובקרות אבטחה ברמת המהדר (Compiler Security), המדגים פריצת גבולות הרצה וסיכוני שרשרת אספקה.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Linux Internals</div>
+                    <a class="article-title" href="blog/he/linux-internals-ostree-hibernation.html">Linux Internals: OSTree & Hibernation</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> צלילה לעומק מנגנוני ליבת לינוקס (OSTree ו-Hibernation), תוך התמקדות בשמירה על שלמות המערכת (System Integrity) ואבטחת נתונים במצב שינה.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Sandbox Isolation</div>
+                    <a class="article-title" href="blog/he/flatpak-sandbox-isolation.html">Flatpak Sandbox Isolation</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> הערכת מנגנוני הבידוד וההרשאות של Flatpak לבחינת אפקטיביות ארכיטקטורת ה-Sandbox כנגד אפליקציות הדורשות הרשאות יתר.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="category-card">
+            <h3>🌐 Web, API & Network Security</h3>
+            <ul class="article-list">
+                <li class="article-item">
+                    <div class="article-meta">8 במרץ 2026</div>
+                    <a class="article-title" href="blog/he/rust-envoy-tunnel.html">Data Hop Firewall (Rust & Envoy)</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> יישום ארכיטקטורת אבטחת רשת ומדיניות בדיקת תעבורה (Traffic Inspection) באמצעות Envoy ו-Rust להגנת נקודות קצה ו-APIs.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Network Security</div>
+                    <a class="article-title" href="blog/he/scapy-tls-packet-crafter.html">Scapy TLS Packet Crafter</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> בניית מחוללי מנות TLS מותאמים אישית לבדיקת עמידות פרוטוקולים קריפטוגרפיים וביצוע ניתוח חולשות ברמת התקשורת.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Network CTF</div>
+                    <a class="article-title" href="blog/he/multistage-network-ctf.html">Multi-Stage Network CTF</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> פתרון אתגרי חדירה רשתיים מרובי-שלבים המדגימים ארכיטקטורת אבטחה ותנועה רוחבית (Lateral Movement) ברשתות מבודדות.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Routing Internals</div>
+                    <a class="article-title" href="blog/he/life-of-a-packet-routing.html">Life of a Packet: Routing Internals</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח מנגנוני ניתוב מנות (Routing Mechanics) להבנת וקטורי תקיפה רשתיים, ניטור תעבורה וזיהוי אנומליות בניתוב.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Mitigation Research</div>
+                    <a class="article-title" href="blog/he/pt-dns-rebinding-mitigation.html">DNS Rebinding Mitigation</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> פיתוח מנגנוני מיטיגציה נגד התקפות DNS Rebinding לאכיפת Same-Origin Policy (SOP) ומניעת גישה ממשאבים חיצוניים לרשת הפנימית.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">Web Security</div>
+                    <a class="article-title" href="blog/he/pt-web-registration-diagnostic.html">Web Registration Diagnostic</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> אבחון נקודות קצה (Endpoints) באפליקציות Web, זיהוי פגמים בלוגיקה העסקית (Business Logic Flaws) ועקיפת בקרות גישה.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="category-card">
+            <h3>🤖 AI Security & Trust Boundaries</h3>
+            <ul class="article-list">
+                <li class="article-item">
+                    <div class="article-meta">19 במאי 2026</div>
+                    <a class="article-title" href="blog/he/browser-privilege-boundary.html">Browser Privilege Boundary: כש-AI הופך לסוכן</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> ניתוח סיכוני אבטחה בסוכני AI מבוססי דפדפן, תוך התמקדות בשבירת גבולות אמון (Trust Boundaries) וניצול ממשקים אוטונומיים.</p>
+                </li>
+                <li class="article-item">
+                    <div class="article-meta">SaaS Architecture</div>
+                    <a class="article-title" href="blog/he/myleads-saas-architecture.html">Zero Trust AI SaaS Architecture</a>
+                    <p class="article-summary"><strong>תקציר AppSec:</strong> תכנון ארכיטקטורת SaaS Multi-Tenant בגישת Zero Trust, עם הפרדת הרשאות קשיחה ואימות קפדני של עומסי עבודה מבוססי AI.</p>
+                </li>
+            </ul>
+        </div>
 
     </div>
     <footer>
-        <p>&copy; 2026 Shay Mordechai. כל הזכויות שמורות. | Application Security Expert</p>
+        <p>&copy; 2026 Shay Mordechai. All rights reserved. | Application Security Engineer</p>
     </footer>
 </body>
 </html>
